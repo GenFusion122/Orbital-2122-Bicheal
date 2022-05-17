@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "59725859836",
+    "project_id": "beecheal-17e08",
+    "storage_bucket": "beecheal-17e08.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59725859836:android:e0005ed8ed4e79449cc079",
+        "android_client_info": {
+          "package_name": "com.bicheal.beecheal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "59725859836-d50t4npvjk3l0ssplfaqqf1jvta38ek4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeVBBoPciwz-0WZsJLFo4Y6yNVBj3FRDY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "59725859836-d50t4npvjk3l0ssplfaqqf1jvta38ek4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
