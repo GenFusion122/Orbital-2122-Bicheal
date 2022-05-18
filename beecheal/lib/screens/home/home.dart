@@ -17,14 +17,14 @@ class Home extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.orange,
         elevation: 0.0,
-          actions: <Widget>[
-            TextButton.icon(
-                icon: Icon(Icons.person),
-                label: Text('Sign Out'),
-                onPressed: () async {
-                  await _auth.signOut();
-                })
-          ],
+        actions: <Widget>[
+          TextButton.icon(
+              icon: Icon(Icons.person),
+              label: Text('Sign Out'),
+              onPressed: () async {
+                await _auth.signOut();
+              })
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -64,3 +64,5 @@ class Home extends StatelessWidget {
         ],
       ),
     ));
+  }
+}
