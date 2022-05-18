@@ -1,13 +1,22 @@
+import 'package:beecheal/screens/authenticate/authenticate.dart';
+import 'package:beecheal/screens/home/sign_in.dart';
 import 'package:flutter/material.dart';
-
 import 'home/home.dart';
+import 'package:beecheal/models/userid.dart';
+import 'package:provider/provider.dart';
 
 class Wrapper extends StatelessWidget {
   const Wrapper({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    //or return login if its not logged in
-    return Home();
+    final user = Provider.of<UserID?>(context);
+
+    //return Home or Authenticate
+    if (user == null) {
+      return Authenticate();
+    } else {
+      return Home();
+    }
   }
 }
