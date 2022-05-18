@@ -1,5 +1,5 @@
 import 'package:beecheal/screens/authenticate/authenticate.dart';
-import 'package:beecheal/screens/home/sign_in.dart';
+import 'authenticate/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'home/home.dart';
 import 'package:beecheal/models/userid.dart';
