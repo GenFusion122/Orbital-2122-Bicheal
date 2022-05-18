@@ -2,10 +2,12 @@ import 'package:beecheal/screens/home/calendar.dart';
 import 'package:beecheal/screens/home/journalEntries.dart';
 import 'package:beecheal/screens/home/statistics.dart';
 import 'package:beecheal/screens/wrapper.dart';
+import 'package:beecheal/services/auth.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  final AuthService _auth = AuthService();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,6 +16,15 @@ class Home extends StatelessWidget {
         title: Text('Home!'),
         centerTitle: true,
         backgroundColor: Colors.orange,
+        elevation: 0.0,
+          actions: <Widget>[
+            TextButton.icon(
+                icon: Icon(Icons.person),
+                label: Text('Sign Out'),
+                onPressed: () async {
+                  await _auth.signOut();
+                })
+          ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -53,5 +64,3 @@ class Home extends StatelessWidget {
         ],
       ),
     ));
-  }
-}
