@@ -1,3 +1,7 @@
+import 'package:beecheal/screens/home/calendar.dart';
+import 'package:beecheal/screens/home/journalEntries.dart';
+import 'package:beecheal/screens/home/statistics.dart';
+import 'package:beecheal/screens/wrapper.dart';
 import 'package:beecheal/services/auth.dart';
 import 'package:flutter/material.dart';
 
@@ -6,11 +10,13 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.orange[100],
+    return MaterialApp(
+        home: Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.orange[400],
-          elevation: 0.0,
+        title: Text('Home!'),
+        centerTitle: true,
+        backgroundColor: Colors.orange,
+        elevation: 0.0,
           actions: <Widget>[
             TextButton.icon(
                 icon: Icon(Icons.person),
@@ -18,7 +24,43 @@ class Home extends StatelessWidget {
                 onPressed: () async {
                   await _auth.signOut();
                 })
-          ]),
-    );
-  }
-}
+          ],
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.orange)),
+                  child: Text("statistics"),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => Statistics()));
+                  }),
+              ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.orange)),
+                  child: Text("calendar"),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => calendar()));
+                  }),
+              ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.orange)),
+                  child: Text("journal"),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => journalEntries()));
+                  })
+            ],
+          ),
+        ],
+      ),
+    ));
