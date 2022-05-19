@@ -20,7 +20,7 @@ class calendar extends StatelessWidget {
               child: GestureDetector(
                 onTap: () {
                   Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => Home()));
+                      .pop(MaterialPageRoute(builder: (context) => Home()));
                 },
                 child: Icon(
                   Icons.home,

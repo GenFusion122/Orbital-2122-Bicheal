@@ -20,7 +20,7 @@ class Statistics extends StatelessWidget {
                     padding: EdgeInsets.only(right: 20),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(
+                        Navigator.of(context).pop(
                             MaterialPageRoute(builder: (context) => Home()));
                       },
                       child: Icon(

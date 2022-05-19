@@ -65,4 +65,10 @@ class Home extends StatelessWidget {
       ),
     ));
   }
+
+  signoutAndRedirect(context) async {
+    await _auth.signOut();
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => Wrapper()));
+  }
 }
