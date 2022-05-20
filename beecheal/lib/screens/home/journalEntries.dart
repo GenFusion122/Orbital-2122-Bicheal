@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 class journalEntries extends StatelessWidget {
   // const journalEntries({Key? key}) : super(key: key);
-  // final AuthService _auth = AuthService();
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class journalEntries extends StatelessWidget {
           children: <Widget>[
             ElevatedButton(
                 onPressed: () {
-                  DatabaseService().updateUserEntry(
+                  DatabaseService(uid: _auth.curruid()).updateUserEntry(
                       'Placeholder', 0000002359, 'Placeholder', 'Lorem Ipsum');
                 },
                 child: Text('Create Journal Entry'))
