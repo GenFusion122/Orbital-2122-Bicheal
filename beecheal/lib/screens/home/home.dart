@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:beecheal/models/userid.dart';
-
 import '../../custom widgets/custombuttons.dart';
 
 class Home extends StatelessWidget {
@@ -11,9 +10,8 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final uid = _auth.curruid();
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         title: Text('Home!'),
         centerTitle: true,
         backgroundColor: Colors.orange,

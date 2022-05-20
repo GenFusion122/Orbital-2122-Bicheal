@@ -8,19 +8,26 @@ import 'package:beecheal/services/auth.dart';
 import 'package:provider/provider.dart';
 
 class journalEntries extends StatelessWidget {
-  const journalEntries({Key? key}) : super(key: key);
+  // const journalEntries({Key? key}) : super(key: key);
+  // final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('journals skreen'),
-        centerTitle: true,
-        backgroundColor: Colors.orange,
-      ),
-      body: Container(
-        child: Align(
-            alignment: Alignment.center,
-            child: Text('<insert journal list here>')),
-      ),
-    );
+        appBar: AppBar(
+          title: Text('journals skreen'),
+          centerTitle: true,
+          backgroundColor: Colors.orange,
+        ),
+        body: Column(
+          children: <Widget>[
+            ElevatedButton(
+                onPressed: () {
+                  DatabaseService().updateUserEntry(
+                      'Placeholder', 0000002359, 'Placeholder', 'Lorem Ipsum');
+                },
+                child: Text('Create Journal Entry'))
+          ],
+        ));
+  }
+}
