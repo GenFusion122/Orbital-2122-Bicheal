@@ -3,13 +3,18 @@ import 'package:beecheal/screens/home/journalEntries.dart';
 import 'package:beecheal/screens/home/statistics.dart';
 import 'package:beecheal/screens/wrapper.dart';
 import 'package:beecheal/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:beecheal/models/userid.dart';
 
 class Home extends StatelessWidget {
   final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
+    final uid = _auth.curruid();
+
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(
