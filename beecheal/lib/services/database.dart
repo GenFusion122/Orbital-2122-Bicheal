@@ -16,8 +16,8 @@ class DatabaseService {
     });
   }
 
-  Future updateUserEntry(
-      String title, int dateTime, String description, String body) async {
+  Future updateUserEntry(String? title, String? dateTime, String? description,
+      String? body) async {
     return await userCollection
         .doc(uid)
         .collection('entries')
@@ -30,8 +30,8 @@ class DatabaseService {
     });
   }
 
-  // get users stream
-  Stream<QuerySnapshot> get users {
-    return userCollection.snapshots();
+// get entries stream
+  Stream<QuerySnapshot> get entries {
+    return userCollection.doc(uid).collection('entries').snapshots();
   }
 }
