@@ -1,8 +1,15 @@
 import 'package:beecheal/models/userid.dart';
+import 'package:beecheal/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String? data() {
+    final curruser = _auth.currentUser;
+    final uid = curruser?.uid;
+    return uid;
+  }
 
   // creates user object based on User
   UserID? _userfromUser(User? user) {
@@ -19,6 +26,7 @@ class AuthService {
     try {
       UserCredential result = await _auth.signInAnonymously();
       User? user = result.user;
+
       return _userfromUser(user);
     } catch (e) {
       print(e.toString());
@@ -45,6 +53,10 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
+
+      // create uid document
+      await DatabaseService(uid: user!.uid).updateUserID(user.uid);
+
       return _userfromUser(user);
     } catch (e) {
       print(e.toString());
