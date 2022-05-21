@@ -3,8 +3,42 @@ import 'package:flutter/material.dart';
 
 import '../../custom widgets/custombuttons.dart';
 
-class Home extends StatelessWidget {
+class Occasion {
+  String title;
+  DateTime date;
+  String description;
+  Occasion(this.title, this.date, this.description);
+}
+
+class Home extends StatefulWidget {
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
+  List<Occasion> occassions = [
+    Occasion("Do Laundry", DateTime.now(), "use the blue detergent"),
+    Occasion("Hang the clothes", DateTime.now(), "open a new packet of pegs"),
+    Occasion("Cook dinner", DateTime.now(), "pasta sounds really good")
+  ];
+  Widget todoListTemplate(Occasion o) {
+    return Card(
+        margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Text(o.title, style: TextStyle(fontSize: 18, color: Colors.black)),
+            Row(children: [
+              Text(o.description,
+                  style: TextStyle(fontSize: 13, color: Colors.grey)),
+              Spacer(),
+              Text("${o.date.day}-${o.date.month}-${o.date.year}",
+                  style: TextStyle(fontSize: 18, color: Colors.grey)),
+            ])
+          ],
+        ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +51,7 @@ class Home extends StatelessWidget {
         actions: <Widget>[
           TextButton.icon(
               icon: Icon(Icons.person),
+              style: TextButton.styleFrom(primary: Colors.brown[500]),
               label: Text('Sign Out'),
               onPressed: () async {
                 await _auth.signOut();
@@ -27,10 +62,11 @@ class Home extends StatelessWidget {
         children: <Widget>[
           Expanded(
             flex: 4,
-            child: Card(
-              margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-              child: Text("To do list here"),
-            ),
+            child: Container(
+                margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: Column(
+                  children: occassions.map((x) => todoListTemplate(x)).toList(),
+                )),
           ),
           Expanded(
               flex: 2,
