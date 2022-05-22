@@ -30,6 +30,15 @@ class DatabaseService {
     });
   }
 
+  void deleteUserEntry(String? title, String? dateTime) async {
+    userCollection
+        .doc(uid)
+        .collection('entries')
+        .doc(dateTime.toString())
+        .delete();
+    print('Deleted entry ${title.toString()} made on ${dateTime.toString()}');
+  }
+
 // get entries stream
   Stream<QuerySnapshot> get entries {
     return userCollection.doc(uid).collection('entries').snapshots();

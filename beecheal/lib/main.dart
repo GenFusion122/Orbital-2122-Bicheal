@@ -1,7 +1,7 @@
 import 'package:beecheal/screens/authenticate/sign_in.dart';
 import 'package:beecheal/screens/home/calendar.dart';
 import 'package:beecheal/screens/home/home.dart';
-import 'package:beecheal/screens/home/journal_entries.dart';
+import 'package:beecheal/screens/journal/journal_entries.dart';
 import 'package:beecheal/screens/home/statistics.dart';
 import 'package:beecheal/screens/wrapper.dart';
 import 'package:beecheal/services/auth.dart';
