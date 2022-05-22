@@ -1,3 +1,4 @@
+import 'package:beecheal/custom%20widgets/constants.dart';
 import 'package:beecheal/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
@@ -41,12 +42,13 @@ class _RegisterState extends State<Register> {
           ],
         ),
         body: Container(
-            padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
             child: Form(
               key: _formKey,
               child: Column(children: <Widget>[
                 SizedBox(height: 20.0),
                 TextFormField(
+                    decoration: textInputDecoration.copyWith(hintText: 'Email'),
                     validator: (val) => EmailValidator.validate(val!)
                         ? null
                         : 'Enter a valid email',
@@ -55,8 +57,10 @@ class _RegisterState extends State<Register> {
                     }),
                 SizedBox(height: 20.0),
                 TextFormField(
+                    decoration:
+                        textInputDecoration.copyWith(hintText: 'Password'),
                     validator: (val) => val!.length < 8
-                        ? 'Enter a password at least 6 characters long'
+                        ? 'Enter a password at least 8 characters long'
                         : null,
                     obscureText: true,
                     onChanged: (val) {

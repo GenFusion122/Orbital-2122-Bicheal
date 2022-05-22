@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  String? data() {
+  String? curruid() {
     final curruser = _auth.currentUser;
     final uid = curruser?.uid;
     return uid;

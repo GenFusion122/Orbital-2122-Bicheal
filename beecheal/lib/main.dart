@@ -1,7 +1,7 @@
 import 'package:beecheal/screens/authenticate/sign_in.dart';
 import 'package:beecheal/screens/home/calendar.dart';
 import 'package:beecheal/screens/home/home.dart';
-import 'package:beecheal/screens/home/journalEntries.dart';
+import 'package:beecheal/screens/journal/journal_entries.dart';
 import 'package:beecheal/screens/home/statistics.dart';
 import 'package:beecheal/screens/wrapper.dart';
 import 'package:beecheal/services/auth.dart';
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => Home(),
         '/statistics': (context) => Statistics(),
         '/calendar': (context) => calendar(),
-        '/journalEntries': (context) => journalEntries(),
+        '/journalEntries': (context) => JournalEntries(),
       }),
     );
   }
