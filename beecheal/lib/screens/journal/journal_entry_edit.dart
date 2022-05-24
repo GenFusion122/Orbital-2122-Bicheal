@@ -97,17 +97,19 @@ class _EntryScreenState extends State<EntryScreen> {
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
                             if (widget.textPrompt == 'Create') {
-                              DatabaseService(uid: _auth.curruid()).updateUserEntry(
-                                  widget.entry.title,
-                                  '${DateTime.now().day.toString()}-${DateTime.now().month.toString()}-${DateTime.now().year.toString()} ${DateTime.now().hour.toString()}:${DateTime.now().minute.toString()}',
-                                  widget.entry.description,
-                                  widget.entry.body);
+                              DatabaseService(uid: _auth.curruid())
+                                  .updateUserEntry(
+                                      widget.entry.title,
+                                      DateTime.now(),
+                                      widget.entry.description,
+                                      widget.entry.body);
+                              print(DateTime.now());
                               Navigator.of(context).pop();
                             } else {
                               DatabaseService(uid: _auth.curruid())
                                   .updateUserEntry(
                                       widget.entry.title,
-                                      widget.entry.date.toString(),
+                                      widget.entry.date,
                                       widget.entry.description,
                                       widget.entry.body);
                               Navigator.of(context).pop();
