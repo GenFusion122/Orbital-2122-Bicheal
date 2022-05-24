@@ -1,4 +1,5 @@
 import 'package:beecheal/custom%20widgets/constants.dart';
+import 'package:beecheal/models/entry.dart';
 import 'package:beecheal/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/services/auth.dart';
@@ -18,9 +19,9 @@ class _JournalEntriesState extends State<JournalEntries> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<QuerySnapshot?>.value(
+    return StreamProvider<List<Entry>>.value(
       value: DatabaseService(uid: _auth.curruid()).entries,
-      initialData: null,
+      initialData: [],
       child: Scaffold(
           appBar: AppBar(
             title: Text('journals skreen'),
@@ -35,7 +36,9 @@ class _JournalEntriesState extends State<JournalEntries> {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return EntryScreen(textPrompt: 'Create');
+                      return EntryScreen(
+                          entry: Entry("", DateTime.now(), "", ""),
+                          textPrompt: 'Create');
                     });
               },
               child: const Icon(Icons.book_rounded))),

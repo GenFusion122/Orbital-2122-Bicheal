@@ -1,3 +1,4 @@
+import 'package:beecheal/models/entry.dart';
 import 'package:beecheal/screens/journal/journal_entry_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,11 +14,11 @@ class EntryList extends StatefulWidget {
 class _EntryListState extends State<EntryList> {
   @override
   Widget build(BuildContext context) {
-    final entries = Provider.of<QuerySnapshot?>(context);
+    final entries = Provider.of<List<Entry>>(context);
     return ListView.builder(
-        itemCount: entries?.docs.toList().length,
+        itemCount: entries.length,
         itemBuilder: (context, index) {
-          return EntryTile(entry: entries?.docs.toList()[index]);
+          return EntryTile(entries[index]);
         });
   }
 }

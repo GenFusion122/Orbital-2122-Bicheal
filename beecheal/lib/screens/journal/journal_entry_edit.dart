@@ -1,3 +1,4 @@
+import 'package:beecheal/models/entry.dart';
 import 'package:beecheal/screens/journal/journal_entry_view.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/custom widgets/constants.dart';
@@ -7,18 +8,10 @@ import 'package:beecheal/services/database.dart';
 class EntryScreen extends StatefulWidget {
   // const EntryScreen({Key? key}) : super(key: key);
 
-  String? titleInitial;
-  String? descriptionInitial;
-  String? bodyInitial;
-  String? dateTimeInitial;
+  Entry entry;
   String textPrompt;
 
-  EntryScreen(
-      {this.titleInitial,
-      this.descriptionInitial,
-      this.bodyInitial,
-      this.dateTimeInitial,
-      required this.textPrompt});
+  EntryScreen({required this.entry, required this.textPrompt});
 
   @override
   State<EntryScreen> createState() => _EntryScreenState();
@@ -48,27 +41,27 @@ class _EntryScreenState extends State<EntryScreen> {
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: TextFormField(
-                        initialValue: widget.titleInitial,
+                        initialValue: widget.entry.title,
                         decoration:
                             textInputDecoration.copyWith(hintText: 'Title'),
                         validator: (val) =>
                             val!.isNotEmpty ? null : 'Please enter a title',
                         onChanged: (val) {
-                          setState(() => widget.titleInitial = val);
+                          setState(() => widget.entry.title = val);
                           // print(widget.titleInitial);
                         }),
                   ),
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: TextFormField(
-                        initialValue: widget.descriptionInitial,
+                        initialValue: widget.entry.description,
                         decoration: textInputDecoration.copyWith(
                             hintText: 'Description'),
                         validator: (val) => val!.isNotEmpty
                             ? null
                             : 'Please enter a description',
                         onChanged: (val) {
-                          setState(() => widget.descriptionInitial = val);
+                          setState(() => widget.entry.description = val);
                           // print(widget.descriptionInitial);
                         }),
                   ),
@@ -78,7 +71,7 @@ class _EntryScreenState extends State<EntryScreen> {
                       constraints: BoxConstraints(maxHeight: 180.0),
                       child: SingleChildScrollView(
                         child: TextFormField(
-                            initialValue: widget.bodyInitial,
+                            initialValue: widget.entry.body,
                             textAlignVertical: TextAlignVertical.top,
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
@@ -88,7 +81,7 @@ class _EntryScreenState extends State<EntryScreen> {
                             validator: (val) =>
                                 val!.isNotEmpty ? null : 'Please enter a body',
                             onChanged: (val) {
-                              setState(() => widget.bodyInitial = val);
+                              setState(() => widget.entry.body = val);
                               // print(widget.bodyInitial);
                             }),
                       ),
@@ -103,30 +96,25 @@ class _EntryScreenState extends State<EntryScreen> {
                         child: Text(widget.textPrompt),
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
-                            if (widget.dateTimeInitial == null) {
+                            if (widget.textPrompt == 'Create') {
                               DatabaseService(uid: _auth.curruid()).updateUserEntry(
-                                  widget.titleInitial,
+                                  widget.entry.title,
                                   '${DateTime.now().day.toString()}-${DateTime.now().month.toString()}-${DateTime.now().year.toString()} ${DateTime.now().hour.toString()}:${DateTime.now().minute.toString()}',
-                                  widget.descriptionInitial,
-                                  widget.bodyInitial);
+                                  widget.entry.description,
+                                  widget.entry.body);
                               Navigator.of(context).pop();
                             } else {
                               DatabaseService(uid: _auth.curruid())
                                   .updateUserEntry(
-                                      widget.titleInitial,
-                                      widget.dateTimeInitial,
-                                      widget.descriptionInitial,
-                                      widget.bodyInitial);
+                                      widget.entry.title,
+                                      widget.entry.date.toString(),
+                                      widget.entry.description,
+                                      widget.entry.body);
                               Navigator.of(context).pop();
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return EntryView(
-                                      title: widget.titleInitial,
-                                      description: widget.descriptionInitial,
-                                      body: widget.bodyInitial,
-                                      dateTime: widget.dateTimeInitial,
-                                    );
+                                    return EntryView(widget.entry);
                                   });
                             }
                           }

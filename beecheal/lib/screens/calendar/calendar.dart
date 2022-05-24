@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../home/home.dart';
+import 'package:beecheal/models/occasion.dart';
 
 class calendar extends StatefulWidget {
   const calendar({Key? key}) : super(key: key);

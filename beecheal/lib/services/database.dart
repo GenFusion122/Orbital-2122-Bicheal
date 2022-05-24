@@ -1,4 +1,6 @@
+import 'package:beecheal/models/entry.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class DatabaseService {
   final String? uid;
@@ -40,7 +42,22 @@ class DatabaseService {
   }
 
 // get entries stream
-  Stream<QuerySnapshot> get entries {
-    return userCollection.doc(uid).collection('entries').snapshots();
+  Stream<List<Entry>> get entries {
+    return userCollection
+        .doc(uid)
+        .collection('entries')
+        .snapshots()
+        .map(_EntryListFromSnapshot);
   }
+}
+
+//journal entry list from snapshot
+List<Entry> _EntryListFromSnapshot(QuerySnapshot snap) {
+  return snap.docs
+      .map((document) => Entry(
+          document['title'],
+          DateFormat('dd-MM-yyyy HH:mm').parse(document['dateTime']),
+          document['description'],
+          document['body']))
+      .toList();
 }
