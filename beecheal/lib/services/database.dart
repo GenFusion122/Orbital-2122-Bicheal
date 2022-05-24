@@ -1,4 +1,6 @@
+import 'package:beecheal/models/entry.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class DatabaseService {
   final String? uid;
@@ -16,12 +18,12 @@ class DatabaseService {
     });
   }
 
-  Future updateUserEntry(String? title, String? dateTime, String? description,
+  Future updateUserEntry(String? title, DateTime? dateTime, String? description,
       String? body) async {
     return await userCollection
         .doc(uid)
         .collection('entries')
-        .doc(dateTime.toString())
+        .doc(dateTime.toString().substring(0, 23))
         .set({
       'title': title,
       'dateTime': dateTime,
@@ -31,16 +33,24 @@ class DatabaseService {
   }
 
   void deleteUserEntry(String? title, String? dateTime) async {
-    userCollection
-        .doc(uid)
-        .collection('entries')
-        .doc(dateTime.toString())
-        .delete();
+    userCollection.doc(uid).collection('entries').doc(dateTime).delete();
     print('Deleted entry ${title.toString()} made on ${dateTime.toString()}');
   }
 
 // get entries stream
-  Stream<QuerySnapshot> get entries {
-    return userCollection.doc(uid).collection('entries').snapshots();
+  Stream<List<Entry>> get entries {
+    return userCollection
+        .doc(uid)
+        .collection('entries')
+        .snapshots()
+        .map(_EntryListFromSnapshot);
   }
+}
+
+//journal entry list from snapshot
+List<Entry> _EntryListFromSnapshot(QuerySnapshot snap) {
+  return snap.docs
+      .map((document) => Entry(document['title'], document['dateTime'].toDate(),
+          document['description'], document['body']))
+      .toList();
 }

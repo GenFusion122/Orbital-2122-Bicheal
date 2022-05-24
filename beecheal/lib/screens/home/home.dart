@@ -4,13 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:beecheal/models/userid.dart';
 import '../../custom widgets/custombuttons.dart';
-
-class Occasion {
-  String title;
-  DateTime date;
-  String description;
-  Occasion(this.title, this.date, this.description);
-}
+import 'package:beecheal/models/occasion.dart';
 
 class Home extends StatefulWidget {
   @override

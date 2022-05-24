@@ -1,3 +1,4 @@
+import 'package:beecheal/models/entry.dart';
 import 'package:beecheal/screens/journal/journal_entry_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/services/database.dart';
@@ -5,16 +6,9 @@ import 'package:beecheal/services/auth.dart';
 
 class EntryView extends StatelessWidget {
   // const EntryView({Key? key}) : super(key: key);
-  final String? title;
-  final String? description;
-  final String? body;
-  final String? dateTime;
+  Entry entry;
 
-  EntryView(
-      {required this.title,
-      required this.description,
-      required this.body,
-      required this.dateTime});
+  EntryView(this.entry);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +27,7 @@ class EntryView extends StatelessWidget {
           Column(mainAxisSize: MainAxisSize.min, children: [
             Align(
                 alignment: Alignment.topRight,
-                child: Text(dateTime.toString(),
+                child: Text(entry.date.toString(),
                     style: TextStyle(
                         fontSize: 15.0, fontWeight: FontWeight.bold))),
             Card(
@@ -49,7 +43,7 @@ class EntryView extends StatelessWidget {
                     width: 400.0,
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(title.toString(),
+                      child: Text(entry.title,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16.0)),
                     ),
@@ -66,7 +60,7 @@ class EntryView extends StatelessWidget {
                   padding: EdgeInsets.all(6.0),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(description.toString(),
+                    child: Text(entry.description,
                         style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                             fontSize: 14.0)),
@@ -85,8 +79,8 @@ class EntryView extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: SingleChildScrollView(
-                        child: Text(body.toString(),
-                            style: TextStyle(fontSize: 12.0)),
+                        child:
+                            Text(entry.body, style: TextStyle(fontSize: 12.0)),
                       ),
                     ),
                   )),
@@ -105,10 +99,7 @@ class EntryView extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return EntryScreen(
-                              titleInitial: title,
-                              descriptionInitial: description,
-                              bodyInitial: body,
-                              dateTimeInitial: dateTime,
+                              entry: entry,
                               textPrompt: 'Update',
                             );
                           });
@@ -120,7 +111,7 @@ class EntryView extends StatelessWidget {
                     child: Text('Delete'),
                     onPressed: () {
                       DatabaseService(uid: _auth.curruid())
-                          .deleteUserEntry(title, dateTime);
+                          .deleteUserEntry(entry.title, entry.date.toString());
                       Navigator.of(context).pop();
                       showDialog(
                           context: context,
@@ -130,7 +121,7 @@ class EntryView extends StatelessWidget {
                             });
                             return AlertDialog(
                                 title: Text(
-                                    'Deleted ${title.toString()} created on ${dateTime.toString()}'));
+                                    'Deleted ${entry.title} created on ${entry.date.toString()}'));
                           });
                     })
               ],
