@@ -97,6 +97,7 @@ class _EntryScreenState extends State<EntryScreen> {
                           if (_formkey.currentState!.validate()) {
                             if (widget.textPrompt == 'Create') {
                               DatabaseService().updateUserEntry(
+                                  '',
                                   widget.entry.title,
                                   DateTime.now(),
                                   widget.entry.description,
@@ -105,6 +106,7 @@ class _EntryScreenState extends State<EntryScreen> {
                               Navigator.of(context).pop();
                             } else {
                               DatabaseService().updateUserEntry(
+                                  widget.entry.id,
                                   widget.entry.title,
                                   widget.entry.date,
                                   widget.entry.description,

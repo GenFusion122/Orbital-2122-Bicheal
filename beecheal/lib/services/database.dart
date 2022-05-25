@@ -18,18 +18,33 @@ class DatabaseService {
     });
   }
 
-  Future updateUserEntry(String? title, DateTime? dateTime, String? description,
-      String? body) async {
-    return await userCollection
-        .doc(_auth.curruid())
-        .collection('entries')
-        .doc(dateTime.toString().substring(0, 23))
-        .set({
-      'title': title,
-      'dateTime': dateTime,
-      'description': description,
-      'body': body,
-    });
+  Future updateUserEntry(String? id, String? title, DateTime? dateTime,
+      String? description, String? body) async {
+    // create new entry
+    if (id == '') {
+      return await userCollection
+          .doc(_auth.curruid())
+          .collection('entries')
+          .doc()
+          .set({
+        'title': title,
+        'dateTime': dateTime,
+        'description': description,
+        'body': body,
+      });
+      // update existing entry
+    } else {
+      return await userCollection
+          .doc(_auth.curruid())
+          .collection('entries')
+          .doc(id)
+          .set({
+        'title': title,
+        'dateTime': dateTime,
+        'description': description,
+        'body': body,
+      });
+    }
   }
 
   void deleteUserEntry(String? id, String? title, String? dateTime) async {
