@@ -110,8 +110,8 @@ class EntryView extends StatelessWidget {
                             Color.fromARGB(255, 255, 202, 0))),
                     child: Text('Delete'),
                     onPressed: () {
-                      DatabaseService()
-                          .deleteUserEntry(entry.title, entry.date.toString());
+                      DatabaseService().deleteUserEntry(
+                          entry.id, entry.title, entry.date.toString());
                       Navigator.of(context).pop();
                       showDialog(
                           context: context,

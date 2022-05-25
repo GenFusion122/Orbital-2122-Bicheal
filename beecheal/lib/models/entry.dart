@@ -3,5 +3,5 @@ import 'package:flutter/cupertino.dart';
 
 class Entry extends Occasion {
   String body;
-  Entry(super.title, super.date, super.description, this.body);
+  Entry(super.id, super.title, super.date, super.description, this.body);
 }

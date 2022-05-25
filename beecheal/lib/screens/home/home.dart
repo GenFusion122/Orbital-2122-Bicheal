@@ -14,9 +14,10 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
   List<Occasion> occassions = [
-    Occasion("Do Laundry", DateTime.now(), "use the blue detergent"),
-    Occasion("Hang the clothes", DateTime.now(), "open a new packet of pegs"),
-    Occasion("Cook dinner", DateTime.now(), "pasta sounds really good")
+    Occasion("1", "Do Laundry", DateTime.now(), "use the blue detergent"),
+    Occasion(
+        "2", "Hang the clothes", DateTime.now(), "open a new packet of pegs"),
+    Occasion("3", "Cook dinner", DateTime.now(), "pasta sounds really good")
   ];
   Widget todoListTemplate(Occasion o) {
     return Card(
