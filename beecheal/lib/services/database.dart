@@ -1,4 +1,5 @@
 import 'package:beecheal/models/entry.dart';
+import 'package:beecheal/models/occasion.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:beecheal/services/auth.dart';
 
@@ -31,13 +32,31 @@ class DatabaseService {
     });
   }
 
-  void deleteUserEntry(String? title, String? dateTime) async {
-    userCollection
-        .doc(_auth.curruid())
-        .collection('entries')
-        .doc(dateTime)
-        .delete();
+  void deleteUserEntry(String? id, String? title, String? dateTime) async {
+    userCollection.doc(_auth.curruid()).collection('entries').doc(id).delete();
     print('Deleted entry ${title.toString()} made on ${dateTime.toString()}');
+  }
+
+  Future updateUserOccasion(String? id, String? title, DateTime? dateTime,
+      String? description) async {
+    return await userCollection
+        .doc(_auth.curruid())
+        .collection('occasions')
+        .doc(id)
+        .set({
+      'title': title,
+      'dateTime': dateTime,
+      'description': description,
+    });
+  }
+
+// get occasions stream
+  Stream<List<Occasion>> get occasion {
+    return userCollection
+        .doc(_auth.curruid())
+        .collection('occasion')
+        .snapshots()
+        .map(_OccasionListFromSnapshot);
   }
 
 // get entries stream
@@ -53,7 +72,19 @@ class DatabaseService {
 //journal entry list from snapshot
 List<Entry> _EntryListFromSnapshot(QuerySnapshot snap) {
   return snap.docs
-      .map((document) => Entry(document['title'], document['dateTime'].toDate(),
-          document['description'], document['body']))
+      .map((document) => Entry(
+          document.id,
+          document['title'],
+          document['dateTime'].toDate(),
+          document['description'],
+          document['body']))
+      .toList();
+}
+
+//occasion list from snapshot
+List<Occasion> _OccasionListFromSnapshot(QuerySnapshot snap) {
+  return snap.docs
+      .map((document) => Occasion(document.id, document['title'],
+          document['dateTime'].toDate(), document['description']))
       .toList();
 }

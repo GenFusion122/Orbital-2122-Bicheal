@@ -33,7 +33,7 @@ class _JournalEntriesState extends State<JournalEntries> {
                     context: context,
                     builder: (BuildContext context) {
                       return EntryScreen(
-                          entry: Entry("", DateTime.now(), "", ""),
+                          entry: Entry("", "", DateTime.now(), "", ""),
                           textPrompt: 'Create');
                     });
               },
