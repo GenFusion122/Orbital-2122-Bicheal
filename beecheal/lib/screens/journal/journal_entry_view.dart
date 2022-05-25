@@ -2,7 +2,6 @@ import 'package:beecheal/models/entry.dart';
 import 'package:beecheal/screens/journal/journal_entry_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/services/database.dart';
-import 'package:beecheal/services/auth.dart';
 
 class EntryView extends StatelessWidget {
   // const EntryView({Key? key}) : super(key: key);
@@ -12,8 +11,6 @@ class EntryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AuthService _auth = AuthService();
-
     return AlertDialog(
         backgroundColor: Colors.orange[100],
         content: Stack(children: <Widget>[
@@ -110,7 +107,7 @@ class EntryView extends StatelessWidget {
                             Color.fromARGB(255, 255, 202, 0))),
                     child: Text('Delete'),
                     onPressed: () {
-                      DatabaseService(uid: _auth.curruid())
+                      DatabaseService()
                           .deleteUserEntry(entry.title, entry.date.toString());
                       Navigator.of(context).pop();
                       showDialog(

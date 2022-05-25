@@ -2,7 +2,7 @@ import 'package:beecheal/models/entry.dart';
 import 'package:beecheal/screens/journal/journal_entry_view.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/custom widgets/constants.dart';
-import 'package:beecheal/services/auth.dart';
+
 import 'package:beecheal/services/database.dart';
 
 class EntryScreen extends StatefulWidget {
@@ -19,7 +19,6 @@ class EntryScreen extends StatefulWidget {
 
 class _EntryScreenState extends State<EntryScreen> {
   final _formkey = GlobalKey<FormState>();
-  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -97,21 +96,19 @@ class _EntryScreenState extends State<EntryScreen> {
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
                             if (widget.textPrompt == 'Create') {
-                              DatabaseService(uid: _auth.curruid())
-                                  .updateUserEntry(
-                                      widget.entry.title,
-                                      DateTime.now(),
-                                      widget.entry.description,
-                                      widget.entry.body);
+                              DatabaseService().updateUserEntry(
+                                  widget.entry.title,
+                                  DateTime.now(),
+                                  widget.entry.description,
+                                  widget.entry.body);
                               print(DateTime.now());
                               Navigator.of(context).pop();
                             } else {
-                              DatabaseService(uid: _auth.curruid())
-                                  .updateUserEntry(
-                                      widget.entry.title,
-                                      widget.entry.date,
-                                      widget.entry.description,
-                                      widget.entry.body);
+                              DatabaseService().updateUserEntry(
+                                  widget.entry.title,
+                                  widget.entry.date,
+                                  widget.entry.description,
+                                  widget.entry.body);
                               Navigator.of(context).pop();
                               showDialog(
                                   context: context,

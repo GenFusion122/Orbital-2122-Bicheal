@@ -1,27 +1,26 @@
 import 'package:beecheal/models/entry.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
+import 'package:beecheal/services/auth.dart';
 
 class DatabaseService {
-  final String? uid;
-
-  DatabaseService({this.uid});
+  // To get current uid to manage database of current user
+  final AuthService _auth = AuthService();
 
   // collection reference
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
 
   // creating documents
-  Future updateUserID(String uid) async {
-    return await userCollection.doc(uid).set({
-      'uid': uid,
+  Future updateUserID() async {
+    return await userCollection.doc(_auth.curruid()).set({
+      'uid': _auth.curruid(),
     });
   }
 
   Future updateUserEntry(String? title, DateTime? dateTime, String? description,
       String? body) async {
     return await userCollection
-        .doc(uid)
+        .doc(_auth.curruid())
         .collection('entries')
         .doc(dateTime.toString().substring(0, 23))
         .set({
@@ -33,14 +32,18 @@ class DatabaseService {
   }
 
   void deleteUserEntry(String? title, String? dateTime) async {
-    userCollection.doc(uid).collection('entries').doc(dateTime).delete();
+    userCollection
+        .doc(_auth.curruid())
+        .collection('entries')
+        .doc(dateTime)
+        .delete();
     print('Deleted entry ${title.toString()} made on ${dateTime.toString()}');
   }
 
 // get entries stream
   Stream<List<Entry>> get entries {
     return userCollection
-        .doc(uid)
+        .doc(_auth.curruid())
         .collection('entries')
         .snapshots()
         .map(_EntryListFromSnapshot);

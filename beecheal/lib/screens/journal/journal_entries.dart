@@ -1,10 +1,7 @@
-import 'package:beecheal/custom%20widgets/constants.dart';
 import 'package:beecheal/models/entry.dart';
 import 'package:beecheal/services/database.dart';
 import 'package:flutter/material.dart';
-import 'package:beecheal/services/auth.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'journal_entry_list.dart';
 import 'journal_entry_edit.dart';
 
@@ -15,12 +12,11 @@ class JournalEntries extends StatefulWidget {
 
 class _JournalEntriesState extends State<JournalEntries> {
   // const journalEntries({Key? key}) : super(key: key);
-  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
     return StreamProvider<List<Entry>>.value(
-      value: DatabaseService(uid: _auth.curruid()).entries,
+      value: DatabaseService().entries,
       initialData: [],
       child: Scaffold(
           appBar: AppBar(
