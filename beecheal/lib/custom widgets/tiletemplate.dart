@@ -1,7 +1,7 @@
 import 'package:beecheal/models/occasion.dart';
+import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/screens/journal/journal_entry_view.dart';
-import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 
 class TileTemplate extends StatelessWidget {
   // const TileTemplate({Key? key}) : super(key: key);
