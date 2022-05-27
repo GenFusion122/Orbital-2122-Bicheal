@@ -1,15 +1,16 @@
-import 'package:beecheal/custom%20widgets/listtemplate.dart';
-import 'package:beecheal/models/task.dart';
-import 'package:beecheal/screens/todo_list/todo_task_edit.dart';
-import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:beecheal/services/auth.dart';
-import 'package:beecheal/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:beecheal/models/userid.dart';
 import '../../custom widgets/custombuttons.dart';
-import 'package:beecheal/models/occasion.dart';
+
+class Occasion {
+  String title;
+  DateTime date;
+  String description;
+  Occasion(this.title, this.date, this.description);
+}
 
 class Home extends StatefulWidget {
   @override
@@ -18,6 +19,28 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
+  List<Occasion> occassions = [
+    Occasion("Do Laundry", DateTime.now(), "use the blue detergent"),
+    Occasion("Hang the clothes", DateTime.now(), "open a new packet of pegs"),
+    Occasion("Cook dinner", DateTime.now(), "pasta sounds really good")
+  ];
+  Widget todoListTemplate(Occasion o) {
+    return Card(
+        margin: EdgeInsets.fromLTRB(16, 16, 16, 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Text(o.title, style: TextStyle(fontSize: 18, color: Colors.black)),
+            Row(children: [
+              Text(o.description,
+                  style: TextStyle(fontSize: 13, color: Colors.grey)),
+              Spacer(),
+              Text("${o.date.day}-${o.date.month}-${o.date.year}",
+                  style: TextStyle(fontSize: 18, color: Colors.grey)),
+            ])
+          ],
+        ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,40 +64,11 @@ class _HomeState extends State<Home> {
         children: <Widget>[
           Expanded(
             flex: 4,
-            child: Stack(children: [
-              Container(
-                  margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  child: ListTemplate(
-                      Provider.of<List<Task>>(context), 'TaskView')),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    height: 40.0,
-                    width: 40.0,
-                    child: FloatingActionButton(
-                        child: Icon(Icons.add),
-                        backgroundColor: Colors.amber[400],
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return TaskEditScreen(
-                                    task: Task(
-                                      "",
-                                      "",
-                                      DateTime(2999, 12, 12, 23, 59),
-                                      "",
-                                      DateTime(2999, 12, 12, 23, 59),
-                                    ),
-                                    textPrompt: 'Create');
-                              });
-                        }),
-                  ),
-                ),
-              )
-            ]),
+            child: Container(
+                margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: Column(
+                  children: occassions.map((x) => todoListTemplate(x)).toList(),
+                )),
           ),
           Expanded(
               flex: 2,

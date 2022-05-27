@@ -55,7 +55,7 @@ class AuthService {
       User? user = result.user;
 
       // create uid document
-      await DatabaseService().updateUserID();
+      await DatabaseService(uid: user!.uid).updateUserID(user.uid);
 
       return _userfromUser(user);
     } catch (e) {

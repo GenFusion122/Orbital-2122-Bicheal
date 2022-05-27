@@ -1,16 +1,24 @@
-import 'package:beecheal/models/entry.dart';
 import 'package:beecheal/screens/journal/journal_entry_view.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/custom widgets/constants.dart';
+import 'package:beecheal/services/auth.dart';
 import 'package:beecheal/services/database.dart';
 
 class EntryScreen extends StatefulWidget {
   // const EntryScreen({Key? key}) : super(key: key);
 
-  Entry entry;
+  String? titleInitial;
+  String? descriptionInitial;
+  String? bodyInitial;
+  String? dateTimeInitial;
   String textPrompt;
 
-  EntryScreen({required this.entry, required this.textPrompt});
+  EntryScreen(
+      {this.titleInitial,
+      this.descriptionInitial,
+      this.bodyInitial,
+      this.dateTimeInitial,
+      required this.textPrompt});
 
   @override
   State<EntryScreen> createState() => _EntryScreenState();
@@ -18,6 +26,7 @@ class EntryScreen extends StatefulWidget {
 
 class _EntryScreenState extends State<EntryScreen> {
   final _formkey = GlobalKey<FormState>();
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -39,27 +48,27 @@ class _EntryScreenState extends State<EntryScreen> {
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: TextFormField(
-                        initialValue: widget.entry.title,
+                        initialValue: widget.titleInitial,
                         decoration:
                             textInputDecoration.copyWith(hintText: 'Title'),
                         validator: (val) =>
                             val!.isNotEmpty ? null : 'Please enter a title',
                         onChanged: (val) {
-                          setState(() => widget.entry.title = val);
+                          setState(() => widget.titleInitial = val);
                           // print(widget.titleInitial);
                         }),
                   ),
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: TextFormField(
-                        initialValue: widget.entry.description,
+                        initialValue: widget.descriptionInitial,
                         decoration: textInputDecoration.copyWith(
                             hintText: 'Description'),
                         validator: (val) => val!.isNotEmpty
                             ? null
                             : 'Please enter a description',
                         onChanged: (val) {
-                          setState(() => widget.entry.description = val);
+                          setState(() => widget.descriptionInitial = val);
                           // print(widget.descriptionInitial);
                         }),
                   ),
@@ -69,7 +78,7 @@ class _EntryScreenState extends State<EntryScreen> {
                       constraints: BoxConstraints(maxHeight: 180.0),
                       child: SingleChildScrollView(
                         child: TextFormField(
-                            initialValue: widget.entry.body,
+                            initialValue: widget.bodyInitial,
                             textAlignVertical: TextAlignVertical.top,
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
@@ -79,7 +88,7 @@ class _EntryScreenState extends State<EntryScreen> {
                             validator: (val) =>
                                 val!.isNotEmpty ? null : 'Please enter a body',
                             onChanged: (val) {
-                              setState(() => widget.entry.body = val);
+                              setState(() => widget.bodyInitial = val);
                               // print(widget.bodyInitial);
                             }),
                       ),
@@ -94,26 +103,30 @@ class _EntryScreenState extends State<EntryScreen> {
                         child: Text(widget.textPrompt),
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
-                            if (widget.textPrompt == 'Create') {
-                              DatabaseService().updateUserEntry(
-                                  '',
-                                  widget.entry.title,
-                                  DateTime.now(),
-                                  widget.entry.description,
-                                  widget.entry.body);
+                            if (widget.dateTimeInitial == null) {
+                              DatabaseService(uid: _auth.curruid()).updateUserEntry(
+                                  widget.titleInitial,
+                                  '${DateTime.now().day.toString()}-${DateTime.now().month.toString()}-${DateTime.now().year.toString()} ${DateTime.now().hour.toString()}:${DateTime.now().minute.toString()}',
+                                  widget.descriptionInitial,
+                                  widget.bodyInitial);
                               Navigator.of(context).pop();
                             } else {
-                              DatabaseService().updateUserEntry(
-                                  widget.entry.id,
-                                  widget.entry.title,
-                                  widget.entry.date,
-                                  widget.entry.description,
-                                  widget.entry.body);
+                              DatabaseService(uid: _auth.curruid())
+                                  .updateUserEntry(
+                                      widget.titleInitial,
+                                      widget.dateTimeInitial,
+                                      widget.descriptionInitial,
+                                      widget.bodyInitial);
                               Navigator.of(context).pop();
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return EntryView(widget.entry);
+                                    return EntryView(
+                                      title: widget.titleInitial,
+                                      description: widget.descriptionInitial,
+                                      body: widget.bodyInitial,
+                                      dateTime: widget.dateTimeInitial,
+                                    );
                                   });
                             }
                           }

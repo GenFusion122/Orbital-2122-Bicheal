@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import 'package:beecheal/models/occasion.dart';
+import '../home/home.dart';
 
 class calendar extends StatefulWidget {
   const calendar({Key? key}) : super(key: key);
@@ -12,14 +12,11 @@ class calendar extends StatefulWidget {
 
 class _calendarState extends State<calendar> {
   List<Occasion> occassions = [
-    Occasion("1", "Do Laundry", DateTime.now().add(const Duration(days: 5)),
+    Occasion("Do Laundry", DateTime.now().add(const Duration(days: 5)),
         "use the blue detergent"),
-    Occasion(
-        "2",
-        "Hang the clothes",
-        DateTime.now().add(const Duration(days: 10)),
+    Occasion("Hang the clothes", DateTime.now().add(const Duration(days: 10)),
         "open a new packet of pegs"),
-    Occasion("2", "Cook dinner", DateTime.now().add(const Duration(days: 2)),
+    Occasion("Cook dinner", DateTime.now().add(const Duration(days: 2)),
         "pasta sounds really good")
   ];
   CalendarFormat _calendarFormat = CalendarFormat.month;

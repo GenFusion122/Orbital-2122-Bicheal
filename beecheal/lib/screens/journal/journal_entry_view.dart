@@ -1,16 +1,25 @@
-import 'package:beecheal/models/entry.dart';
 import 'package:beecheal/screens/journal/journal_entry_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/services/database.dart';
+import 'package:beecheal/services/auth.dart';
 
 class EntryView extends StatelessWidget {
   // const EntryView({Key? key}) : super(key: key);
-  Entry entry;
+  final String? title;
+  final String? description;
+  final String? body;
+  final String? dateTime;
 
-  EntryView(this.entry);
+  EntryView(
+      {required this.title,
+      required this.description,
+      required this.body,
+      required this.dateTime});
 
   @override
   Widget build(BuildContext context) {
+    final AuthService _auth = AuthService();
+
     return AlertDialog(
         backgroundColor: Colors.orange[100],
         content: Stack(children: <Widget>[
@@ -24,7 +33,7 @@ class EntryView extends StatelessWidget {
           Column(mainAxisSize: MainAxisSize.min, children: [
             Align(
                 alignment: Alignment.topRight,
-                child: Text(entry.date.toString(),
+                child: Text(dateTime.toString(),
                     style: TextStyle(
                         fontSize: 15.0, fontWeight: FontWeight.bold))),
             Card(
@@ -40,7 +49,7 @@ class EntryView extends StatelessWidget {
                     width: 400.0,
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(entry.title,
+                      child: Text(title.toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16.0)),
                     ),
@@ -57,7 +66,7 @@ class EntryView extends StatelessWidget {
                   padding: EdgeInsets.all(6.0),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(entry.description,
+                    child: Text(description.toString(),
                         style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                             fontSize: 14.0)),
@@ -76,8 +85,8 @@ class EntryView extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: SingleChildScrollView(
-                        child:
-                            Text(entry.body, style: TextStyle(fontSize: 12.0)),
+                        child: Text(body.toString(),
+                            style: TextStyle(fontSize: 12.0)),
                       ),
                     ),
                   )),
@@ -96,7 +105,10 @@ class EntryView extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return EntryScreen(
-                              entry: entry,
+                              titleInitial: title,
+                              descriptionInitial: description,
+                              bodyInitial: body,
+                              dateTimeInitial: dateTime,
                               textPrompt: 'Update',
                             );
                           });
@@ -107,8 +119,8 @@ class EntryView extends StatelessWidget {
                             Color.fromARGB(255, 255, 202, 0))),
                     child: Text('Delete'),
                     onPressed: () {
-                      DatabaseService().deleteUserEntry(
-                          entry.id, entry.title, entry.date.toString());
+                      DatabaseService(uid: _auth.curruid())
+                          .deleteUserEntry(title, dateTime);
                       Navigator.of(context).pop();
                       showDialog(
                           context: context,
@@ -118,12 +130,13 @@ class EntryView extends StatelessWidget {
                             });
                             return AlertDialog(
                                 title: Text(
-                                    'Deleted ${entry.title} created on ${entry.date.toString()}'));
+                                    'Deleted ${title.toString()} created on ${dateTime.toString()}'));
                           });
                     })
               ],
             )
           ]),
         ]));
+    ;
   }
 }

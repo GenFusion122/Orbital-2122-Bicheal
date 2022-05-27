@@ -47,7 +47,6 @@ class _RegisterState extends State<Register> {
               key: _formKey,
               child: Column(children: <Widget>[
                 SizedBox(height: 20.0),
-                // Email input
                 TextFormField(
                     decoration: textInputDecoration.copyWith(hintText: 'Email'),
                     validator: (val) => EmailValidator.validate(val!)
@@ -57,7 +56,6 @@ class _RegisterState extends State<Register> {
                       setState(() => email = val);
                     }),
                 SizedBox(height: 20.0),
-                // Password input
                 TextFormField(
                     decoration:
                         textInputDecoration.copyWith(hintText: 'Password'),
@@ -76,7 +74,6 @@ class _RegisterState extends State<Register> {
                       backgroundColor:
                           MaterialStateProperty.all(Colors.amber[400])),
                   onPressed: () async {
-                    // validation check
                     if (_formKey.currentState!.validate()) {
                       dynamic result =
                           await _auth.registerEmail(email, password);
