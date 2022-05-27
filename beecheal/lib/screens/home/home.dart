@@ -34,6 +34,7 @@ class _HomeState extends State<Home> {
               label: Text('Sign Out'),
               onPressed: () async {
                 await _auth.signOut();
+                setState(() {});
               })
         ],
       ),
