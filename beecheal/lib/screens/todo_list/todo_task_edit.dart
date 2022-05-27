@@ -1,22 +1,23 @@
-import 'package:beecheal/models/entry.dart';
-import 'package:beecheal/screens/journal/journal_entry_view.dart';
+import 'package:beecheal/models/task.dart';
+import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/custom widgets/constants.dart';
 import 'package:beecheal/services/database.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
-class EntryScreen extends StatefulWidget {
+class TaskEditScreen extends StatefulWidget {
   // const EntryScreen({Key? key}) : super(key: key);
 
-  Entry entry;
+  Task task;
   String textPrompt;
 
-  EntryScreen({required this.entry, required this.textPrompt});
+  TaskEditScreen({required this.task, required this.textPrompt});
 
   @override
-  State<EntryScreen> createState() => _EntryScreenState();
+  State<TaskEditScreen> createState() => _TaskEditScreenState();
 }
 
-class _EntryScreenState extends State<EntryScreen> {
+class _TaskEditScreenState extends State<TaskEditScreen> {
   final _formkey = GlobalKey<FormState>();
 
   @override
@@ -39,51 +40,27 @@ class _EntryScreenState extends State<EntryScreen> {
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: TextFormField(
-                        initialValue: widget.entry.title,
+                        initialValue: widget.task.title,
                         decoration:
                             textInputDecoration.copyWith(hintText: 'Title'),
                         validator: (val) =>
                             val!.isNotEmpty ? null : 'Please enter a title',
                         onChanged: (val) {
-                          setState(() => widget.entry.title = val);
-                          // print(widget.titleInitial);
+                          setState(() => widget.task.title = val);
                         }),
                   ),
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: TextFormField(
-                        initialValue: widget.entry.description,
+                        initialValue: widget.task.description,
                         decoration: textInputDecoration.copyWith(
                             hintText: 'Description'),
                         validator: (val) => val!.isNotEmpty
                             ? null
                             : 'Please enter a description',
                         onChanged: (val) {
-                          setState(() => widget.entry.description = val);
-                          // print(widget.descriptionInitial);
+                          setState(() => widget.task.description = val);
                         }),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Container(
-                      constraints: BoxConstraints(maxHeight: 180.0),
-                      child: SingleChildScrollView(
-                        child: TextFormField(
-                            initialValue: widget.entry.body,
-                            textAlignVertical: TextAlignVertical.top,
-                            keyboardType: TextInputType.multiline,
-                            maxLines: null,
-                            minLines: 7,
-                            decoration:
-                                textInputDecoration.copyWith(hintText: 'Body'),
-                            validator: (val) =>
-                                val!.isNotEmpty ? null : 'Please enter a body',
-                            onChanged: (val) {
-                              setState(() => widget.entry.body = val);
-                              // print(widget.bodyInitial);
-                            }),
-                      ),
-                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.all(1.0),
@@ -92,28 +69,44 @@ class _EntryScreenState extends State<EntryScreen> {
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 Color.fromARGB(255, 255, 202, 0))),
                         child: Text(widget.textPrompt),
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formkey.currentState!.validate()) {
                             if (widget.textPrompt == 'Create') {
-                              DatabaseService().updateUserEntry(
+                              await DatePicker.showDateTimePicker(
+                                context,
+                                showTitleActions: true,
+                                onChanged: (date) {},
+                                onConfirm: (date) {
+                                  widget.task.date = date;
+                                },
+                              );
+                              DatabaseService().updateUserTask(
                                   '',
-                                  widget.entry.title,
-                                  DateTime.now(),
-                                  widget.entry.description,
-                                  widget.entry.body);
+                                  widget.task.title,
+                                  widget.task.date,
+                                  widget.task.description,
+                                  widget.task.completedOn);
                               Navigator.of(context).pop();
                             } else {
-                              DatabaseService().updateUserEntry(
-                                  widget.entry.id,
-                                  widget.entry.title,
-                                  widget.entry.date,
-                                  widget.entry.description,
-                                  widget.entry.body);
+                              await DatePicker.showDateTimePicker(
+                                context,
+                                showTitleActions: true,
+                                onChanged: (date) {},
+                                onConfirm: (date) {
+                                  widget.task.date = date;
+                                },
+                              );
+                              DatabaseService().updateUserTask(
+                                  widget.task.id,
+                                  widget.task.title,
+                                  widget.task.date,
+                                  widget.task.description,
+                                  widget.task.completedOn);
                               Navigator.of(context).pop();
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return EntryView(widget.entry);
+                                    return TaskView(widget.task);
                                   });
                             }
                           }

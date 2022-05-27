@@ -1,13 +1,13 @@
-import 'package:beecheal/models/entry.dart';
-import 'package:beecheal/screens/journal/journal_entry_edit.dart';
+import 'package:beecheal/models/task.dart';
+import 'package:beecheal/screens/todo_list/todo_task_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/services/database.dart';
 
-class EntryView extends StatelessWidget {
+class TaskView extends StatelessWidget {
   // const EntryView({Key? key}) : super(key: key);
-  Entry entry;
+  Task task;
 
-  EntryView(this.entry);
+  TaskView(this.task);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class EntryView extends StatelessWidget {
           Column(mainAxisSize: MainAxisSize.min, children: [
             Align(
                 alignment: Alignment.topRight,
-                child: Text(entry.date.toString(),
+                child: Text(task.date.toString(),
                     style: TextStyle(
                         fontSize: 15.0, fontWeight: FontWeight.bold))),
             Card(
@@ -40,7 +40,7 @@ class EntryView extends StatelessWidget {
                     width: 400.0,
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(entry.title,
+                      child: Text(task.title,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16.0)),
                     ),
@@ -57,32 +57,29 @@ class EntryView extends StatelessWidget {
                   padding: EdgeInsets.all(6.0),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(entry.description,
+                    child: Text(task.description,
                         style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                             fontSize: 14.0)),
                   ),
                 )),
-            Expanded(
-              child: Card(
-                  clipBehavior: Clip.none,
-                  margin: EdgeInsets.symmetric(vertical: 1.0),
-                  color: Color.fromARGB(255, 255, 243, 224),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+            Card(
+                clipBehavior: Clip.none,
+                margin: EdgeInsets.symmetric(vertical: 1.0),
+                color: Color.fromARGB(255, 255, 243, 224),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(6.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                        '${task.completedOn == DateTime(2999, 12, 12, 23, 59) ? 'Not completed' : 'Completed on ${task.completedOn}'}',
+                        style: TextStyle(color: Colors.black, fontSize: 14.0)),
                   ),
-                  child: Padding(
-                    padding: EdgeInsets.all(6.0),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: SingleChildScrollView(
-                        child:
-                            Text(entry.body, style: TextStyle(fontSize: 12.0)),
-                      ),
-                    ),
-                  )),
-            ),
-            Row(
+                )),
+            Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
@@ -95,11 +92,19 @@ class EntryView extends StatelessWidget {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return EntryScreen(
-                              entry: entry,
-                              textPrompt: 'Update',
-                            );
+                            return TaskEditScreen(
+                                task: task, textPrompt: 'Update');
                           });
+                    }),
+                ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Color.fromARGB(255, 255, 202, 0))),
+                    child: Text('Mark completed'),
+                    onPressed: () {
+                      DatabaseService().updateUserTask(task.id, task.title,
+                          task.date, task.description, DateTime.now());
+                      Navigator.of(context).pop();
                     }),
                 ElevatedButton(
                     style: ButtonStyle(
@@ -107,8 +112,7 @@ class EntryView extends StatelessWidget {
                             Color.fromARGB(255, 255, 202, 0))),
                     child: Text('Delete'),
                     onPressed: () {
-                      DatabaseService().deleteUserEntry(
-                          entry.id, entry.title, entry.date.toString());
+                      DatabaseService().deleteUserTask(task.id, task.title);
                       Navigator.of(context).pop();
                       showDialog(
                           context: context,
@@ -117,13 +121,13 @@ class EntryView extends StatelessWidget {
                               Navigator.of(context).pop();
                             });
                             return AlertDialog(
-                                title: Text(
-                                    'Deleted ${entry.title} created on ${entry.date.toString()}'));
+                                title: Text('Deleted ${task.title}'));
                           });
-                    })
+                    }),
               ],
             )
           ]),
         ]));
+    ;
   }
 }

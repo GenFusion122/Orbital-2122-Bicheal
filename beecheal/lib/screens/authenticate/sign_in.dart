@@ -47,6 +47,7 @@ class _SignInState extends State<SignIn> {
               key: _formKey,
               child: Column(children: <Widget>[
                 SizedBox(height: 20.0),
+                // Email input
                 TextFormField(
                     decoration: textInputDecoration.copyWith(hintText: 'Email'),
                     validator: (val) => EmailValidator.validate(val!)
@@ -56,6 +57,7 @@ class _SignInState extends State<SignIn> {
                       setState(() => email = val);
                     }),
                 SizedBox(height: 20.0),
+                // Password input
                 TextFormField(
                     decoration:
                         textInputDecoration.copyWith(hintText: 'Password'),
@@ -73,6 +75,7 @@ class _SignInState extends State<SignIn> {
                       backgroundColor:
                           MaterialStateProperty.all(Colors.amber[400])),
                   onPressed: () async {
+                    // Validation check
                     if (_formKey.currentState!.validate()) {
                       dynamic result = await _auth.signInEmail(email, password);
                       if (result == null) {
