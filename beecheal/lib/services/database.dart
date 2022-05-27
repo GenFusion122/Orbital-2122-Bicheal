@@ -89,22 +89,34 @@ class DatabaseService {
 
   Future updateUserOccasion(String? id, String? title, DateTime? dateTime,
       String? description) async {
-    return await userCollection
-        .doc(_auth.curruid())
-        .collection('occasions')
-        .doc(id)
-        .set({
-      'title': title,
-      'dateTime': dateTime,
-      'description': description,
-    });
+    if (id == "") {
+      return await userCollection
+          .doc(_auth.curruid())
+          .collection('occasions')
+          .doc()
+          .set({
+        'title': title,
+        'dateTime': dateTime,
+        'description': description,
+      });
+    } else {
+      return await userCollection
+          .doc(_auth.curruid())
+          .collection('occasions')
+          .doc(id)
+          .set({
+        'title': title,
+        'dateTime': dateTime,
+        'description': description,
+      });
+    }
   }
 
 // get occasions stream
   Stream<List<Occasion>> get occasion {
     return userCollection
         .doc(_auth.curruid())
-        .collection('occasion')
+        .collection('occasions')
         .snapshots()
         .map(_OccasionListFromSnapshot);
   }
