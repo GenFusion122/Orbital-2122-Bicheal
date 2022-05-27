@@ -1,4 +1,6 @@
 import 'package:beecheal/screens/authenticate/authenticate.dart';
+import '../models/task.dart';
+import '../services/database.dart';
 import 'authenticate/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'home/home.dart';
@@ -16,7 +18,8 @@ class Wrapper extends StatelessWidget {
     if (user == null) {
       return Authenticate();
     } else {
-      return Home();
+      return StreamProvider<List<Task>>.value(
+          value: DatabaseService().tasks, initialData: [], child: Home());
     }
   }
 }

@@ -27,20 +27,17 @@ class MyApp extends StatelessWidget {
     return StreamProvider<UserID?>.value(
       initialData: null,
       value: AuthService().user,
-      child: StreamProvider<List<Task>>.value(
-        value: DatabaseService().tasks,
-        initialData: [],
-        child: MaterialApp(initialRoute: '/', routes: {
-          '/': (context) => Wrapper(),
-          '/home': (context) => Home(),
-          '/statistics': (context) => Statistics(),
-          '/calendar': (context) => CalendarView(),
-          '/journalEntries': (context) => StreamProvider<List<Entry>>.value(
-              value: DatabaseService().entries,
-              initialData: [],
-              child: JournalEntries()),
-        }),
-      ),
+      child: MaterialApp(initialRoute: '/', routes: {
+        '/': (context) => Wrapper(),
+        '/home': (context) => StreamProvider<List<Task>>.value(
+            value: DatabaseService().tasks, initialData: [], child: Home()),
+        '/statistics': (context) => Statistics(),
+        '/calendar': (context) => CalendarView(),
+        '/journalEntries': (context) => StreamProvider<List<Entry>>.value(
+            value: DatabaseService().entries,
+            initialData: [],
+            child: JournalEntries()),
+      }),
     );
   }
 }
