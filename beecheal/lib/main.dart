@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => Wrapper(),
           '/home': (context) => Home(),
           '/statistics': (context) => Statistics(),
-          '/calendar': (context) => calendar(),
+          '/calendar': (context) => CalendarView(),
           '/journalEntries': (context) => StreamProvider<List<Entry>>.value(
               value: DatabaseService().entries,
               initialData: [],
