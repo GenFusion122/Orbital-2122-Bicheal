@@ -88,7 +88,7 @@ class EntryView extends StatelessWidget {
                 ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromARGB(255, 255, 202, 0))),
+                            Color.fromARGB(255, 255, 202, 40))),
                     child: Text('Edit'),
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -104,7 +104,7 @@ class EntryView extends StatelessWidget {
                 ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromARGB(255, 255, 202, 0))),
+                            Color.fromARGB(255, 255, 202, 40))),
                     child: Text('Delete'),
                     onPressed: () {
                       DatabaseService().deleteUserEntry(entry.getId(),

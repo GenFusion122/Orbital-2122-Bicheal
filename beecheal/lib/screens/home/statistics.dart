@@ -12,7 +12,7 @@ class Statistics extends StatelessWidget {
         appBar: AppBar(
           title: Text('stats skreen'),
           centerTitle: true,
-          backgroundColor: Colors.orange,
+          backgroundColor: Colors.orange[400],
         ),
         body:
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[

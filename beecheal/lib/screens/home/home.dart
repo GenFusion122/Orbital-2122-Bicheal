@@ -1,11 +1,13 @@
 import 'package:beecheal/custom%20widgets/listtemplate.dart';
 import 'package:beecheal/models/task.dart';
 import 'package:beecheal/screens/todo_list/todo_task_edit.dart';
+import 'package:beecheal/screens/todo_list/todo_task_tile.dart';
 import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:beecheal/services/auth.dart';
 import 'package:beecheal/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:beecheal/models/userid.dart';
 import '../../custom widgets/custombuttons.dart';
@@ -18,14 +20,16 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
+  String toDoListState = 'Default';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 255, 243, 224),
       appBar: AppBar(
         title: Text('Home!'),
         centerTitle: true,
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.orange[400],
         elevation: 0.0,
         actions: <Widget>[
           TextButton.icon(
@@ -41,16 +45,51 @@ class _HomeState extends State<Home> {
       body: Column(
         children: <Widget>[
           Expanded(
-            flex: 4,
+            flex: 8,
             child: Stack(children: [
               Container(
-                  margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  child: ListTemplate(
-                      Provider.of<List<Task>>(context), 'TaskView')),
+                  color: Color.fromARGB(255, 255, 243, 224),
+                  margin: EdgeInsets.all(2.0),
+                  child: StreamBuilder(
+                    stream: DatabaseService().tasks,
+                    builder: (context, AsyncSnapshot<List<Task>> snapshot) {
+                      var completed = Provider.of<List<Task>>(context).where(
+                          (task) =>
+                              task.getCompletedOn() !=
+                              DateTime(2999, 12, 12, 23, 59));
+                      var notCompleted = Provider.of<List<Task>>(context).where(
+                          (task) =>
+                              task.getCompletedOn() ==
+                              DateTime(2999, 12, 12, 23, 59));
+                      if (toDoListState == 'Default') {
+                        return ListView.builder(
+                            itemCount: Provider.of<List<Task>>(context).length,
+                            itemBuilder: (context, index) {
+                              return TaskTile(
+                                  Provider.of<List<Task>>(context)[index]);
+                            });
+                      } else if (toDoListState == 'Not Completed') {
+                        return ListView.builder(
+                            itemCount: notCompleted.length,
+                            itemBuilder: (context, index) {
+                              return TaskTile(notCompleted.toList()[index]);
+                            });
+                      } else if (toDoListState == 'Completed') {
+                        return ListView.builder(
+                            itemCount: completed.length,
+                            itemBuilder: (context, index) {
+                              return TaskTile(completed.toList()[index]);
+                            });
+                      } else {
+                        return SpinKitFoldingCube(
+                            color: Colors.white, size: 50.0);
+                      }
+                    },
+                  )),
               Align(
                 alignment: Alignment.bottomRight,
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(2.0),
                   child: SizedBox(
                     height: 40.0,
                     width: 40.0,
@@ -78,7 +117,55 @@ class _HomeState extends State<Home> {
             ]),
           ),
           Expanded(
-              flex: 2,
+            flex: 1,
+            child: Row(children: [
+              Expanded(
+                flex: 1,
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Color.fromARGB(255, 255, 202, 40)),
+                      // side: MaterialStateProperty.all<BorderSide>(BorderSide(
+                      //     color: Color.fromARGB(255, 121, 85, 72),
+                      //     width: 3.0))
+                    ),
+                    child: Text('Default'),
+                    onPressed: () {
+                      setState(() {
+                        toDoListState = 'Default';
+                      });
+                    }),
+              ),
+              Expanded(
+                flex: 1,
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Color.fromARGB(255, 255, 202, 40))),
+                    child: Text('Not Completed'),
+                    onPressed: () {
+                      setState(() {
+                        toDoListState = 'Not Completed';
+                      });
+                    }),
+              ),
+              Expanded(
+                flex: 1,
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Color.fromARGB(255, 255, 202, 40))),
+                    child: Text('Completed'),
+                    onPressed: () {
+                      setState(() {
+                        toDoListState = 'Completed';
+                      });
+                    }),
+              ),
+            ]),
+          ),
+          Expanded(
+              flex: 4,
               child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -93,7 +180,7 @@ class _HomeState extends State<Home> {
                     ),
                   ])),
           Expanded(
-              flex: 2,
+              flex: 4,
               child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -107,13 +194,21 @@ class _HomeState extends State<Home> {
                       child: Text("Custom card!"),
                     ),
                   ])),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              OrangeNavButton("/statistics", "statistics", context),
-              OrangeNavButton("/calendar", "calendar", context),
-              OrangeNavButton("/journalEntries", "journal", context),
-            ],
+          Expanded(
+            flex: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                    child:
+                        OrangeNavButton("/statistics", "statistics", context)),
+                Expanded(
+                    child: OrangeNavButton("/calendar", "calendar", context)),
+                Expanded(
+                    child:
+                        OrangeNavButton("/journalEntries", "journal", context)),
+              ],
+            ),
           ),
         ],
       ),

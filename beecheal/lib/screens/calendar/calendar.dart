@@ -6,7 +6,6 @@ import 'package:beecheal/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-
 import 'package:beecheal/models/occasion.dart';
 
 class CalendarView extends StatefulWidget {
@@ -53,7 +52,7 @@ class _CalendarViewState extends State<CalendarView> {
       appBar: AppBar(
         title: Text('calendar skreen'),
         centerTitle: true,
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.orange[400],
       ),
       body: StreamBuilder(
           stream: DatabaseService().occasion,

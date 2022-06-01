@@ -85,7 +85,7 @@ class TaskView extends StatelessWidget {
                 ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromARGB(255, 255, 202, 0))),
+                            Color.fromARGB(255, 255, 202, 40))),
                     child: Text('Edit'),
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -99,21 +99,7 @@ class TaskView extends StatelessWidget {
                 ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromARGB(255, 255, 202, 0))),
-                    child: Text('Mark completed'),
-                    onPressed: () {
-                      DatabaseService().updateUserTask(
-                          task.getId(),
-                          task.getTitle(),
-                          task.getDate(),
-                          task.getDescription(),
-                          DateTime.now());
-                      Navigator.of(context).pop();
-                    }),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromARGB(255, 255, 202, 0))),
+                            Color.fromARGB(255, 255, 202, 40))),
                     child: Text('Delete'),
                     onPressed: () {
                       DatabaseService()
