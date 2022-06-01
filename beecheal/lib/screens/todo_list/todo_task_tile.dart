@@ -18,9 +18,9 @@ class TaskTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: ListTile(
-            title: Text(task.title),
-            subtitle: Text(task.description),
-            trailing: Text(task.date.toString()),
+            title: Text(task.getTitle()),
+            subtitle: Text(task.getDescription()),
+            trailing: Text(task.getDate().toString()),
             onTap: () {},
           ),
         ));

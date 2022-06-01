@@ -39,27 +39,27 @@ class _EntryScreenState extends State<EntryScreen> {
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: TextFormField(
-                        initialValue: widget.entry.title,
+                        initialValue: widget.entry.getTitle(),
                         decoration:
                             textInputDecoration.copyWith(hintText: 'Title'),
                         validator: (val) =>
                             val!.isNotEmpty ? null : 'Please enter a title',
                         onChanged: (val) {
-                          setState(() => widget.entry.title = val);
+                          setState(() => widget.entry.setTitle(val));
                           // print(widget.titleInitial);
                         }),
                   ),
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: TextFormField(
-                        initialValue: widget.entry.description,
+                        initialValue: widget.entry.getDescription(),
                         decoration: textInputDecoration.copyWith(
                             hintText: 'Description'),
                         validator: (val) => val!.isNotEmpty
                             ? null
                             : 'Please enter a description',
                         onChanged: (val) {
-                          setState(() => widget.entry.description = val);
+                          setState(() => widget.entry.setDescription(val));
                           // print(widget.descriptionInitial);
                         }),
                   ),
@@ -69,7 +69,7 @@ class _EntryScreenState extends State<EntryScreen> {
                       constraints: BoxConstraints(maxHeight: 180.0),
                       child: SingleChildScrollView(
                         child: TextFormField(
-                            initialValue: widget.entry.body,
+                            initialValue: widget.entry.getBody(),
                             textAlignVertical: TextAlignVertical.top,
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
@@ -79,7 +79,7 @@ class _EntryScreenState extends State<EntryScreen> {
                             validator: (val) =>
                                 val!.isNotEmpty ? null : 'Please enter a body',
                             onChanged: (val) {
-                              setState(() => widget.entry.body = val);
+                              setState(() => widget.entry.setBody(val));
                               // print(widget.bodyInitial);
                             }),
                       ),
@@ -97,18 +97,18 @@ class _EntryScreenState extends State<EntryScreen> {
                             if (widget.textPrompt == 'Create') {
                               DatabaseService().updateUserEntry(
                                   '',
-                                  widget.entry.title,
+                                  widget.entry.getTitle(),
                                   DateTime.now(),
-                                  widget.entry.description,
-                                  widget.entry.body);
+                                  widget.entry.getDescription(),
+                                  widget.entry.getBody());
                               Navigator.of(context).pop();
                             } else {
                               DatabaseService().updateUserEntry(
-                                  widget.entry.id,
-                                  widget.entry.title,
-                                  widget.entry.date,
-                                  widget.entry.description,
-                                  widget.entry.body);
+                                  widget.entry.getId(),
+                                  widget.entry.getTitle(),
+                                  widget.entry.getDate(),
+                                  widget.entry.getDescription(),
+                                  widget.entry.getBody());
                               Navigator.of(context).pop();
                               showDialog(
                                   context: context,

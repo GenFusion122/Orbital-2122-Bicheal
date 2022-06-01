@@ -40,26 +40,26 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: TextFormField(
-                        initialValue: widget.task.title,
+                        initialValue: widget.task.getTitle(),
                         decoration:
                             textInputDecoration.copyWith(hintText: 'Title'),
                         validator: (val) =>
                             val!.isNotEmpty ? null : 'Please enter a title',
                         onChanged: (val) {
-                          setState(() => widget.task.title = val);
+                          setState(() => widget.task.setTitle(val));
                         }),
                   ),
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: TextFormField(
-                        initialValue: widget.task.description,
+                        initialValue: widget.task.getDescription(),
                         decoration: textInputDecoration.copyWith(
                             hintText: 'Description'),
                         validator: (val) => val!.isNotEmpty
                             ? null
                             : 'Please enter a description',
                         onChanged: (val) {
-                          setState(() => widget.task.description = val);
+                          setState(() => widget.task.setDescription(val));
                         }),
                   ),
                   Padding(
@@ -77,15 +77,15 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                 showTitleActions: true,
                                 onChanged: (date) {},
                                 onConfirm: (date) {
-                                  widget.task.date = date;
+                                  widget.task.setDate(date);
                                 },
                               );
                               DatabaseService().updateUserTask(
                                   '',
-                                  widget.task.title,
-                                  widget.task.date,
-                                  widget.task.description,
-                                  widget.task.completedOn);
+                                  widget.task.getTitle(),
+                                  widget.task.getDate(),
+                                  widget.task.getDescription(),
+                                  widget.task.getCompletedOn());
                               Navigator.of(context).pop();
                             } else {
                               await DatePicker.showDateTimePicker(
@@ -93,15 +93,15 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                 showTitleActions: true,
                                 onChanged: (date) {},
                                 onConfirm: (date) {
-                                  widget.task.date = date;
+                                  widget.task.setDate(date);
                                 },
                               );
                               DatabaseService().updateUserTask(
-                                  widget.task.id,
-                                  widget.task.title,
-                                  widget.task.date,
-                                  widget.task.description,
-                                  widget.task.completedOn);
+                                  widget.task.getId(),
+                                  widget.task.getTitle(),
+                                  widget.task.getDate(),
+                                  widget.task.getDescription(),
+                                  widget.task.getCompletedOn());
                               Navigator.of(context).pop();
                               showDialog(
                                   context: context,

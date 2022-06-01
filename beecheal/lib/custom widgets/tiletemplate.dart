@@ -20,9 +20,9 @@ class TileTemplate extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: ListTile(
-            title: Text(occasion.title),
-            subtitle: Text(occasion.description),
-            trailing: Text(occasion.date.toString()),
+            title: Text(occasion.getTitle()),
+            subtitle: Text(occasion.getDescription()),
+            trailing: Text(occasion.getDate().toString()),
             onTap: () {
               showDialog(
                   context: context,

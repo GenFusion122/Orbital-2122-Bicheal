@@ -24,7 +24,7 @@ class TaskView extends StatelessWidget {
           Column(mainAxisSize: MainAxisSize.min, children: [
             Align(
                 alignment: Alignment.topRight,
-                child: Text(task.date.toString(),
+                child: Text(task.getDate().toString(),
                     style: TextStyle(
                         fontSize: 15.0, fontWeight: FontWeight.bold))),
             Card(
@@ -40,7 +40,7 @@ class TaskView extends StatelessWidget {
                     width: 400.0,
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(task.title,
+                      child: Text(task.getTitle(),
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16.0)),
                     ),
@@ -57,7 +57,7 @@ class TaskView extends StatelessWidget {
                   padding: EdgeInsets.all(6.0),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(task.description,
+                    child: Text(task.getDescription(),
                         style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                             fontSize: 14.0)),
@@ -75,7 +75,7 @@ class TaskView extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                        '${task.completedOn == DateTime(2999, 12, 12, 23, 59) ? 'Not completed' : 'Completed on ${task.completedOn}'}',
+                        '${task.getCompletedOn() == DateTime(2999, 12, 12, 23, 59) ? 'Not completed' : 'Completed on ${task.getCompletedOn()}'}',
                         style: TextStyle(color: Colors.black, fontSize: 14.0)),
                   ),
                 )),
@@ -102,8 +102,12 @@ class TaskView extends StatelessWidget {
                             Color.fromARGB(255, 255, 202, 0))),
                     child: Text('Mark completed'),
                     onPressed: () {
-                      DatabaseService().updateUserTask(task.id, task.title,
-                          task.date, task.description, DateTime.now());
+                      DatabaseService().updateUserTask(
+                          task.getId(),
+                          task.getTitle(),
+                          task.getDate(),
+                          task.getDescription(),
+                          DateTime.now());
                       Navigator.of(context).pop();
                     }),
                 ElevatedButton(
@@ -112,7 +116,8 @@ class TaskView extends StatelessWidget {
                             Color.fromARGB(255, 255, 202, 0))),
                     child: Text('Delete'),
                     onPressed: () {
-                      DatabaseService().deleteUserTask(task.id, task.title);
+                      DatabaseService()
+                          .deleteUserTask(task.getId(), task.getTitle());
                       Navigator.of(context).pop();
                       showDialog(
                           context: context,
@@ -121,7 +126,7 @@ class TaskView extends StatelessWidget {
                               Navigator.of(context).pop();
                             });
                             return AlertDialog(
-                                title: Text('Deleted ${task.title}'));
+                                title: Text('Deleted ${task.getTitle()}'));
                           });
                     }),
               ],

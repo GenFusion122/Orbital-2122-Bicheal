@@ -44,26 +44,26 @@ class _CalenderEditScreenState extends State<CalenderEditScreen> {
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: TextFormField(
-                        initialValue: widget.occasion.title,
+                        initialValue: widget.occasion.getTitle(),
                         decoration:
                             textInputDecoration.copyWith(hintText: 'Title'),
                         validator: (val) =>
                             val!.isNotEmpty ? null : 'Please enter a title',
                         onChanged: (val) {
-                          setState(() => widget.occasion.title = val);
+                          setState(() => widget.occasion.setTitle(val));
                         }),
                   ),
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: TextFormField(
-                        initialValue: widget.occasion.description,
+                        initialValue: widget.occasion.getDescription(),
                         decoration: textInputDecoration.copyWith(
                             hintText: 'Description'),
                         validator: (val) => val!.isNotEmpty
                             ? null
                             : 'Please enter a description',
                         onChanged: (val) {
-                          setState(() => widget.occasion.description = val);
+                          setState(() => widget.occasion.setDescription(val));
                         }),
                   ),
                   Padding(
@@ -81,17 +81,18 @@ class _CalenderEditScreenState extends State<CalenderEditScreen> {
                                 showTitleActions: true,
                                 onChanged: (date) {},
                                 onConfirm: (date) {
-                                  widget.occasion.date = widget.occasion.date
+                                  widget.occasion.setDate(widget.occasion
+                                      .getDate()
                                       .add(Duration(
                                           hours: date.hour,
-                                          minutes: date.minute));
+                                          minutes: date.minute)));
                                 },
                               );
                               DatabaseService().updateUserOccasion(
                                   '',
-                                  widget.occasion.title,
-                                  widget.occasion.date,
-                                  widget.occasion.description);
+                                  widget.occasion.getTitle(),
+                                  widget.occasion.getDate(),
+                                  widget.occasion.getDescription());
                               Navigator.of(context).pop();
                             } else {
                               await DatePicker.showDateTimePicker(
@@ -99,14 +100,14 @@ class _CalenderEditScreenState extends State<CalenderEditScreen> {
                                 showTitleActions: true,
                                 onChanged: (date) {},
                                 onConfirm: (date) {
-                                  widget.occasion.date = date;
+                                  widget.occasion.setDate(date);
                                 },
                               );
                               DatabaseService().updateUserOccasion(
-                                  widget.occasion.id,
-                                  widget.occasion.title,
-                                  widget.occasion.date,
-                                  widget.occasion.description);
+                                  widget.occasion.getId(),
+                                  widget.occasion.getTitle(),
+                                  widget.occasion.getDate(),
+                                  widget.occasion.getDescription());
                               Navigator.of(context).pop();
                               showDialog(
                                   context: context,

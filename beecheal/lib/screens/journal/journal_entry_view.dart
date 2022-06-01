@@ -24,7 +24,7 @@ class EntryView extends StatelessWidget {
           Column(mainAxisSize: MainAxisSize.min, children: [
             Align(
                 alignment: Alignment.topRight,
-                child: Text(entry.date.toString(),
+                child: Text(entry.getDate().toString(),
                     style: TextStyle(
                         fontSize: 15.0, fontWeight: FontWeight.bold))),
             Card(
@@ -40,7 +40,7 @@ class EntryView extends StatelessWidget {
                     width: 400.0,
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(entry.title,
+                      child: Text(entry.getTitle(),
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16.0)),
                     ),
@@ -57,7 +57,7 @@ class EntryView extends StatelessWidget {
                   padding: EdgeInsets.all(6.0),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(entry.description,
+                    child: Text(entry.getDescription(),
                         style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                             fontSize: 14.0)),
@@ -76,8 +76,8 @@ class EntryView extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: SingleChildScrollView(
-                        child:
-                            Text(entry.body, style: TextStyle(fontSize: 12.0)),
+                        child: Text(entry.getBody(),
+                            style: TextStyle(fontSize: 12.0)),
                       ),
                     ),
                   )),
@@ -107,8 +107,8 @@ class EntryView extends StatelessWidget {
                             Color.fromARGB(255, 255, 202, 0))),
                     child: Text('Delete'),
                     onPressed: () {
-                      DatabaseService().deleteUserEntry(
-                          entry.id, entry.title, entry.date.toString());
+                      DatabaseService().deleteUserEntry(entry.getId(),
+                          entry.getTitle(), entry.getDate().toString());
                       Navigator.of(context).pop();
                       showDialog(
                           context: context,
@@ -118,7 +118,7 @@ class EntryView extends StatelessWidget {
                             });
                             return AlertDialog(
                                 title: Text(
-                                    'Deleted ${entry.title} created on ${entry.date.toString()}'));
+                                    'Deleted ${entry.getTitle()} created on ${entry.getDate().toString()}'));
                           });
                     })
               ],

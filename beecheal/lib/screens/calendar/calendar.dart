@@ -30,7 +30,8 @@ class _CalendarViewState extends State<CalendarView> {
     List<Occasion> todaysEvents = [];
 
     for (int i = 0; i < occasionList.length; i++) {
-      if (DateUtils.dateOnly(occasionList[i].date) == DateUtils.dateOnly(day)) {
+      if (DateUtils.dateOnly(occasionList[i].getDate()) ==
+          DateUtils.dateOnly(day)) {
         todaysEvents.add(occasionList[i]);
       }
     }
