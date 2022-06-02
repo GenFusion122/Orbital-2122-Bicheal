@@ -1,27 +1,27 @@
+import 'dart:ffi';
+
+import 'package:beecheal/custom%20widgets/timepicker.dart';
 import 'package:beecheal/models/occasion.dart';
 import 'package:beecheal/screens/calendar/calendar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-
 import '../../custom widgets/constants.dart';
 import '../../services/database.dart';
 
-class CalenderEditScreen extends StatefulWidget {
+class CalendarEditScreen extends StatefulWidget {
   Occasion occasion;
   String textPrompt;
   DateTime? selectedDay;
-  CalenderEditScreen(
+
+  CalendarEditScreen(
       {required this.occasion,
       required this.textPrompt,
       required this.selectedDay});
   @override
-  State<CalenderEditScreen> createState() => _CalenderEditScreenState();
+  State<CalendarEditScreen> createState() => _CalenderEditScreenState();
 }
 
-class _CalenderEditScreenState extends State<CalenderEditScreen> {
+class _CalenderEditScreenState extends State<CalendarEditScreen> {
   final _formkey = GlobalKey<FormState>();
 
   @override
@@ -76,39 +76,39 @@ class _CalenderEditScreenState extends State<CalenderEditScreen> {
                         onPressed: () async {
                           if (_formkey.currentState!.validate()) {
                             if (widget.textPrompt == 'Create') {
-                              await DatePicker.showTimePicker(
-                                context,
-                                showTitleActions: true,
-                                onChanged: (date) {},
-                                onConfirm: (date) {
-                                  widget.occasion.setDate(widget.occasion
-                                      .getDate()
-                                      .add(Duration(
-                                          hours: date.hour,
-                                          minutes: date.minute)));
-                                },
-                              );
-                              DatabaseService().updateUserOccasion(
-                                  '',
-                                  widget.occasion.getTitle(),
-                                  widget.occasion.getDate(),
-                                  widget.occasion.getDescription());
-                              Navigator.of(context).pop();
+                              TimeOfDay? pickedTime =
+                                  await TimePicker.timePicker(
+                                      context,
+                                      TimeOfDay.fromDateTime(
+                                          widget.occasion.getDate()));
+                              if (pickedTime != null) {
+                                //if the user didn't cancel
+                                widget.occasion.setDate(widget.occasion
+                                    .getDate()
+                                    .add(Duration(
+                                        hours: pickedTime.hour,
+                                        minutes: pickedTime.minute)));
+                                DatabaseService().updateUserOccasion(
+                                    '',
+                                    widget.occasion.getTitle(),
+                                    widget.occasion.getDate(),
+                                    widget.occasion.getDescription());
+                              }
+                              Navigator.of(context).pop(); //if he did just pop
                             } else {
-                              await DatePicker.showDateTimePicker(
-                                context,
-                                showTitleActions: true,
-                                onChanged: (date) {},
-                                onConfirm: (date) {
-                                  widget.occasion.setDate(date);
-                                },
-                              );
-                              DatabaseService().updateUserOccasion(
-                                  widget.occasion.getId(),
-                                  widget.occasion.getTitle(),
-                                  widget.occasion.getDate(),
-                                  widget.occasion.getDescription());
-                              Navigator.of(context).pop();
+                              DateTime? pickedDateTime =
+                                  await TimePicker.dateTimePicker(
+                                      context, widget.occasion.getDate());
+                              if (pickedDateTime != null) {
+                                //if the user didn't cancel
+                                widget.occasion.setDate(pickedDateTime);
+                                DatabaseService().updateUserOccasion(
+                                    widget.occasion.getId(),
+                                    widget.occasion.getTitle(),
+                                    widget.occasion.getDate(),
+                                    widget.occasion.getDescription());
+                              }
+                              Navigator.of(context).pop(); //if he did just pop
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
