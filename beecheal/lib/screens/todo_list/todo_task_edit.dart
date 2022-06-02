@@ -5,6 +5,8 @@ import 'package:beecheal/custom widgets/constants.dart';
 import 'package:beecheal/services/database.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
+import '../../custom widgets/timepicker.dart';
+
 class TaskEditScreen extends StatefulWidget {
   // const EntryScreen({Key? key}) : super(key: key);
 
@@ -71,44 +73,25 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                         child: Text(widget.textPrompt),
                         onPressed: () async {
                           if (_formkey.currentState!.validate()) {
-                            if (widget.textPrompt == 'Create') {
-                              await DatePicker.showDateTimePicker(
-                                context,
-                                showTitleActions: true,
-                                onChanged: (date) {},
-                                onConfirm: (date) {
-                                  widget.task.setDate(date);
-                                },
-                              );
-                              DatabaseService().updateUserTask(
-                                  '',
-                                  widget.task.getTitle(),
-                                  widget.task.getDate(),
-                                  widget.task.getDescription(),
-                                  widget.task.getCompletedOn());
-                              Navigator.of(context).pop();
-                            } else {
-                              await DatePicker.showDateTimePicker(
-                                context,
-                                showTitleActions: true,
-                                onChanged: (date) {},
-                                onConfirm: (date) {
-                                  widget.task.setDate(date);
-                                },
-                              );
+                            DateTime? pickedDateTime =
+                                await TimePicker.dateTimePicker(
+                                    context, widget.task.getDate());
+                            if (pickedDateTime != null) {
+                              //if the user didn't cancel
+                              widget.task.setDate(pickedDateTime);
                               DatabaseService().updateUserTask(
                                   widget.task.getId(),
                                   widget.task.getTitle(),
                                   widget.task.getDate(),
                                   widget.task.getDescription(),
                                   widget.task.getCompletedOn());
-                              Navigator.of(context).pop();
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return TaskView(widget.task);
-                                  });
                             }
+                            Navigator.of(context).pop();
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return TaskView(widget.task);
+                                });
                           }
                         }),
                   )

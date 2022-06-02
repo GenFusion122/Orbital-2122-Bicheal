@@ -4,16 +4,19 @@ class TimePicker {
   static Future<DateTime?> dateTimePicker(
       BuildContext context, DateTime initDate) async {
     DateTime? finalDate = await datePicker(context, initDate);
+    if (finalDate == null) {
+      Navigator.of(context).pop();
+      return null;
+    }
     TimeOfDay? finalTime =
         await timePicker(context, TimeOfDay.fromDateTime(initDate));
-    if (finalDate != null && finalTime != null) {
-      //if they pressed cancel
-
-      finalDate = finalDate
-          .add(Duration(hours: finalTime!.hour, minutes: finalTime.minute));
-      return finalDate;
+    if (finalTime == null) {
+      Navigator.of(context).pop();
+      return null;
     }
-    return null;
+    finalDate = finalDate
+        .add(Duration(hours: finalTime.hour, minutes: finalTime.minute));
+    return finalDate;
   }
 
   static Future<DateTime?> datePicker(

@@ -94,28 +94,18 @@ class _EntryScreenState extends State<EntryScreen> {
                         child: Text(widget.textPrompt),
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
-                            if (widget.textPrompt == 'Create') {
-                              DatabaseService().updateUserEntry(
-                                  '',
-                                  widget.entry.getTitle(),
-                                  DateTime.now(),
-                                  widget.entry.getDescription(),
-                                  widget.entry.getBody());
-                              Navigator.of(context).pop();
-                            } else {
-                              DatabaseService().updateUserEntry(
-                                  widget.entry.getId(),
-                                  widget.entry.getTitle(),
-                                  widget.entry.getDate(),
-                                  widget.entry.getDescription(),
-                                  widget.entry.getBody());
-                              Navigator.of(context).pop();
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return EntryView(widget.entry);
-                                  });
-                            }
+                            DatabaseService().updateUserEntry(
+                                widget.entry.getId(),
+                                widget.entry.getTitle(),
+                                widget.entry.getDate(),
+                                widget.entry.getDescription(),
+                                widget.entry.getBody());
+                            Navigator.of(context).pop();
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return EntryView(widget.entry);
+                                });
                           }
                         }),
                   )

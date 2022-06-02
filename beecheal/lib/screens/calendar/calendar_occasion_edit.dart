@@ -74,13 +74,14 @@ class _CalenderEditScreenState extends State<CalendarEditScreen> {
                                 Color.fromARGB(255, 255, 202, 0))),
                         child: Text(widget.textPrompt),
                         onPressed: () async {
+                          TimeOfDay? pickedTime;
+                          DateTime? pickedDateTime;
                           if (_formkey.currentState!.validate()) {
                             if (widget.textPrompt == 'Create') {
-                              TimeOfDay? pickedTime =
-                                  await TimePicker.timePicker(
-                                      context,
-                                      TimeOfDay.fromDateTime(
-                                          widget.occasion.getDate()));
+                              pickedTime = await TimePicker.timePicker(
+                                  context,
+                                  TimeOfDay.fromDateTime(
+                                      widget.occasion.getDate()));
                               if (pickedTime != null) {
                                 //if the user didn't cancel
                                 widget.occasion.setDate(widget.occasion
@@ -88,33 +89,32 @@ class _CalenderEditScreenState extends State<CalendarEditScreen> {
                                     .add(Duration(
                                         hours: pickedTime.hour,
                                         minutes: pickedTime.minute)));
-                                DatabaseService().updateUserOccasion(
-                                    '',
-                                    widget.occasion.getTitle(),
-                                    widget.occasion.getDate(),
-                                    widget.occasion.getDescription());
                               }
-                              Navigator.of(context).pop(); //if he did just pop
                             } else {
-                              DateTime? pickedDateTime =
-                                  await TimePicker.dateTimePicker(
-                                      context, widget.occasion.getDate());
+                              //else its 'update'
+                              pickedDateTime = await TimePicker.dateTimePicker(
+                                  context, widget.occasion.getDate());
                               if (pickedDateTime != null) {
                                 //if the user didn't cancel
                                 widget.occasion.setDate(pickedDateTime);
-                                DatabaseService().updateUserOccasion(
-                                    widget.occasion.getId(),
-                                    widget.occasion.getTitle(),
-                                    widget.occasion.getDate(),
-                                    widget.occasion.getDescription());
                               }
-                              Navigator.of(context).pop(); //if he did just pop
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return CalendarView();
-                                  });
                             }
+
+                            if (!(pickedDateTime == null &&
+                                pickedTime == null)) {
+                              //if both aren't null, then the user didn't cancel
+                              DatabaseService().updateUserOccasion(
+                                  widget.occasion.getId(),
+                                  widget.occasion.getTitle(),
+                                  widget.occasion.getDate(),
+                                  widget.occasion.getDescription());
+                            }
+                            Navigator.of(context).pop(); //if he did just pop
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CalendarView();
+                                });
                           }
                         }),
                   )
