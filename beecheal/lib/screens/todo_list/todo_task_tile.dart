@@ -1,12 +1,13 @@
-import 'package:beecheal/models/task.dart';
+import 'package:beecheal/models/occasion.dart';
+import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:flutter/material.dart';
+import 'package:beecheal/services/database.dart';
 
 class TaskTile extends StatelessWidget {
-  // const TaskTile({Key? key}) : super(key: key);
+  // const TileTemplate({Key? key}) : super(key: key);
 
-  final Task task;
-
-  TaskTile(this.task);
+  var occasion;
+  TaskTile(this.occasion);
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +19,63 @@ class TaskTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: ListTile(
-            title: Text(task.getTitle()),
-            subtitle: Text(task.getDescription()),
-            trailing: Text(task.getDate().toString()),
-            onTap: () {},
+            title: Text(occasion.getTitle()),
+            subtitle: Column(children: [
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(occasion.getDescription())),
+              Align(
+                  alignment: Alignment.centerRight,
+                  // changes text color based on current completedOn status and time relative to due date
+                  child: Text(occasion.getDate().toString(),
+                      style: TextStyle(
+                          color: (occasion
+                                  .getCompletedOn()
+                                  .isBefore(occasion.getDate()))
+                              ? Colors.green
+                              : ((DateTime.now()
+                                          .difference(occasion.getDate())
+                                          .inDays <
+                                      -7))
+                                  ? Color.fromARGB(255, 60, 60, 60)
+                                  : (DateTime.now()
+                                          .isBefore(occasion.getDate()))
+                                      ? Color.fromARGB(255, 255, 237, 70)
+                                      : Color.fromARGB(255, 255, 92, 80),
+                          fontWeight: FontWeight.bold))),
+            ]),
+            trailing: IconButton(
+                iconSize: 30.0,
+                icon:
+                    occasion.getCompletedOn() == DateTime(2999, 12, 12, 23, 59)
+                        ? Icon(Icons.check_box_outline_blank_rounded,
+                            color: Colors.red)
+                        : Icon(Icons.check_box_rounded, color: Colors.green),
+                onPressed: () {
+                  if (occasion.getCompletedOn() ==
+                      DateTime(2999, 12, 12, 23, 59)) {
+                    DatabaseService().updateUserTask(
+                        occasion.getId(),
+                        occasion.getTitle(),
+                        occasion.getDate(),
+                        occasion.getDescription(),
+                        DateTime.now());
+                  } else {
+                    DatabaseService().updateUserTask(
+                        occasion.getId(),
+                        occasion.getTitle(),
+                        occasion.getDate(),
+                        occasion.getDescription(),
+                        DateTime(2999, 12, 12, 23, 59));
+                  }
+                }),
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return TaskView(occasion);
+                  });
+            },
           ),
         ));
   }
