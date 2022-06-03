@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:beecheal/models/userid.dart';
 import '../../custom widgets/custombuttons.dart';
 import 'package:beecheal/models/occasion.dart';
+import 'dart:async';
 
 class Home extends StatefulWidget {
   @override
@@ -21,9 +22,14 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
   String toDoListState = 'Default';
+  Timer? _everyMinute;
 
   @override
   Widget build(BuildContext context) {
+    _everyMinute = Timer.periodic(Duration(minutes: 1), (Timer t) {
+      // print('Rebuilt at ${DateTime.now()}');
+      setState(() {});
+    });
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 243, 224),
       appBar: AppBar(
@@ -56,11 +62,11 @@ class _HomeState extends State<Home> {
                       var completed = Provider.of<List<Task>>(context).where(
                           (task) =>
                               task.getCompletedOn() !=
-                              DateTime(2999, 12, 12, 23, 59));
+                              Task.incompletePlaceholder);
                       var notCompleted = Provider.of<List<Task>>(context).where(
                           (task) =>
                               task.getCompletedOn() ==
-                              DateTime(2999, 12, 12, 23, 59));
+                              Task.incompletePlaceholder);
                       if (toDoListState == 'Default') {
                         return ListView.builder(
                             itemCount: Provider.of<List<Task>>(context).length,
@@ -104,9 +110,9 @@ class _HomeState extends State<Home> {
                                     task: Task(
                                       "",
                                       "",
-                                      DateTime(2999, 12, 12, 23, 59),
+                                      DateTime.now(),
                                       "",
-                                      DateTime(2999, 12, 12, 23, 59),
+                                      Task.incompletePlaceholder,
                                     ),
                                     textPrompt: 'Create');
                               });

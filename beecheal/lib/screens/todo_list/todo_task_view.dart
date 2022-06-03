@@ -75,7 +75,7 @@ class TaskView extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                        '${task.getCompletedOn() == DateTime(2999, 12, 12, 23, 59) ? 'Not completed' : 'Completed on ${task.getCompletedOn()}'}',
+                        '${task.getCompletedOn() == Task.incompletePlaceholder ? 'Not completed' : 'Completed on ${task.getCompletedOn()}'}',
                         style: TextStyle(color: Colors.black, fontSize: 14.0)),
                   ),
                 )),

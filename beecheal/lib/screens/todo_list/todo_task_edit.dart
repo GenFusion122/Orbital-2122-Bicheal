@@ -85,13 +85,13 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                   widget.task.getDate(),
                                   widget.task.getDescription(),
                                   widget.task.getCompletedOn());
+                              Navigator.of(context).pop();
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return TaskView(widget.task);
+                                  });
                             }
-                            Navigator.of(context).pop();
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return TaskView(widget.task);
-                                });
                           }
                         }),
                   )
