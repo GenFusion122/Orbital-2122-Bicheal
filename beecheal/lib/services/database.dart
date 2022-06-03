@@ -112,6 +112,15 @@ class DatabaseService {
     }
   }
 
+  void deleteUserOccasion(String? id, String? title) async {
+    userCollection
+        .doc(_auth.curruid())
+        .collection('occasions')
+        .doc(id)
+        .delete();
+    print('Deleted task ${title.toString()}');
+  }
+
 // get occasions stream
   Stream<List<Occasion>> get occasion {
     return userCollection

@@ -1,5 +1,5 @@
 import 'package:beecheal/custom%20widgets/listtemplate.dart';
-import 'package:beecheal/screens/calendar/calendar_edit.dart';
+import 'package:beecheal/screens/calendar/calendar_occasion_edit.dart';
 import 'package:beecheal/screens/calendar/calendar_occasion_tile.dart';
 import 'package:beecheal/screens/calendar/calendar_occasions_list.dart';
 import 'package:beecheal/services/database.dart';
@@ -58,11 +58,14 @@ class _CalendarViewState extends State<CalendarView> {
           stream: DatabaseService().occasion,
           builder: (context, AsyncSnapshot<List<Occasion>> snapshot) {
             return Column(children: <Widget>[
-              TableCalendar(
-                focusedDay: DateTime.now(),
+              TableCalendar<Occasion>(
+                focusedDay: _focusedDay,
                 firstDay: DateTime(1900),
-                lastDay: DateTime(2050),
+                lastDay: DateTime(2999),
                 calendarFormat: _calendarFormat,
+                eventLoader: (day) =>
+                    _getEventsForDay(day, snapshot.data ?? []),
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                 onFormatChanged: (format) {
                   if (_calendarFormat != format) {
                     // Call `setState()` when updating calendar format
@@ -71,14 +74,11 @@ class _CalendarViewState extends State<CalendarView> {
                     });
                   }
                 },
-                selectedDayPredicate: (day) {
-                  return isSameDay(_selectedDay, day);
-                },
                 onDaySelected: (selectedDay, focusedDay) {
                   if (!isSameDay(_selectedDay, selectedDay)) {
                     setState(() {
                       _selectedDay = selectedDay;
-                      _focusedDay = focusedDay;
+                      _focusedDay = selectedDay;
                       _rangeStart = null; // Important to clean those
                       _rangeEnd = null;
                       _rangeSelectionMode = RangeSelectionMode.toggledOff;
@@ -90,9 +90,6 @@ class _CalendarViewState extends State<CalendarView> {
                 onPageChanged: (focusedDay) {
                   // No need to call `setState()` here
                   _focusedDay = focusedDay;
-                },
-                eventLoader: (day) {
-                  return _getEventsForDay(day, snapshot.data ?? []);
                 },
               ),
               SizedBox(height: 8),
@@ -119,7 +116,7 @@ class _CalendarViewState extends State<CalendarView> {
           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return CalenderEditScreen(
+                return CalendarEditScreen(
                   occasion:
                       Occasion("", "", _selectedDay ?? DateTime.now(), ""),
                   textPrompt: 'Create',
