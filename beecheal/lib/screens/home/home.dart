@@ -1,5 +1,6 @@
 import 'package:beecheal/custom%20widgets/listtemplate.dart';
 import 'package:beecheal/models/task.dart';
+import 'package:beecheal/screens/journal/journal_entries.dart';
 import 'package:beecheal/screens/todo_list/todo_task_edit.dart';
 import 'package:beecheal/screens/todo_list/todo_task_tile.dart';
 import 'package:beecheal/screens/todo_list/todo_task_view.dart';
@@ -12,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:beecheal/models/userid.dart';
 import '../../custom widgets/custombuttons.dart';
 import 'package:beecheal/models/occasion.dart';
+import 'package:beecheal/services/notifications.dart';
 import 'dart:async';
 
 class Home extends StatefulWidget {
@@ -23,6 +25,20 @@ class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
   String toDoListState = 'Default';
   Timer? _everyMinute;
+
+  // To test notifications
+  void listenNotifications() =>
+      NotificationService.onNotifications.stream.listen(onClickedNotification);
+
+  void onClickedNotification(String? payload) =>
+      Navigator.pushNamed(context, '/journalEntries');
+
+  void initState() {
+    super.initState();
+
+    NotificationService.init();
+    listenNotifications();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -200,6 +216,22 @@ class _HomeState extends State<Home> {
                       child: Text("Custom card!"),
                     ),
                   ])),
+          // To test notifications
+          Expanded(
+            flex: 1,
+            child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Color.fromARGB(255, 255, 202, 40))),
+                child: Text('Notification'),
+                onPressed: () {
+                  NotificationService.showNotification(
+                    title: 'Ding dONG',
+                    body: 'Time for your daily journal entry dickhead',
+                    payload: 'test.abs',
+                  );
+                }),
+          ),
           Expanded(
             flex: 1,
             child: Row(
