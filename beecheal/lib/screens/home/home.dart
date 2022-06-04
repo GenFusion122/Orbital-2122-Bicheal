@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
       NotificationService.onNotifications.stream.listen(onClickedNotification);
 
   void onClickedNotification(String? payload) =>
-      Navigator.pushNamed(context, '/journalEntries');
+      Navigator.pushNamed(context, payload.toString());
 
   void initState() {
     super.initState();
@@ -35,17 +35,19 @@ class _HomeState extends State<Home> {
 
     // Daily journal entry notification
     NotificationService.showDailyScheduledNotification(
+        id: 0,
         title: 'Daily journal entry',
-        body: 'bruh',
-        payload: 'just do eet',
+        body: 'show journal entries',
+        payload: '/journalEntries',
         time: Time(20),
         scheduledDate: DateTime.now());
 
     // Weekly notification
     NotificationService.showWeeklyScheduledNotification(
+        id: 1,
         title: 'Weekly reminder',
         body: 'It\'s a new week!',
-        payload: 'idk',
+        payload: '/home',
         time: Time(8),
         days: [DateTime.monday],
         scheduledDate: DateTime.now());
@@ -238,9 +240,10 @@ class _HomeState extends State<Home> {
                 child: Text('Notification'),
                 onPressed: () {
                   NotificationService.showNotification(
+                    id: 2,
                     title: 'Ding dONG',
                     body: 'Time for your daily journal entry dickhead',
-                    payload: 'test.abs',
+                    payload: '/journalEntries',
                   );
                 }),
           ),
@@ -254,9 +257,10 @@ class _HomeState extends State<Home> {
                 child: Text('Scheduled Notification'),
                 onPressed: () {
                   NotificationService.showScheduledNotification(
-                    title: 'WHAT THE HELL IS EVEN THAT',
-                    body: 'MY PP BIG SIAL',
-                    payload: 'test.abs',
+                    id: 3,
+                    title: 'Test',
+                    body: 'Show Calendar',
+                    payload: '/calendar',
                     scheduledDate: DateTime.now().add(Duration(seconds: 10)),
                   );
                 }),

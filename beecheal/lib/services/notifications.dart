@@ -7,6 +7,8 @@ import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 class NotificationService {
   static final _notifications = FlutterLocalNotificationsPlugin();
   static final onNotifications = BehaviorSubject<String?>();
+  static final notificationAppLaunchDetails =
+      _notifications.getNotificationAppLaunchDetails();
   static _notificationDetails() async {
     return NotificationDetails(
         android: AndroidNotificationDetails(
@@ -25,6 +27,7 @@ class NotificationService {
         onNotifications.add(payload);
       },
     );
+
     if (initScheduled) {
       timeZone.initializeTimeZones();
       final locationName = await FlutterNativeTimezone.getLocalTimezone();
@@ -33,7 +36,7 @@ class NotificationService {
   }
 
   static Future showNotification({
-    int id = 0,
+    required int id,
     String? title,
     String? body,
     String? payload,
@@ -47,7 +50,7 @@ class NotificationService {
       );
 
   static void showScheduledNotification(
-          {int id = 0,
+          {required int id,
           String? title,
           String? body,
           String? payload,
@@ -65,7 +68,7 @@ class NotificationService {
       );
 
   static void showDailyScheduledNotification(
-          {int id = 0,
+          {required int id,
           String? title,
           String? body,
           String? payload,
@@ -85,7 +88,7 @@ class NotificationService {
       );
 
   static void showWeeklyScheduledNotification(
-          {int id = 0,
+          {required int id,
           String? title,
           String? body,
           String? payload,
