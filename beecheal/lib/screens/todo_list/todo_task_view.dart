@@ -109,7 +109,7 @@ class TaskView extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             Future.delayed(const Duration(seconds: 1), () {
-                              Navigator.of(context).pop();
+                              //Navigator.of(context).pop();
                             });
                             return AlertDialog(
                                 title: Text('Deleted ${task.getTitle()}'));

@@ -25,7 +25,7 @@ class TimePicker {
         context: context,
         initialDate: initDate,
         firstDate: DateTime(1990),
-        lastDate: DateTime(2999),
+        lastDate: DateTime(3000),
         builder: (context, child) {
           return Theme(
             data: Theme.of(context).copyWith(

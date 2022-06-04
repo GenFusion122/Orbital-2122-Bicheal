@@ -110,11 +110,6 @@ class _CalenderEditScreenState extends State<CalendarEditScreen> {
                                   widget.occasion.getDescription());
                             }
                             Navigator.of(context).pop(); //if he did just pop
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CalendarView();
-                                });
                           }
                         }),
                   )

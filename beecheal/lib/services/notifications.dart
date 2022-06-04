@@ -1,10 +1,10 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
   static final _notifications = FlutterLocalNotificationsPlugin();
   static final onNotifications = BehaviorSubject<String?>();
-
   static _notificationDetails() async {
     return NotificationDetails(
         android: AndroidNotificationDetails(
@@ -37,5 +37,23 @@ class NotificationService {
         body,
         await _notificationDetails(),
         payload: payload,
+      );
+
+  static void showScheduledNotification(
+          {int id = 0,
+          String? title,
+          String? body,
+          String? payload,
+          required DateTime scheduledDate}) async =>
+      _notifications.zonedSchedule(
+        id,
+        title,
+        body,
+        tz.TZDateTime.from(scheduledDate, tz.local),
+        await _notificationDetails(),
+        payload: payload,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
       );
 }
