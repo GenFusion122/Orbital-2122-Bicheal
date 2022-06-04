@@ -1,18 +1,13 @@
-import 'package:beecheal/custom%20widgets/listtemplate.dart';
 import 'package:beecheal/models/task.dart';
-import 'package:beecheal/screens/journal/journal_entries.dart';
 import 'package:beecheal/screens/todo_list/todo_task_edit.dart';
 import 'package:beecheal/screens/todo_list/todo_task_tile.dart';
-import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:beecheal/services/auth.dart';
 import 'package:beecheal/services/database.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:beecheal/models/userid.dart';
 import '../../custom widgets/custombuttons.dart';
-import 'package:beecheal/models/occasion.dart';
 import 'package:beecheal/services/notifications.dart';
 import 'dart:async';
 
@@ -35,13 +30,30 @@ class _HomeState extends State<Home> {
 
   void initState() {
     super.initState();
-
-    NotificationService.init();
+    NotificationService.init(initScheduled: true);
     listenNotifications();
+
+    // Daily journal entry notification
+    NotificationService.showDailyScheduledNotification(
+        title: 'Daily journal entry',
+        body: 'bruh',
+        payload: 'just do eet',
+        time: Time(20),
+        scheduledDate: DateTime.now());
+
+    // Weekly notification
+    NotificationService.showWeeklyScheduledNotification(
+        title: 'Weekly reminder',
+        body: 'It\'s a new week!',
+        payload: 'idk',
+        time: Time(8),
+        days: [DateTime.monday],
+        scheduledDate: DateTime.now());
   }
 
   @override
   Widget build(BuildContext context) {
+    // refreshes listview
     _everyMinute = Timer.periodic(Duration(minutes: 1), (Timer t) {
       // print('Rebuilt at ${DateTime.now()}');
       setState(() {});
