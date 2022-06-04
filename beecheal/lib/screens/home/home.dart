@@ -232,6 +232,23 @@ class _HomeState extends State<Home> {
                   );
                 }),
           ),
+          //testing Scheduled Noti's
+          Expanded(
+            flex: 1,
+            child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Color.fromARGB(255, 255, 202, 40))),
+                child: Text('Scheduled Notification'),
+                onPressed: () {
+                  NotificationService.showScheduledNotification(
+                    title: 'WHAT THE HELL IS EVEN THAT',
+                    body: 'MY PP BIG SIAL',
+                    payload: 'test.abs',
+                    scheduledDate: DateTime.now().add(Duration(seconds: 10)),
+                  );
+                }),
+          ),
           Expanded(
             flex: 1,
             child: Row(

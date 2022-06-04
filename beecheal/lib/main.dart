@@ -11,10 +11,12 @@ import 'package:provider/provider.dart';
 import 'models/userid.dart';
 import 'models/entry.dart';
 import 'services/database.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  tz.initializeTimeZones();
   runApp(const MyApp());
 }
 
