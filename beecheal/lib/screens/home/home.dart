@@ -1,5 +1,6 @@
 import 'package:beecheal/custom%20widgets/listtemplate.dart';
 import 'package:beecheal/models/task.dart';
+import 'package:beecheal/screens/journal/journal_entries.dart';
 import 'package:beecheal/screens/todo_list/todo_task_edit.dart';
 import 'package:beecheal/screens/todo_list/todo_task_tile.dart';
 import 'package:beecheal/screens/todo_list/todo_task_view.dart';
@@ -12,6 +13,8 @@ import 'package:provider/provider.dart';
 import 'package:beecheal/models/userid.dart';
 import '../../custom widgets/custombuttons.dart';
 import 'package:beecheal/models/occasion.dart';
+import 'package:beecheal/services/notifications.dart';
+import 'dart:async';
 
 class Home extends StatefulWidget {
   @override
@@ -21,9 +24,28 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
   String toDoListState = 'Default';
+  Timer? _everyMinute;
+
+  // To test notifications
+  void listenNotifications() =>
+      NotificationService.onNotifications.stream.listen(onClickedNotification);
+
+  void onClickedNotification(String? payload) =>
+      Navigator.pushNamed(context, '/journalEntries');
+
+  void initState() {
+    super.initState();
+
+    NotificationService.init();
+    listenNotifications();
+  }
 
   @override
   Widget build(BuildContext context) {
+    _everyMinute = Timer.periodic(Duration(minutes: 1), (Timer t) {
+      // print('Rebuilt at ${DateTime.now()}');
+      setState(() {});
+    });
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 243, 224),
       appBar: AppBar(
@@ -56,11 +78,11 @@ class _HomeState extends State<Home> {
                       var completed = Provider.of<List<Task>>(context).where(
                           (task) =>
                               task.getCompletedOn() !=
-                              DateTime(2999, 12, 12, 23, 59));
+                              Task.incompletePlaceholder);
                       var notCompleted = Provider.of<List<Task>>(context).where(
                           (task) =>
                               task.getCompletedOn() ==
-                              DateTime(2999, 12, 12, 23, 59));
+                              Task.incompletePlaceholder);
                       if (toDoListState == 'Default') {
                         return ListView.builder(
                             itemCount: Provider.of<List<Task>>(context).length,
@@ -104,9 +126,9 @@ class _HomeState extends State<Home> {
                                     task: Task(
                                       "",
                                       "",
-                                      DateTime(2999, 12, 12, 23, 59),
+                                      DateTime.now(),
                                       "",
-                                      DateTime(2999, 12, 12, 23, 59),
+                                      Task.incompletePlaceholder,
                                     ),
                                     textPrompt: 'Create');
                               });
@@ -194,6 +216,22 @@ class _HomeState extends State<Home> {
                       child: Text("Custom card!"),
                     ),
                   ])),
+          // To test notifications
+          Expanded(
+            flex: 1,
+            child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Color.fromARGB(255, 255, 202, 40))),
+                child: Text('Notification'),
+                onPressed: () {
+                  NotificationService.showNotification(
+                    title: 'Ding dONG',
+                    body: 'Time for your daily journal entry dickhead',
+                    payload: 'test.abs',
+                  );
+                }),
+          ),
           Expanded(
             flex: 1,
             child: Row(

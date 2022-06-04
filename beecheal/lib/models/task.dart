@@ -5,6 +5,8 @@ class Task extends Occasion {
   Task(super._id, super._title, super._date, super._description,
       this._completedOn);
 
+  static final DateTime incompletePlaceholder = DateTime(2999, 1, 1, 0, 0);
+
   getCompletedOn() {
     return this._completedOn;
   }

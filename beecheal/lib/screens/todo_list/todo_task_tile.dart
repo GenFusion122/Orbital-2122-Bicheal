@@ -2,6 +2,7 @@ import 'package:beecheal/models/occasion.dart';
 import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/services/database.dart';
+import 'package:beecheal/models/task.dart';
 
 class TaskTile extends StatelessWidget {
   // const TileTemplate({Key? key}) : super(key: key);
@@ -46,14 +47,12 @@ class TaskTile extends StatelessWidget {
             ]),
             trailing: IconButton(
                 iconSize: 30.0,
-                icon:
-                    occasion.getCompletedOn() == DateTime(2999, 12, 12, 23, 59)
-                        ? Icon(Icons.check_box_outline_blank_rounded,
-                            color: Colors.red)
-                        : Icon(Icons.check_box_rounded, color: Colors.green),
+                icon: occasion.getCompletedOn() == Task.incompletePlaceholder
+                    ? Icon(Icons.check_box_outline_blank_rounded,
+                        color: Colors.red)
+                    : Icon(Icons.check_box_rounded, color: Colors.green),
                 onPressed: () {
-                  if (occasion.getCompletedOn() ==
-                      DateTime(2999, 12, 12, 23, 59)) {
+                  if (occasion.getCompletedOn() == Task.incompletePlaceholder) {
                     DatabaseService().updateUserTask(
                         occasion.getId(),
                         occasion.getTitle(),
@@ -66,7 +65,7 @@ class TaskTile extends StatelessWidget {
                         occasion.getTitle(),
                         occasion.getDate(),
                         occasion.getDescription(),
-                        DateTime(2999, 12, 12, 23, 59));
+                        Task.incompletePlaceholder);
                   }
                 }),
             onTap: () {
