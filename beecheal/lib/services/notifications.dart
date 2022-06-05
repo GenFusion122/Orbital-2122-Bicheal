@@ -23,6 +23,12 @@ class NotificationService {
     return _notifications;
   }
 
+  static getPendingNotifications() async {
+    List pendingNotificationList =
+        await _notifications.pendingNotificationRequests();
+    return print(pendingNotificationList.length);
+  }
+
   static Future init({bool initScheduled = false}) async {
     final android = AndroidInitializationSettings('@mipmap/ic_launcher');
     final settings = InitializationSettings(android: android);

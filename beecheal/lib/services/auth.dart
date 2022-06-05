@@ -56,6 +56,8 @@ class AuthService {
 
       // create uid document
       await DatabaseService().updateUserID();
+      await DatabaseService().updateUserDailyReminderPreference(true);
+      await DatabaseService().updateUserWeeklyReminderPreference(true);
 
       return _userfromUser(user);
     } catch (e) {

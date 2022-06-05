@@ -1,4 +1,5 @@
 import 'package:beecheal/models/task.dart';
+import 'package:beecheal/models/user.dart';
 import 'package:beecheal/screens/calendar/calendar.dart';
 import 'package:beecheal/screens/home/home.dart';
 import 'package:beecheal/screens/journal/journal_entries.dart';
@@ -29,17 +30,21 @@ Future<void> main() async {
   runApp(StreamProvider<UserID?>.value(
     initialData: null,
     value: AuthService().user,
-    child: MaterialApp(initialRoute: initialroute, routes: {
-      '/': (context) => Wrapper(),
-      '/home': (context) => StreamProvider<List<Task>>.value(
-          value: DatabaseService().tasks, initialData: [], child: Home()),
-      '/statistics': (context) => Statistics(),
-      '/calendar': (context) => CalendarView(),
-      '/journalEntries': (context) => StreamProvider<List<Entry>>.value(
-          value: DatabaseService().entries,
-          initialData: [],
-          child: JournalEntries()),
-    }),
+    child: StreamProvider<User?>.value(
+      initialData: User('', true, true),
+      value: DatabaseService().user,
+      child: MaterialApp(initialRoute: initialroute, routes: {
+        '/': (context) => Wrapper(),
+        '/home': (context) => StreamProvider<List<Task>>.value(
+            value: DatabaseService().tasks, initialData: [], child: Home()),
+        '/statistics': (context) => Statistics(),
+        '/calendar': (context) => CalendarView(),
+        '/journalEntries': (context) => StreamProvider<List<Entry>>.value(
+            value: DatabaseService().entries,
+            initialData: [],
+            child: JournalEntries()),
+      }),
+    ),
   ));
 }
 
