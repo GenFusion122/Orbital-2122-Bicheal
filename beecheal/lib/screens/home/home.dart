@@ -104,9 +104,9 @@ class _HomeState extends State<Home> {
                     leading: Icon(Icons.account_circle),
                     title: Text('Profile'),
                     onTap: () {
-                      // print(dailyJournalEntry);
-                      // print(weeklyReminder);
-                      // NotificationService.getPendingNotifications();
+                      print(dailyJournalEntry);
+                      print(weeklyReminder);
+                      NotificationService.getPendingNotifications();
                     },
                   ),
                   ListTile(
@@ -137,22 +137,6 @@ class _HomeState extends State<Home> {
                               setState(() {
                                 DatabaseService()
                                     .updateUserDailyReminderPreference(value);
-                                if (value) {
-                                  // print('creating');
-                                  NotificationService
-                                      .showDailyScheduledNotification(
-                                          id: 0,
-                                          title: 'Daily journal entry',
-                                          body: 'show journal entries',
-                                          payload: '/journalEntries',
-                                          time: Time(20),
-                                          scheduledDate: DateTime.now());
-                                } else {
-                                  // print('cancelling');
-                                  NotificationService.getNotificationInstance()
-                                      .cancel(0);
-                                }
-                                setState(() {});
                               });
                             },
                           ),
@@ -180,23 +164,6 @@ class _HomeState extends State<Home> {
                               setState(() {
                                 DatabaseService()
                                     .updateUserWeeklyReminderPreference(value);
-                                if (value) {
-                                  // print('creating');
-                                  NotificationService
-                                      .showWeeklyScheduledNotification(
-                                          id: 1,
-                                          title: 'Weekly reminder',
-                                          body: 'It\'s a new week!',
-                                          payload: '/home',
-                                          time: Time(8),
-                                          days: [DateTime.monday],
-                                          scheduledDate: DateTime.now());
-                                } else {
-                                  // print('cancelling');
-                                  NotificationService.getNotificationInstance()
-                                      .cancel(1);
-                                }
-                                setState(() {});
                               });
                             },
                           ),
