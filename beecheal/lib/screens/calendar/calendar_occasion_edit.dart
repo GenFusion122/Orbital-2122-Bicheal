@@ -1,10 +1,10 @@
-import 'dart:ffi';
 import 'package:beecheal/custom%20widgets/timepicker.dart';
 import 'package:beecheal/models/occasion.dart';
-import 'package:beecheal/screens/calendar/calendar.dart';
+import 'package:beecheal/screens/home/initialize_notifications.dart';
 import 'package:flutter/material.dart';
 import '../../custom widgets/constants.dart';
 import '../../services/database.dart';
+import 'package:beecheal/services/notifications.dart';
 
 class CalendarEditScreen extends StatefulWidget {
   Occasion occasion;
@@ -106,9 +106,11 @@ class _CalenderEditScreenState extends State<CalendarEditScreen> {
                                   widget.occasion.getTitle(),
                                   widget.occasion.getDate(),
                                   widget.occasion.getDescription());
+                              InitializeNotifications
+                                  .initializeOccasionNotifications();
                             }
-                            Navigator.of(context).pop(); //if he did just pop
                           }
+                          Navigator.of(context).pop(); //if he did just pop
                         }),
                   )
                 ],

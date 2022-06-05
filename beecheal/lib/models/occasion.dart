@@ -5,7 +5,7 @@ class Occasion {
   String _description;
   Occasion(this._id, this._title, this._date, this._description);
 
-  getId() {
+  String getId() {
     return this._id;
   }
 
@@ -21,7 +21,7 @@ class Occasion {
     this._title = title;
   }
 
-  getDate() {
+  DateTime getDate() {
     return this._date;
   }
 

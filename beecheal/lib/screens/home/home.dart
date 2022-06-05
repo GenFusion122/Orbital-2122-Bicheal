@@ -1,4 +1,5 @@
 import 'package:beecheal/models/task.dart';
+import 'package:beecheal/screens/home/initialize_notifications.dart';
 import 'package:beecheal/screens/todo_list/todo_task_edit.dart';
 import 'package:beecheal/screens/todo_list/todo_task_tile.dart';
 import 'package:beecheal/services/auth.dart';
@@ -27,7 +28,7 @@ class _HomeState extends State<Home> {
 
   void onClickedNotification(String? payload) =>
       Navigator.pushNamed(context, payload.toString());
-
+  @override
   void initState() {
     super.initState();
     NotificationService.init(initScheduled: true);
@@ -51,6 +52,10 @@ class _HomeState extends State<Home> {
         time: Time(8),
         days: [DateTime.monday],
         scheduledDate: DateTime.now());
+    //TODO: Check if notifications exist
+    InitializeNotifications.initializeOccasionNotifications();
+    InitializeNotifications.initializeToDoNotifications();
+    print(DateTime.now());
   }
 
   @override

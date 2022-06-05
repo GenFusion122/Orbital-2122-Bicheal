@@ -1,4 +1,5 @@
 import 'package:beecheal/models/task.dart';
+import 'package:beecheal/screens/home/initialize_notifications.dart';
 import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/custom widgets/constants.dart';
@@ -84,6 +85,8 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                   widget.task.getDate(),
                                   widget.task.getDescription(),
                                   widget.task.getCompletedOn());
+                              InitializeNotifications
+                                  .initializeToDoNotifications();
                               Navigator.of(context).pop();
                               showDialog(
                                   context: context,
