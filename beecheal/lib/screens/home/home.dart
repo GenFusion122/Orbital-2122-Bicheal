@@ -22,16 +22,12 @@ class _HomeState extends State<Home> {
   Timer? _everyMinute;
 
   // To test notifications
-  void listenNotifications() =>
-      NotificationService.onNotifications.stream.listen(onClickedNotification);
-
-  void onClickedNotification(String? payload) =>
-      Navigator.pushNamed(context, payload.toString());
-
   void initState() {
     super.initState();
     NotificationService.init(initScheduled: true);
-    listenNotifications();
+    // On clicked
+    NotificationService.onNotifications.stream.listen(
+        (String? payload) => Navigator.pushNamed(context, payload.toString()));
 
     // Daily journal entry notification
     NotificationService.showDailyScheduledNotification(
