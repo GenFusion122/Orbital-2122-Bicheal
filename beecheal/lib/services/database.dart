@@ -1,8 +1,11 @@
 import 'package:beecheal/models/entry.dart';
 import 'package:beecheal/models/occasion.dart';
+import 'package:beecheal/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:beecheal/services/auth.dart';
 import 'package:beecheal/models/task.dart';
+import 'package:beecheal/services/notifications.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class DatabaseService {
   // To get current uid to manage database of current user
@@ -16,6 +19,27 @@ class DatabaseService {
   Future updateUserID() async {
     return await userCollection.doc(_auth.curruid()).set({
       'uid': _auth.curruid(),
+    });
+  }
+
+  Future updateUserDailyReminderPreference(bool value) async {
+    return await userCollection.doc(_auth.curruid()).update({
+      'dailyJournalEntry': value,
+    });
+  }
+
+  Future getUserDailyReminderPreference() async {
+    return print(userCollection.doc(_auth.curruid()).get().then(
+      (DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return data;
+      },
+    ));
+  }
+
+  Future updateUserWeeklyReminderPreference(bool value) async {
+    return await userCollection.doc(_auth.curruid()).update({
+      'weeklyReminder': value,
     });
   }
 
@@ -121,6 +145,13 @@ class DatabaseService {
     print('Deleted task ${title.toString()}');
   }
 
+// get user stream
+  Stream<User> get user {
+    return userCollection.doc(_auth.curruid()).snapshots().map((document) =>
+        User(document['uid'], document['dailyJournalEntry'],
+            document['weeklyReminder']));
+  }
+
 // get occasions stream
   Stream<List<Occasion>> get occasion {
     return userCollection
@@ -147,35 +178,35 @@ class DatabaseService {
         .snapshots()
         .map(_TaskListFromSnapshot);
   }
-}
 
 //journal entry list from snapshot
-List<Entry> _EntryListFromSnapshot(QuerySnapshot snap) {
-  return snap.docs
-      .map((document) => Entry(
-          document.id,
-          document['title'],
-          document['dateTime'].toDate(),
-          document['description'],
-          document['body']))
-      .toList();
-}
+  List<Entry> _EntryListFromSnapshot(QuerySnapshot snap) {
+    return snap.docs
+        .map((document) => Entry(
+            document.id,
+            document['title'],
+            document['dateTime'].toDate(),
+            document['description'],
+            document['body']))
+        .toList();
+  }
 
 //occasion list from snapshot
-List<Occasion> _OccasionListFromSnapshot(QuerySnapshot snap) {
-  return snap.docs
-      .map((document) => Occasion(document.id, document['title'],
-          document['dateTime'].toDate(), document['description']))
-      .toList();
-}
+  List<Occasion> _OccasionListFromSnapshot(QuerySnapshot snap) {
+    return snap.docs
+        .map((document) => Occasion(document.id, document['title'],
+            document['dateTime'].toDate(), document['description']))
+        .toList();
+  }
 
-List<Task> _TaskListFromSnapshot(QuerySnapshot snap) {
-  return snap.docs
-      .map((document) => Task(
-          document.id,
-          document['title'],
-          document['dateTime'].toDate(),
-          document['description'],
-          document['completedOn'].toDate()))
-      .toList();
+  List<Task> _TaskListFromSnapshot(QuerySnapshot snap) {
+    return snap.docs
+        .map((document) => Task(
+            document.id,
+            document['title'],
+            document['dateTime'].toDate(),
+            document['description'],
+            document['completedOn'].toDate()))
+        .toList();
+  }
 }

@@ -1,14 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:timezone/data/latest.dart' as timeZone;
 import 'package:timezone/timezone.dart' as timeZone;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:flutter_local_notifications_platform_interface/flutter_local_notifications_platform_interface.dart';
 
 class NotificationService {
   static final _notifications = FlutterLocalNotificationsPlugin();
   static final onNotifications = BehaviorSubject<String?>();
-  static final notificationAppLaunchDetails =
-      _notifications.getNotificationAppLaunchDetails();
+
   static _notificationDetails() async {
     return NotificationDetails(
         android: AndroidNotificationDetails(
@@ -16,6 +17,16 @@ class NotificationService {
       'channel name',
       importance: Importance.max,
     ));
+  }
+
+  static getNotificationInstance() {
+    return _notifications;
+  }
+
+  static getPendingNotifications() async {
+    List pendingNotificationList =
+        await _notifications.pendingNotificationRequests();
+    return print(pendingNotificationList.length);
   }
 
   static Future init({bool initScheduled = false}) async {

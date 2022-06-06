@@ -1,5 +1,6 @@
 import 'package:beecheal/custom%20widgets/constants.dart';
 import 'package:beecheal/services/auth.dart';
+import 'package:beecheal/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 
@@ -34,7 +35,7 @@ class _RegisterState extends State<Register> {
             TextButton.icon(
               icon: Icon(Icons.person),
               style: TextButton.styleFrom(primary: Colors.brown[500]),
-              label: Text('SignIn'),
+              label: Text('Sign In'),
               onPressed: () {
                 widget.toggleSignIn();
               },
