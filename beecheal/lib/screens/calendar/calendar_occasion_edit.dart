@@ -76,10 +76,8 @@ class _CalenderEditScreenState extends State<CalendarEditScreen> {
                           DateTime? pickedDateTime;
                           if (_formkey.currentState!.validate()) {
                             if (widget.textPrompt == 'Create') {
-                              pickedTime = await TimePicker.timePicker(
-                                  context,
-                                  TimeOfDay.fromDateTime(
-                                      widget.occasion.getDate()));
+                              pickedTime = await TimePicker.timePicker(context,
+                                  TimeOfDay.fromDateTime(DateTime.now()));
                               if (pickedTime != null) {
                                 //if the user didn't cancel
                                 widget.occasion.setDate(widget.occasion
