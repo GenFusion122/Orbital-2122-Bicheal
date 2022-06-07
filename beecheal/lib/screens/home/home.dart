@@ -50,9 +50,8 @@ class _HomeState extends State<Home> {
       }
     });
     _initializeNotificaitonValues(); //initialize notification objects
-    bool dailyJournalEntry =
-        Provider.of<User?>(context)?.getDailyJournalEntry();
-    bool weeklyReminder = Provider.of<User?>(context)?.getWeeklyReminder();
+    bool dailyJournalEntry = Provider.of<User>(context).getDailyJournalEntry();
+    bool weeklyReminder = Provider.of<User>(context).getWeeklyReminder();
     // Daily journal entry notification
     if (dailyJournalEntry) {
       NotificationService.showDailyScheduledNotification(
