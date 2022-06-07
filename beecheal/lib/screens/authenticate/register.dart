@@ -22,6 +22,7 @@ class _RegisterState extends State<Register> {
   // text field state
   String email = '';
   String password = '';
+  String confirm = '';
   String error = '';
 
   @override
@@ -70,9 +71,20 @@ class _RegisterState extends State<Register> {
                       setState(() => password = val);
                     }),
                 SizedBox(height: 20.0),
+                // Password input
+                TextFormField(
+                    decoration:
+                        textInputDecoration.copyWith(hintText: 'Confirm'),
+                    validator: (val) =>
+                        val != password ? 'Passwords don\'t match' : null,
+                    obscureText: true,
+                    onChanged: (val) {
+                      setState(() => confirm = val);
+                    }),
+                SizedBox(height: 20.0),
                 ElevatedButton(
-                  child:
-                      Text('Register', style: TextStyle(color: Colors.white)),
+                  child: Text('Register',
+                      style: TextStyle(color: Colors.brown[500])),
                   style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all(Colors.amber[400])),
