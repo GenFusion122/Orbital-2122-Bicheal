@@ -3,6 +3,7 @@ import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/services/database.dart';
 import 'package:beecheal/models/task.dart';
+import 'package:intl/intl.dart';
 
 class TaskTile extends StatelessWidget {
   // const TileTemplate({Key? key}) : super(key: key);
@@ -28,7 +29,10 @@ class TaskTile extends StatelessWidget {
               Align(
                   alignment: Alignment.centerRight,
                   // changes text color based on current completedOn status and time relative to due date
-                  child: Text(occasion.getDate().toString(),
+                  child: Text(
+                      DateFormat('yyyy-MM-dd   hh:mm a')
+                          .format(occasion.getDate())
+                          .toString(),
                       style: TextStyle(
                           color: (occasion
                                   .getCompletedOn()

@@ -1,3 +1,4 @@
+import 'package:beecheal/custom%20widgets/constants.dart';
 import 'package:beecheal/models/task.dart';
 import 'package:beecheal/models/user.dart';
 import 'package:beecheal/screens/home/initialize_notifications.dart';
@@ -44,7 +45,9 @@ class _HomeState extends State<Home> {
     // refreshes listview
     _everyMinute = Timer.periodic(Duration(minutes: 1), (Timer t) {
       // print('Rebuilt at ${DateTime.now()}');
-      //setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
     _initializeNotificaitonValues(); //initialize notification objects
     bool dailyJournalEntry =
@@ -83,13 +86,17 @@ class _HomeState extends State<Home> {
         child: Scaffold(
           backgroundColor: Color.fromARGB(255, 255, 243, 224),
           appBar: AppBar(
-            title: Text('Home!'),
+            iconTheme: IconThemeData(color: Colors.brown[500]),
+            title: Text(
+              'Home!',
+              style: TextStyle(color: Colors.brown[500]),
+            ),
             centerTitle: true,
             backgroundColor: Colors.orange[400],
             elevation: 0.0,
           ),
           endDrawer: Drawer(
-            width: MediaQuery.of(context).size.width * 0.4,
+            width: MediaQuery.of(context).size.width * 0.45,
             child: SafeArea(
               child: ListView(
                 padding: EdgeInsets.zero,
@@ -103,28 +110,123 @@ class _HomeState extends State<Home> {
                         label: Text('Sign Out'),
                         onPressed: () async {
                           // clear all notifications
+                          _everyMinute?.cancel();
                           await NotificationService.getNotificationInstance()
                               .cancelAll();
-                          _everyMinute?.cancel();
                           await _auth.signOut();
                           setState(() {});
                         }),
                   ),
                   ListTile(
+                    minLeadingWidth: 0.0,
                     tileColor: Colors.white,
                     leading: Icon(Icons.account_circle),
                     title: Text('Profile'),
+                  ),
+                  ListTile(
+                    minLeadingWidth: 0.0,
+                    tileColor: Colors.white,
+                    leading: Icon(Icons.pie_chart),
+                    title: Text('Achievements'),
                     onTap: () {
-                      print(dailyJournalEntry);
-                      print(weeklyReminder);
-                      NotificationService.getPendingNotifications();
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              content: Text('Achievements'),
+                            );
+                          });
                     },
                   ),
                   ListTile(
+                    minLeadingWidth: 0.0,
                     tileColor: Colors.white,
                     leading: Icon(Icons.settings),
                     title: Text('Settings'),
-                    onTap: () {},
+                  ),
+                  ListTile(
+                    minLeadingWidth: 0.0,
+                    tileColor: Colors.white,
+                    leading: Icon(Icons.password_rounded),
+                    title: Text('Change Password'),
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            String oldPassword = '';
+                            String newPassword = '';
+                            String confirmNewPassword = '';
+                            final _formkey = GlobalKey<FormState>();
+                            return AlertDialog(
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                                backgroundColor: Colors.orange[100],
+                                content: Form(
+                                  key: _formkey,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      TextFormField(
+                                          decoration:
+                                              textInputDecoration.copyWith(
+                                                  hintText: 'New Password'),
+                                          validator: (val) => val!.length < 8
+                                              ? 'Enter a password at least 8 characters long'
+                                              : null,
+                                          obscureText: true,
+                                          onChanged: (val) {
+                                            setState(() => newPassword = val);
+                                          }),
+                                      TextFormField(
+                                          decoration:
+                                              textInputDecoration.copyWith(
+                                                  hintText:
+                                                      'Confirm New Password'),
+                                          validator: (val) => val != newPassword
+                                              ? 'Passwords don\'t match'
+                                              : null,
+                                          obscureText: true,
+                                          onChanged: (val) {
+                                            setState(
+                                                () => confirmNewPassword = val);
+                                          }),
+                                      ElevatedButton(
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.amber[400])),
+                                        onPressed: () async {
+                                          // Validation check
+                                          if (_formkey.currentState!
+                                              .validate()) {
+                                            dynamic result = await AuthService()
+                                                .changePassword(newPassword);
+                                            Navigator.of(context).pop();
+                                            showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  Future.delayed(
+                                                      const Duration(
+                                                          seconds: 1), () {
+                                                    Navigator.of(context).pop();
+                                                  });
+                                                  return AlertDialog(
+                                                      title: Text(
+                                                          'Password changed'));
+                                                });
+                                            if (result == null) {}
+                                          }
+                                        },
+                                        child: Text('Change password',
+                                            style: TextStyle(
+                                                color: Colors.brown[500])),
+                                      ),
+                                    ],
+                                  ),
+                                ));
+                          });
+                    },
                   ),
                   MergeSemantics(
                     child: ListTile(
@@ -337,42 +439,6 @@ class _HomeState extends State<Home> {
                           child: Text("Custom card!"),
                         ),
                       ])),
-              // To test notifications
-              Expanded(
-                flex: 1,
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromARGB(255, 255, 202, 40))),
-                    child: Text('Notification'),
-                    onPressed: () {
-                      NotificationService.showNotification(
-                        id: 2,
-                        title: 'Ding dONG',
-                        body: 'Time for your daily journal entry dickhead',
-                        payload: '/journalEntries',
-                      );
-                    }),
-              ),
-              //testing Scheduled Noti's
-              Expanded(
-                flex: 1,
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromARGB(255, 255, 202, 40))),
-                    child: Text('Scheduled Notification'),
-                    onPressed: () {
-                      NotificationService.showScheduledNotification(
-                        id: 3,
-                        title: 'Test',
-                        body: 'Show Calendar',
-                        payload: '/calendar',
-                        scheduledDate:
-                            DateTime.now().add(Duration(seconds: 10)),
-                      );
-                    }),
-              ),
               Expanded(
                 flex: 1,
                 child: Row(

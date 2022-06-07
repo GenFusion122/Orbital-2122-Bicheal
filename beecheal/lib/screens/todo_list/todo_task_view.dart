@@ -96,25 +96,26 @@ class TaskView extends StatelessWidget {
                                 task: task, textPrompt: 'Update');
                           });
                     }),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromARGB(255, 255, 202, 40))),
-                    child: Text('Delete'),
-                    onPressed: () {
-                      DatabaseService()
-                          .deleteUserTask(task.getId(), task.getTitle());
-                      Navigator.of(context).pop();
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            Future.delayed(const Duration(seconds: 1), () {
-                              //Navigator.of(context).pop();
+                if (task.getCompletedOn() == Task.incompletePlaceholder)
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromARGB(255, 255, 202, 40))),
+                      child: Text('Delete'),
+                      onPressed: () {
+                        DatabaseService()
+                            .deleteUserTask(task.getId(), task.getTitle());
+                        Navigator.of(context).pop();
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              Future.delayed(const Duration(seconds: 1), () {
+                                //Navigator.of(context).pop();
+                              });
+                              return AlertDialog(
+                                  title: Text('Deleted ${task.getTitle()}'));
                             });
-                            return AlertDialog(
-                                title: Text('Deleted ${task.getTitle()}'));
-                          });
-                    }),
+                      }),
               ],
             )
           ]),
