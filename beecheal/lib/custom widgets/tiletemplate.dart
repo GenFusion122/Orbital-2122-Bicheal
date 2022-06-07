@@ -2,6 +2,7 @@ import 'package:beecheal/models/occasion.dart';
 import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/screens/journal/journal_entry_view.dart';
+import 'package:intl/intl.dart';
 
 class TileTemplate extends StatelessWidget {
   // const TileTemplate({Key? key}) : super(key: key);
@@ -22,7 +23,9 @@ class TileTemplate extends StatelessWidget {
           child: ListTile(
             title: Text(occasion.getTitle()),
             subtitle: Text(occasion.getDescription()),
-            trailing: Text(occasion.getDate().toString()),
+            trailing: Text(DateFormat('yyyy-MM-dd   hh:mm a')
+                .format(occasion.getDate())
+                .toString()),
             onTap: () {
               showDialog(
                   context: context,
