@@ -23,10 +23,10 @@ class NotificationService {
     return _notifications;
   }
 
-  static getPendingNotifications() async {
+  static Future<int> getPendingNotifications() async {
     List pendingNotificationList =
         await _notifications.pendingNotificationRequests();
-    return print(pendingNotificationList.length);
+    return pendingNotificationList.length;
   }
 
   static Future init({bool initScheduled = false}) async {

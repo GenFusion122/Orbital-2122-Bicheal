@@ -1,5 +1,6 @@
 import 'package:beecheal/models/task.dart';
 import 'package:beecheal/models/user.dart';
+import 'package:beecheal/screens/home/initialize_notifications.dart';
 import 'package:beecheal/screens/todo_list/todo_task_edit.dart';
 import 'package:beecheal/screens/todo_list/todo_task_tile.dart';
 import 'package:beecheal/services/auth.dart';
@@ -31,13 +32,21 @@ class _HomeState extends State<Home> {
         (String? payload) => Navigator.pushNamed(context, payload.toString()));
   }
 
+  _initializeNotificaitonValues() async {
+    if (await NotificationService.getPendingNotifications() <= 0) {
+      InitializeNotifications.initializeOccasionNotifications();
+      InitializeNotifications.initializeToDoNotifications();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // refreshes listview
     _everyMinute = Timer.periodic(Duration(minutes: 1), (Timer t) {
       // print('Rebuilt at ${DateTime.now()}');
-      setState(() {});
+      //setState(() {});
     });
+    _initializeNotificaitonValues(); //initialize notification objects
     bool dailyJournalEntry =
         Provider.of<User?>(context)?.getDailyJournalEntry();
     bool weeklyReminder = Provider.of<User?>(context)?.getWeeklyReminder();
@@ -53,6 +62,7 @@ class _HomeState extends State<Home> {
     } else {
       NotificationService.getNotificationInstance().cancel(0);
     }
+
     // Weekly notification
     if (weeklyReminder) {
       NotificationService.showWeeklyScheduledNotification(
@@ -66,6 +76,7 @@ class _HomeState extends State<Home> {
     } else {
       NotificationService.getNotificationInstance().cancel(1);
     }
+
     return Container(
       color: Colors.orange[400],
       child: SafeArea(

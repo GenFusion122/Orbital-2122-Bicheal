@@ -1,12 +1,10 @@
-import 'package:beecheal/custom%20widgets/listtemplate.dart';
 import 'package:beecheal/screens/calendar/calendar_occasion_edit.dart';
 import 'package:beecheal/screens/calendar/calendar_occasion_tile.dart';
-import 'package:beecheal/screens/calendar/calendar_occasions_list.dart';
 import 'package:beecheal/services/database.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:beecheal/models/occasion.dart';
+import 'package:intl/intl.dart';
 
 class CalendarView extends StatefulWidget {
   const CalendarView({Key? key}) : super(key: key);
@@ -60,7 +58,7 @@ class _CalendarViewState extends State<CalendarView> {
             return Column(children: <Widget>[
               TableCalendar<Occasion>(
                 focusedDay: _focusedDay,
-                firstDay: DateTime(1900),
+                firstDay: DateTime(1990),
                 lastDay: DateTime(2999),
                 calendarFormat: _calendarFormat,
                 eventLoader: (day) =>
@@ -117,8 +115,15 @@ class _CalendarViewState extends State<CalendarView> {
               context: context,
               builder: (BuildContext context) {
                 return CalendarEditScreen(
-                  occasion:
-                      Occasion("", "", _selectedDay ?? DateTime.now(), ""),
+                  occasion: Occasion(
+                      "",
+                      "",
+                      DateTime(
+                          _selectedDay!.year,
+                          _selectedDay!.month,
+                          _selectedDay!
+                              .day), //passes a date with "blank" timings
+                      ""),
                   textPrompt: 'Create',
                   selectedDay: _selectedDay,
                 );
