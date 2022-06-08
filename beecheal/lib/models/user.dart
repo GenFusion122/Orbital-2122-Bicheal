@@ -5,15 +5,15 @@ class User {
 
   User(this._uid, this._dailyJournalEntry, this._weeklyReminder);
 
-  getUid() {
+  String getUid() {
     return this._uid;
   }
 
-  getDailyJournalEntry() {
+  bool getDailyJournalEntry() {
     return this._dailyJournalEntry;
   }
 
-  getWeeklyReminder() {
+  bool getWeeklyReminder() {
     return this._weeklyReminder;
   }
 }
