@@ -1,8 +1,6 @@
-import 'package:beecheal/screens/home/home.dart';
+import 'package:beecheal/screens/statistics/statistics_piechart.dart';
 import 'package:beecheal/screens/statistics/statistics_statckedbarchart.dart';
-import 'package:beecheal/services/database.dart';
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -13,9 +11,42 @@ class Statistics extends StatefulWidget {
 
   @override
   State<Statistics> createState() => _StatisticsState();
+  static double countCompleted(List<Task> taskList) {
+    double i = 0;
+    for (Task task in taskList) {
+      if (task.getCompletedOn().isBefore(task.getDate()) ||
+          DateUtils.dateOnly(task.getCompletedOn()) ==
+              DateUtils.dateOnly(task.getDate())) {
+        i++;
+      }
+    }
+    return i;
+  }
+
+  static double countUncompleted(List<Task> taskList) {
+    double i = 0;
+    for (Task task in taskList) {
+      if (task.getCompletedOn().year == 2999) {
+        i++;
+      }
+    }
+    return i;
+  }
+
+  static double countLateCompleted(List<Task> taskList) {
+    double i = 0;
+    for (Task task in taskList) {
+      if (task.getCompletedOn().isAfter(task.getDate()) &&
+          task.getCompletedOn().year != 2999) {
+        i++;
+      }
+    }
+    return i;
+  }
 }
 
 class _StatisticsState extends State<Statistics> {
+  DateTime focusedDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +57,39 @@ class _StatisticsState extends State<Statistics> {
         ),
         body: Center(
             child: Column(
-          children: <Widget>[StackedBarchart()],
+          children: <Widget>[
+            TaskStatsStackedBarchart(
+              focusedDate: focusedDate,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.amber[400])),
+                    onPressed: () {
+                      setState(() {
+                        focusedDate = focusedDate.subtract(Duration(days: 7));
+                      });
+                    },
+                    child: Icon(Icons.arrow_back)),
+                Text(
+                    "Focused Date: ${DateFormat('yy-MM-dd').format(focusedDate)}"),
+                ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.amber[400])),
+                    onPressed: () {
+                      setState(() {
+                        focusedDate = focusedDate.add(Duration(days: 7));
+                      });
+                    },
+                    child: Icon(Icons.arrow_forward)),
+              ],
+            ),
+            TaskStatsPieChart(),
+          ],
         )));
   }
 }
