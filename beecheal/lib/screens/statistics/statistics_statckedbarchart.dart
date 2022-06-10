@@ -16,9 +16,9 @@ class TaskStatsStackedBarchart extends StatefulWidget {
 }
 
 class _TaskStatsStackedBarchart extends State<TaskStatsStackedBarchart> {
-  final Color bottom = Color.fromARGB(255, 48, 255, 65);
-  final Color middle = Color.fromARGB(250, 255, 242, 60);
-  final Color top = Color.fromARGB(255, 255, 1, 1);
+  final Color bottom = Color.fromARGB(255, 150, 243, 85);
+  final Color middle = Color.fromARGB(255, 227, 242, 72);
+  final Color top = Color.fromARGB(255, 242, 88, 73);
 
   Widget bottomTitles(double value, TitleMeta meta) {
     const style = TextStyle(color: Color(0xff939393), fontSize: 10);
@@ -52,21 +52,62 @@ class _TaskStatsStackedBarchart extends State<TaskStatsStackedBarchart> {
     );
   }
 
+  int touchedIndex = -1;
+  BarTouchTooltipData touchToolTips() {
+    return BarTouchTooltipData(
+        tooltipBgColor: Colors.amber[400],
+        getTooltipItem: (group, groupIndex, rod, rodIndex) {
+          double from = rod.rodStackItems[touchedIndex].fromY;
+          double to = rod.rodStackItems[touchedIndex].toY;
+          return BarTooltipItem(
+            (to - from).toStringAsFixed(0),
+            const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: DatabaseService().tasks,
         builder: (context, AsyncSnapshot<List<Task>> snapshot) {
-          return AspectRatio(
-            aspectRatio: 1.5,
-            child: Container(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16.0),
+          return Column(
+            children: [
+              Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20), // if you need this
+                    side: BorderSide(
+                      color: Colors.black,
+                      width: 1,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Text(
+                      "Daily Productivity",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )),
+              AspectRatio(
+                aspectRatio: 1.2,
                 child: BarChart(
                   BarChartData(
                     alignment: BarChartAlignment.center,
                     barTouchData: BarTouchData(
                       enabled: true,
+                      touchTooltipData: touchToolTips(),
+                      touchCallback: (event, touchResponse) {
+                        touchedIndex =
+                            touchResponse?.spot?.touchedStackItemIndex ?? -1;
+                        setState(() {});
+                      },
                     ),
                     titlesData: FlTitlesData(
                       show: true,
@@ -85,7 +126,9 @@ class _TaskStatsStackedBarchart extends State<TaskStatsStackedBarchart> {
                         ),
                       ),
                       topTitles: AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
+                        sideTitles: SideTitles(
+                          showTitles: false,
+                        ),
                       ),
                       rightTitles: AxisTitles(
                         sideTitles: SideTitles(showTitles: false),
@@ -108,7 +151,7 @@ class _TaskStatsStackedBarchart extends State<TaskStatsStackedBarchart> {
                   ),
                 ),
               ),
-            ),
+            ],
           );
         });
   }
@@ -139,7 +182,6 @@ class _TaskStatsStackedBarchart extends State<TaskStatsStackedBarchart> {
             ?.add(taskList[i]);
       }
     }
-    print(dateMapping);
     for (int i = 6; i >= 0; i--) {
       DateTime date =
           DateUtils.dateOnly(widget.focusedDate.subtract(Duration(days: i)));

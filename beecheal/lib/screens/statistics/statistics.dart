@@ -58,37 +58,45 @@ class _StatisticsState extends State<Statistics> {
         body: Center(
             child: Column(
           children: <Widget>[
-            TaskStatsStackedBarchart(
-              focusedDate: focusedDate,
+            Card(child: TaskStatsPieChart()),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(children: [
+                  TaskStatsStackedBarchart(
+                    focusedDate: focusedDate,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.amber[400])),
+                          onPressed: () {
+                            setState(() {
+                              focusedDate =
+                                  focusedDate.subtract(Duration(days: 7));
+                            });
+                          },
+                          child: Icon(Icons.arrow_back)),
+                      Text(
+                          "Focused Date: ${DateFormat('yy-MM-dd').format(focusedDate)}"),
+                      ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.amber[400])),
+                          onPressed: () {
+                            setState(() {
+                              focusedDate = focusedDate.add(Duration(days: 7));
+                            });
+                          },
+                          child: Icon(Icons.arrow_forward)),
+                    ],
+                  )
+                ]),
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.amber[400])),
-                    onPressed: () {
-                      setState(() {
-                        focusedDate = focusedDate.subtract(Duration(days: 7));
-                      });
-                    },
-                    child: Icon(Icons.arrow_back)),
-                Text(
-                    "Focused Date: ${DateFormat('yy-MM-dd').format(focusedDate)}"),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.amber[400])),
-                    onPressed: () {
-                      setState(() {
-                        focusedDate = focusedDate.add(Duration(days: 7));
-                      });
-                    },
-                    child: Icon(Icons.arrow_forward)),
-              ],
-            ),
-            TaskStatsPieChart(),
           ],
         )));
   }

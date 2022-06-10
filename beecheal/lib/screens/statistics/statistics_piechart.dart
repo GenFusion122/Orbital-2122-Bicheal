@@ -22,63 +22,93 @@ class _TaskStatsPieChart extends State<TaskStatsPieChart> {
     return StreamBuilder(
         stream: DatabaseService().tasks,
         builder: (context, AsyncSnapshot<List<Task>> snapshot) {
-          return Row(children: [
-            Expanded(
-                child: AspectRatio(
-                    aspectRatio: 1,
-                    child: PieChart(
-                      PieChartData(
-                          pieTouchData: PieTouchData(touchCallback:
-                              (FlTouchEvent event, pieTouchResponse) {
-                            setState(() {
-                              if (!event.isInterestedForInteractions ||
-                                  pieTouchResponse == null ||
-                                  pieTouchResponse.touchedSection == null) {
-                                touchedIndex = -1;
-                                return;
-                              }
-                              touchedIndex = pieTouchResponse
-                                  .touchedSection!.touchedSectionIndex;
-                            });
-                          }),
-                          borderData: FlBorderData(
-                            show: false,
-                          ),
-                          sectionsSpace: 0,
-                          centerSpaceRadius: 40,
-                          sections: showingSections(snapshot.data ?? [])),
-                    ))),
-            Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const <Widget>[
-                  Legend(
-                    color: Color.fromARGB(255, 48, 255, 65),
-                    text: 'On Time',
-                    isSquare: true,
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Legend(
-                    color: Color.fromARGB(250, 255, 242, 60),
-                    text: 'Uncompleted',
-                    isSquare: true,
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Legend(
-                    color: Color.fromARGB(255, 255, 1, 1),
-                    text: 'Late',
-                    isSquare: true,
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(20), // if you need this
+                      side: BorderSide(
+                        color: Colors.black,
+                        width: 1,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(
+                        "Overall Productivity",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(children: [
+                  Expanded(
+                      child: AspectRatio(
+                          aspectRatio: 1.4,
+                          child: PieChart(
+                            PieChartData(
+                                pieTouchData: PieTouchData(touchCallback:
+                                    (FlTouchEvent event, pieTouchResponse) {
+                                  setState(() {
+                                    if (!event.isInterestedForInteractions ||
+                                        pieTouchResponse == null ||
+                                        pieTouchResponse.touchedSection ==
+                                            null) {
+                                      touchedIndex = -1;
+                                      return;
+                                    }
+                                    touchedIndex = pieTouchResponse
+                                        .touchedSection!.touchedSectionIndex;
+                                  });
+                                }),
+                                borderData: FlBorderData(
+                                  show: false,
+                                ),
+                                sectionsSpace: 0,
+                                centerSpaceRadius: double.infinity,
+                                sections: showingSections(snapshot.data ?? [])),
+                          ))),
+                  Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const <Widget>[
+                        Legend(
+                          color: Color.fromARGB(255, 150, 243, 85),
+                          text: 'On Time',
+                          isSquare: true,
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Legend(
+                          color: Color.fromARGB(255, 227, 242, 72),
+                          text: 'Uncompleted',
+                          isSquare: true,
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Legend(
+                          color: Color.fromARGB(255, 242, 88, 73),
+                          text: 'Late',
+                          isSquare: true,
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                      ]),
                 ]),
-          ]);
+              ),
+            ],
+          );
         });
   }
 
@@ -97,7 +127,7 @@ class _TaskStatsPieChart extends State<TaskStatsPieChart> {
       switch (i) {
         case 0:
           return PieChartSectionData(
-            color: Color.fromARGB(255, 48, 255, 65),
+            color: Color.fromARGB(255, 150, 243, 85),
             value: completed,
             title: isTouched
                 ? '${Statistics.countCompleted(taskList).toStringAsFixed(0)} tasks'
@@ -110,7 +140,7 @@ class _TaskStatsPieChart extends State<TaskStatsPieChart> {
           );
         case 1:
           return PieChartSectionData(
-            color: Color.fromARGB(250, 255, 242, 60),
+            color: Color.fromARGB(255, 227, 242, 72),
             value: uncompleted,
             title: isTouched
                 ? '${Statistics.countUncompleted(taskList).toStringAsFixed(0)} tasks'
@@ -123,7 +153,7 @@ class _TaskStatsPieChart extends State<TaskStatsPieChart> {
           );
         case 2:
           return PieChartSectionData(
-            color: Color.fromARGB(255, 255, 1, 1),
+            color: Color.fromARGB(255, 242, 88, 73),
             value: lateCompleted,
             title: isTouched
                 ? '${Statistics.countLateCompleted(taskList).toStringAsFixed(0)} tasks'
@@ -154,7 +184,7 @@ class Legend extends StatelessWidget {
     required this.text,
     required this.isSquare,
     this.size = 16,
-    this.textColor = const Color(0xff505050),
+    this.textColor = Colors.black,
   }) : super(key: key);
 
   @override
