@@ -7,11 +7,11 @@ class Task extends Occasion {
 
   static final DateTime incompletePlaceholder = DateTime(2999, 1, 1, 0, 0);
 
-  getCompletedOn() {
+  DateTime getCompletedOn() {
     return this._completedOn;
   }
 
-  setCompletedOn(DateTime completedOn) {
+  void setCompletedOn(DateTime completedOn) {
     this._completedOn = completedOn;
   }
 }

@@ -9,15 +9,15 @@ class Occasion {
     return this._id;
   }
 
-  setId(String id) {
+  void setId(String id) {
     this._id = id;
   }
 
-  getTitle() {
+  String getTitle() {
     return this._title;
   }
 
-  setTitle(String title) {
+  void setTitle(String title) {
     this._title = title;
   }
 
@@ -25,15 +25,15 @@ class Occasion {
     return this._date;
   }
 
-  setDate(DateTime date) {
+  void setDate(DateTime date) {
     this._date = date;
   }
 
-  getDescription() {
+  String getDescription() {
     return this._description;
   }
 
-  setDescription(String description) {
+  void setDescription(String description) {
     this._description = description;
   }
 }

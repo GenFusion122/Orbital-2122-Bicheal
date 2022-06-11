@@ -3,7 +3,7 @@ import 'package:beecheal/models/user.dart';
 import 'package:beecheal/screens/calendar/calendar.dart';
 import 'package:beecheal/screens/home/home.dart';
 import 'package:beecheal/screens/journal/journal_entries.dart';
-import 'package:beecheal/screens/home/statistics.dart';
+import 'package:beecheal/screens/statistics/statistics.dart';
 import 'package:beecheal/screens/wrapper.dart';
 import 'package:beecheal/services/auth.dart';
 import 'package:beecheal/services/notifications.dart';

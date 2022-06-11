@@ -5,11 +5,11 @@ class Entry extends Occasion {
   String _body;
   Entry(super._id, super._title, super._date, super._description, this._body);
 
-  getBody() {
+  String getBody() {
     return this._body;
   }
 
-  setBody(String body) {
+  void setBody(String body) {
     this._body = body;
   }
 }

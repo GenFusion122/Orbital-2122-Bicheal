@@ -3,6 +3,9 @@ import 'package:beecheal/screens/todo_list/todo_task_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/services/database.dart';
 
+import '../../services/notifications.dart';
+import '../home/initialize_notifications.dart';
+
 class TaskView extends StatelessWidget {
   // const EntryView({Key? key}) : super(key: key);
   Task task;
@@ -102,7 +105,10 @@ class TaskView extends StatelessWidget {
                           backgroundColor: MaterialStateProperty.all<Color>(
                               Color.fromARGB(255, 255, 202, 40))),
                       child: Text('Delete'),
-                      onPressed: () {
+                      onPressed: () async {
+                        await NotificationService.getNotificationInstance()
+                            .cancelAll();
+                        InitializeNotifications.initializeToDoNotifications();
                         DatabaseService()
                             .deleteUserTask(task.getId(), task.getTitle());
                         Navigator.of(context).pop();

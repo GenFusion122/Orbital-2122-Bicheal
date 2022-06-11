@@ -3,6 +3,8 @@ import 'package:beecheal/screens/calendar/calendar_occasion_edit.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/database.dart';
+import '../../services/notifications.dart';
+import '../home/initialize_notifications.dart';
 
 class OccasionView extends StatelessWidget {
   Occasion occasion;
@@ -86,9 +88,12 @@ class OccasionView extends StatelessWidget {
                         backgroundColor: MaterialStateProperty.all<Color>(
                             Color.fromARGB(255, 255, 202, 0))),
                     child: Text('Delete'),
-                    onPressed: () {
+                    onPressed: () async {
+                      await NotificationService.getNotificationInstance();
+                      InitializeNotifications.initializeOccasionNotifications();
                       DatabaseService().deleteUserOccasion(
                           occasion.getId(), occasion.getTitle());
+
                       Navigator.of(context).pop();
                       showDialog(
                           context: context,
