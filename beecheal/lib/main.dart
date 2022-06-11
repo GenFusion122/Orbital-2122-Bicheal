@@ -47,26 +47,3 @@ Future<void> main() async {
     ),
   ));
 }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({Key? key}) : super(key: key);
-//   // This widget is the root of your application.
-//   @override
-//   Widget build(BuildContext context) {
-//     return StreamProvider<UserID?>.value(
-//       initialData: null,
-//       value: AuthService().user,
-//       child: MaterialApp(initialRoute: initialroute, routes: {
-//         '/': (context) => Wrapper(),
-//         '/home': (context) => StreamProvider<List<Task>>.value(
-//             value: DatabaseService().tasks, initialData: [], child: Home()),
-//         '/statistics': (context) => Statistics(),
-//         '/calendar': (context) => CalendarView(),
-//         '/journalEntries': (context) => StreamProvider<List<Entry>>.value(
-//             value: DatabaseService().entries,
-//             initialData: [],
-//             child: JournalEntries()),
-//       }),
-//     );
-//   }
-// }

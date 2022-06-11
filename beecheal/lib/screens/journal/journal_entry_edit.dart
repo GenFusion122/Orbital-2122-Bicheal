@@ -3,6 +3,7 @@ import 'package:beecheal/screens/journal/journal_entry_view.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/custom widgets/constants.dart';
 import 'package:beecheal/services/database.dart';
+import 'package:beecheal/services/classifier.dart';
 
 class EntryScreen extends StatefulWidget {
   // const EntryScreen({Key? key}) : super(key: key);
@@ -18,6 +19,11 @@ class EntryScreen extends StatefulWidget {
 
 class _EntryScreenState extends State<EntryScreen> {
   final _formkey = GlobalKey<FormState>();
+  Classifier? _classifier;
+
+  void initState() {
+    _classifier = Classifier();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +106,8 @@ class _EntryScreenState extends State<EntryScreen> {
                                 widget.entry.getDate(),
                                 widget.entry.getDescription(),
                                 widget.entry.getBody());
+                            print(
+                                _classifier?.classify(widget.entry.getBody()));
                             Navigator.of(context).pop();
                             showDialog(
                                 context: context,
