@@ -3,6 +3,9 @@ import 'package:beecheal/screens/journal/journal_entry_view.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/custom widgets/constants.dart';
 import 'package:beecheal/services/database.dart';
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:beecheal/services/classifier.dart';
 
 class EntryScreen extends StatefulWidget {
@@ -19,10 +22,13 @@ class EntryScreen extends StatefulWidget {
 
 class _EntryScreenState extends State<EntryScreen> {
   final _formkey = GlobalKey<FormState>();
+  static const platform = MethodChannel('model.classifier/inference');
+
   Classifier? _classifier;
 
   void initState() {
     _classifier = Classifier();
+    Classifier().initWithLocalModel();
   }
 
   @override
@@ -106,8 +112,20 @@ class _EntryScreenState extends State<EntryScreen> {
                                 widget.entry.getDate(),
                                 widget.entry.getDescription(),
                                 widget.entry.getBody());
-                            print(
-                                _classifier?.classify(widget.entry.getBody()));
+                            void Classify() async {
+                              var sendMap = <String, dynamic>{
+                                'string': widget.entry.getBody(),
+                                'modelPath': _classifier?.getModelFile()
+                              };
+                              try {
+                                platform.invokeMethod("Classify", sendMap);
+                              } catch (e) {
+                                print(e);
+                              }
+                            }
+
+                            // print(
+                            //     _classifier?.classify(widget.entry.getBody()));
                             Navigator.of(context).pop();
                             showDialog(
                                 context: context,
