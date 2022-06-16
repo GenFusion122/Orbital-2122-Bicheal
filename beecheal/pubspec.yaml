@@ -48,8 +48,6 @@ dependencies:
   timezone: ^0.8.0
   flutter_native_timezone: ^2.0.0
   fl_chart: ^0.51.0
-  firebase_ml_model_downloader: ^0.1.0+14
-
 
 dev_dependencies:
   flutter_test:
