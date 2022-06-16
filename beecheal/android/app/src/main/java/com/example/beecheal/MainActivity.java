@@ -18,22 +18,29 @@ import org.tensorflow.lite.task.text.nlclassifier.NLClassifier;
 public class MainActivity extends FlutterActivity {
   private static final String CHANNEL = "model.classifier/inference";
   private final Context context = this.context;
+  private Context mContext;
   
   @Override
   public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
+    mContext=this;
     super.configureFlutterEngine(flutterEngine);
       new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL).setMethodCallHandler(
       (call, result) -> {
+        final Map<String, Object> arguments = call.arguments();
       if (call.method.equals("Classify")) {
         try {
+        // String modelPath = (String)arguments.get("modelPath");
         NLClassifier classifier =
-        NLClassifier.createFromFile(context, call.argument("modelPath"));
+        NLClassifier.createFromFile(mContext, "model.tflite");
 
         // Run inference
-        List<Category> results = classifier.classify(call.argument("string"));
+        // List<Category> results = 
+        String body = (String)arguments.get("string");
+        List<Category> results = classifier.classify(body);
 
-        result.success(results);
+        result.success(results.toString());
         } catch(IOException e) {
+          result.success(e);
         }
       };
     }
