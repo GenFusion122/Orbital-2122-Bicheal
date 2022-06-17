@@ -1,7 +1,6 @@
 import 'package:beecheal/screens/statistics/statistics_piechart.dart';
 import 'package:beecheal/screens/statistics/statistics_statckedbarchart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../models/task.dart';
