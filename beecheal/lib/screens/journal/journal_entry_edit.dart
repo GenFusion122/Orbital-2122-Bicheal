@@ -23,6 +23,12 @@ class _EntryScreenState extends State<EntryScreen> {
   final _formkey = GlobalKey<FormState>();
   static const platform = MethodChannel('model.classifier/inference');
 
+  void initState() {
+    // Initialize model
+    platform.invokeMethod(
+        "Classify", <String, dynamic>{'string': widget.entry.getBody()});
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -104,21 +110,6 @@ class _EntryScreenState extends State<EntryScreen> {
                                 widget.entry.getDate(),
                                 widget.entry.getDescription(),
                                 widget.entry.getBody());
-                            // Performs inference on body
-                            void Classify() async {
-                              var sendMap = <String, dynamic>{
-                                'string': widget.entry.getBody(),
-                              };
-                              print(sendMap);
-                              try {
-                                print("TESTING CLASSIFY");
-                                print(await platform.invokeMethod(
-                                    "Classify", sendMap));
-                                print("result above");
-                              } catch (e) {
-                                print(e);
-                              }
-                            }
 
                             Classify();
 
@@ -134,5 +125,20 @@ class _EntryScreenState extends State<EntryScreen> {
                 ],
               ))
         ]));
+  }
+
+  // Performs inference on body
+  void Classify() async {
+    var sendMap = <String, dynamic>{
+      'string': widget.entry.getBody(),
+    };
+    print(sendMap);
+    try {
+      print("TESTING CLASSIFY");
+      print(await platform.invokeMethod("Classify", sendMap));
+      print("result above");
+    } catch (e) {
+      print(e);
+    }
   }
 }
