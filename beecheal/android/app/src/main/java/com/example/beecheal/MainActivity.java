@@ -66,9 +66,25 @@ public class MainActivity extends FlutterActivity {
 
         // Run inference
         String body = (String)arguments.get("string");
+        try {
         List<Category> results = textClassifier.classify(body);
+        int output;
 
-        result.success(results.toString());
+        if (-0.10 < (results.get(0).getScore() - results.get(1).getScore()) && (results.get(0).getScore() - results.get(1).getScore()) < 0.10) {
+          output = 0;
+        }
+        else if (results.get(0).getScore() > results.get(1).getScore()) {
+          output = -1;
+        }
+        else {
+          output = 1;
+        }
+        // return prediction
+        result.success(output);
+        } catch (NullPointerException e) {
+
+        }
+
       };
     }
       );

@@ -44,7 +44,7 @@ class DatabaseService {
   }
 
   Future updateUserEntry(String? id, String? title, DateTime? dateTime,
-      String? description, String? body) async {
+      String? description, String? body, int? sentiment) async {
     // create new entry
     if (id == '') {
       return await userCollection
@@ -56,6 +56,7 @@ class DatabaseService {
         'dateTime': dateTime,
         'description': description,
         'body': body,
+        'sentiment': sentiment,
       });
       // update existing entry
     } else {
@@ -68,6 +69,7 @@ class DatabaseService {
         'dateTime': dateTime,
         'description': description,
         'body': body,
+        'sentiment': sentiment,
       });
     }
   }
@@ -187,7 +189,8 @@ class DatabaseService {
             document['title'],
             document['dateTime'].toDate(),
             document['description'],
-            document['body']))
+            document['body'],
+            document['sentiment']))
         .toList();
   }
 
