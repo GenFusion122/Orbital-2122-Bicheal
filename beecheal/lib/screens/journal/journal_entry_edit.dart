@@ -3,7 +3,8 @@ import 'package:beecheal/screens/journal/journal_entry_view.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/custom widgets/constants.dart';
 import 'package:beecheal/services/database.dart';
-import 'package:beecheal/services/classifier.dart';
+import 'dart:async';
+import 'package:flutter/services.dart';
 
 class EntryScreen extends StatefulWidget {
   // const EntryScreen({Key? key}) : super(key: key);
@@ -19,10 +20,12 @@ class EntryScreen extends StatefulWidget {
 
 class _EntryScreenState extends State<EntryScreen> {
   final _formkey = GlobalKey<FormState>();
-  Classifier? _classifier;
+  static const platform = MethodChannel('model.classifier/inference');
 
   void initState() {
-    _classifier = Classifier();
+    // Initialize model
+    platform
+        .invokeMethod("Classify", <String, dynamic>{'string': 'initialize'});
   }
 
   @override
@@ -98,21 +101,176 @@ class _EntryScreenState extends State<EntryScreen> {
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 Color.fromARGB(255, 255, 202, 0))),
                         child: Text(widget.textPrompt),
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formkey.currentState!.validate()) {
-                            DatabaseService().updateUserEntry(
-                                widget.entry.getId(),
-                                widget.entry.getTitle(),
-                                widget.entry.getDate(),
-                                widget.entry.getDescription(),
-                                widget.entry.getBody());
-                            print(
-                                _classifier?.classify(widget.entry.getBody()));
-                            Navigator.of(context).pop();
+                            int prediction = await Classify();
+                            widget.entry.setSentiment(prediction);
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return EntryView(widget.entry);
+                                  return StatefulBuilder(
+                                      builder: (context, setState) {
+                                    return AlertDialog(
+                                        backgroundColor:
+                                            Color.fromARGB(255, 255, 243, 224),
+                                        content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  'How are you feeling as you write this entry?',
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.4 *
+                                                              0.0875),
+                                                ),
+                                              ),
+                                              SizedBox(height: 20.0),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  Column(children: [
+                                                    Text('Negative'),
+                                                    IconButton(
+                                                        onPressed: (() {
+                                                          setState(() {
+                                                            widget.entry
+                                                                .setSentiment(
+                                                                    -1);
+                                                          });
+                                                        }),
+                                                        icon: Icon(
+                                                            Icons
+                                                                .circle_rounded,
+                                                            color: (widget.entry
+                                                                        .getSentiment() ==
+                                                                    -1)
+                                                                ? Colors.red
+                                                                : Colors.grey[
+                                                                    200])),
+                                                  ]),
+                                                  Column(children: [
+                                                    Text('Neutral'),
+                                                    IconButton(
+                                                        onPressed: (() {
+                                                          setState(() {
+                                                            widget.entry
+                                                                .setSentiment(
+                                                                    0);
+                                                          });
+                                                        }),
+                                                        icon: Icon(
+                                                            Icons
+                                                                .circle_rounded,
+                                                            color: (widget.entry
+                                                                        .getSentiment() ==
+                                                                    0)
+                                                                ? Colors.grey
+                                                                : Colors.grey[
+                                                                    200])),
+                                                  ]),
+                                                  Column(children: [
+                                                    Text('Positive'),
+                                                    IconButton(
+                                                        onPressed: (() {
+                                                          setState(() {
+                                                            widget.entry
+                                                                .setSentiment(
+                                                                    1);
+                                                          });
+                                                        }),
+                                                        icon: Icon(
+                                                            Icons
+                                                                .circle_rounded,
+                                                            color: (widget.entry
+                                                                        .getSentiment() ==
+                                                                    1)
+                                                                ? Colors.green
+                                                                : Colors.grey[
+                                                                    200])),
+                                                  ])
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                      'BzB feels that you are feeling ',
+                                                      style: TextStyle(
+                                                          fontSize: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.4 *
+                                                              0.0875)),
+                                                  Text(
+                                                      (prediction == -1
+                                                          ? 'negative'
+                                                          : prediction == 0
+                                                              ? 'neutral'
+                                                              : 'positive'),
+                                                      style: TextStyle(
+                                                          fontSize: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.4 *
+                                                              0.0875,
+                                                          color: prediction ==
+                                                                  -1
+                                                              ? Colors.red
+                                                              : prediction == 0
+                                                                  ? Colors.grey
+                                                                  : Colors
+                                                                      .green))
+                                                ],
+                                              ),
+                                              SizedBox(height: 20.0),
+                                              ElevatedButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    255,
+                                                                    202,
+                                                                    40))),
+                                                child: Text('Confirm'),
+                                                onPressed: () {
+                                                  DatabaseService()
+                                                      .updateUserEntry(
+                                                          widget.entry.getId(),
+                                                          widget.entry
+                                                              .getTitle(),
+                                                          widget.entry
+                                                              .getDate(),
+                                                          widget.entry
+                                                              .getDescription(),
+                                                          widget.entry
+                                                              .getBody(),
+                                                          widget.entry
+                                                              .getSentiment());
+                                                  Navigator.of(context).pop();
+                                                  Navigator.of(context).pop();
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return EntryView(
+                                                            widget.entry);
+                                                      });
+                                                },
+                                              )
+                                            ]));
+                                  });
                                 });
                           }
                         }),
@@ -120,5 +278,18 @@ class _EntryScreenState extends State<EntryScreen> {
                 ],
               ))
         ]));
+  }
+
+  // Performs inference on body
+  Future<int> Classify() async {
+    var sendMap = <String, dynamic>{
+      'string': widget.entry.getBody(),
+    };
+    print(sendMap);
+    print("TESTING CLASSIFY");
+    print("Prediction:");
+    int result = await platform.invokeMethod("Classify", sendMap);
+    print(result);
+    return result;
   }
 }

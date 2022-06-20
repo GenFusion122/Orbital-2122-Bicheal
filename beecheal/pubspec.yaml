@@ -48,7 +48,6 @@ dependencies:
   timezone: ^0.8.0
   flutter_native_timezone: ^2.0.0
   fl_chart: ^0.51.0
-  tflite_flutter: ^0.9.0
 
 dev_dependencies:
   flutter_test:
@@ -73,8 +72,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-    - assets/
+  # assets:
+  #   - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
