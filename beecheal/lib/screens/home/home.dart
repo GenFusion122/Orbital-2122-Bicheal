@@ -444,16 +444,8 @@ class _HomeState extends State<Home> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Expanded(
-                        child: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Color.fromARGB(255, 255, 202, 40))),
-                            child: Text("statistics"),
-                            onPressed: () {
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              Navigator.pushNamed(context, "/statistics");
-                            })),
+                        child: OrangeNavButton(
+                            "/statistics", "statistics", context)),
                     Expanded(
                         child:
                             OrangeNavButton("/calendar", "calendar", context)),
