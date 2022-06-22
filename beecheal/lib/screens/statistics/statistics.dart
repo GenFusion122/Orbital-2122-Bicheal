@@ -1,5 +1,6 @@
+import 'package:beecheal/screens/statistics/statistics_mood_piechart.dart';
 import 'package:beecheal/screens/statistics/statistics_moodcalendar.dart';
-import 'package:beecheal/screens/statistics/statistics_piechart.dart';
+import 'package:beecheal/screens/statistics/statistics_productivity_piechart.dart';
 import 'package:beecheal/screens/statistics/statistics_statckedbarchart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -65,7 +66,7 @@ class _StatisticsState extends State<Statistics> {
               bottom: PreferredSize(
                 preferredSize: _tabBar.preferredSize,
                 child: Material(
-                  color: Color.fromARGB(255, 255, 202, 40), //<-- SEE HERE
+                  color: Color.fromARGB(255, 255, 202, 40),
                   child: _tabBar,
                 ),
               )),
@@ -112,7 +113,12 @@ class _StatisticsState extends State<Statistics> {
                 ),
               )
             ]),
-            EntryMoodCalendar(),
+            ListView(
+              children: [
+                Card(child: EntryMoodPiechart()),
+                Card(child: EntryMoodCalendar()),
+              ],
+            ),
           ])),
     );
   }

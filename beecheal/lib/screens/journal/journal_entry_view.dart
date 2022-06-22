@@ -6,8 +6,9 @@ import 'package:beecheal/services/database.dart';
 class EntryView extends StatelessWidget {
   // const EntryView({Key? key}) : super(key: key);
   Entry entry;
+  bool viewOnly;
 
-  EntryView(this.entry);
+  EntryView(this.entry, this.viewOnly);
 
   @override
   Widget build(BuildContext context) {
@@ -84,44 +85,47 @@ class EntryView extends StatelessWidget {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromARGB(255, 255, 202, 40))),
-                    child: Text('Edit'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return EntryScreen(
-                              entry: entry,
-                              textPrompt: 'Update',
-                            );
-                          });
-                    }),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromARGB(255, 255, 202, 40))),
-                    child: Text('Delete'),
-                    onPressed: () {
-                      DatabaseService().deleteUserEntry(entry.getId(),
-                          entry.getTitle(), entry.getDate().toString());
-                      Navigator.of(context).pop();
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            Future.delayed(const Duration(seconds: 1), () {
-                              Navigator.of(context).pop();
-                            });
-                            return AlertDialog(
-                                title: Text(
-                                    'Deleted ${entry.getTitle()} created on ${entry.getDate().toString()}'));
-                          });
-                    })
-              ],
+              children: !viewOnly
+                  ? [
+                      ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Color.fromARGB(255, 255, 202, 40))),
+                          child: Text('Edit'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return EntryScreen(
+                                    entry: entry,
+                                    textPrompt: 'Update',
+                                  );
+                                });
+                          }),
+                      ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Color.fromARGB(255, 255, 202, 40))),
+                          child: Text('Delete'),
+                          onPressed: () {
+                            DatabaseService().deleteUserEntry(entry.getId(),
+                                entry.getTitle(), entry.getDate().toString());
+                            Navigator.of(context).pop();
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  Future.delayed(const Duration(seconds: 1),
+                                      () {
+                                    Navigator.of(context).pop();
+                                  });
+                                  return AlertDialog(
+                                      title: Text(
+                                          'Deleted ${entry.getTitle()} created on ${entry.getDate().toString()}'));
+                                });
+                          })
+                    ]
+                  : [],
             )
           ]),
         ]));

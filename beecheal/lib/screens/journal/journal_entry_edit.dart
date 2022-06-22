@@ -265,7 +265,8 @@ class _EntryScreenState extends State<EntryScreen> {
                                                       builder: (BuildContext
                                                           context) {
                                                         return EntryView(
-                                                            widget.entry);
+                                                            widget.entry,
+                                                            false);
                                                       });
                                                 },
                                               )

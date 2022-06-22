@@ -33,7 +33,7 @@ class TileTemplate extends StatelessWidget {
                     if (view == 'TaskView') {
                       return TaskView(occasion);
                     } else if (view == 'EntryView') {
-                      return EntryView(occasion);
+                      return EntryView(occasion, false);
                     } else {
                       return Container();
                     }
