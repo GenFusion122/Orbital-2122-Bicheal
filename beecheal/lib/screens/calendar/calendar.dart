@@ -89,6 +89,26 @@ class _CalendarViewState extends State<CalendarView> {
                   // No need to call `setState()` here
                   _focusedDay = focusedDay;
                 },
+                calendarBuilders:
+                    CalendarBuilders(markerBuilder: ((context, day, events) {
+                  return events.isEmpty
+                      ? SizedBox()
+                      : Container(
+                          margin: EdgeInsets.only(left: 40),
+                          decoration: BoxDecoration(
+                              color: Colors.orange[400],
+                              border: Border.all(
+                                  color: Color.fromARGB(255, 255, 167, 38),
+                                  width: 2),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Text(
+                            events.length.toString(),
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ));
+                })),
               ),
               SizedBox(height: 8),
               Expanded(
