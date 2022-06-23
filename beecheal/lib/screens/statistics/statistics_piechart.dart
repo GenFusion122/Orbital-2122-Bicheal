@@ -46,70 +46,91 @@ class _TaskStatsPieChart extends State<TaskStatsPieChart> {
                       ),
                     )),
               ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(children: [
-                  Expanded(
-                      child: AspectRatio(
-                          aspectRatio: 1.4,
-                          child: PieChart(
-                            PieChartData(
-                                pieTouchData: PieTouchData(touchCallback:
-                                    (FlTouchEvent event, pieTouchResponse) {
-                                  setState(() {
-                                    if (!event.isInterestedForInteractions ||
-                                        pieTouchResponse == null ||
-                                        pieTouchResponse.touchedSection ==
-                                            null) {
-                                      touchedIndex = -1;
-                                      return;
-                                    }
-                                    touchedIndex = pieTouchResponse
-                                        .touchedSection!.touchedSectionIndex;
-                                  });
-                                }),
-                                borderData: FlBorderData(
-                                  show: false,
-                                ),
-                                sectionsSpace: 0,
-                                centerSpaceRadius: double.infinity,
-                                sections: showingSections(snapshot.data ?? [])),
-                          ))),
-                  Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const <Widget>[
-                        Legend(
-                          color: Color.fromARGB(255, 150, 243, 85),
-                          text: 'On Time',
-                          isSquare: true,
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Legend(
-                          color: Color.fromARGB(255, 227, 242, 72),
-                          text: 'Uncompleted',
-                          isSquare: true,
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Legend(
-                          color: Color.fromARGB(255, 242, 88, 73),
-                          text: 'Late',
-                          isSquare: true,
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                      ]),
-                ]),
-              ),
+              Row(children: [
+                Expanded(
+                    child: AspectRatio(
+                        aspectRatio: 1.4,
+                        child: PieChart(
+                          PieChartData(
+                              pieTouchData: PieTouchData(touchCallback:
+                                  (FlTouchEvent event, pieTouchResponse) {
+                                setState(() {
+                                  if (!event.isInterestedForInteractions ||
+                                      pieTouchResponse == null ||
+                                      pieTouchResponse.touchedSection == null) {
+                                    touchedIndex = -1;
+                                    return;
+                                  }
+                                  touchedIndex = pieTouchResponse
+                                      .touchedSection!.touchedSectionIndex;
+                                });
+                              }),
+                              borderData: FlBorderData(
+                                show: false,
+                              ),
+                              sectionsSpace: 0,
+                              centerSpaceRadius: 40,
+                              sections: showingSections(snapshot.data ?? [])),
+                        ))),
+                Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const <Widget>[
+                      Legend(
+                        color: Color.fromARGB(255, 150, 243, 85),
+                        text: 'On Time',
+                        isSquare: true,
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Legend(
+                        color: Color.fromARGB(255, 227, 242, 72),
+                        text: 'Uncompleted',
+                        isSquare: true,
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Legend(
+                        color: Color.fromARGB(255, 242, 88, 73),
+                        text: 'Late',
+                        isSquare: true,
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                    ]),
+              ]),
             ],
           );
         });
+  }
+
+  Widget pieChartWidget(List<Task> taskList) {
+    return PieChart(
+      PieChartData(
+          pieTouchData: PieTouchData(
+              touchCallback: (FlTouchEvent event, pieTouchResponse) {
+            setState(() {
+              if (!event.isInterestedForInteractions ||
+                  pieTouchResponse == null ||
+                  pieTouchResponse.touchedSection == null) {
+                touchedIndex = -1;
+                return;
+              }
+              touchedIndex =
+                  pieTouchResponse.touchedSection!.touchedSectionIndex;
+            });
+          }),
+          borderData: FlBorderData(
+            show: false,
+          ),
+          sectionsSpace: 0,
+          centerSpaceRadius: 40,
+          sections: showingSections(taskList)),
+    );
   }
 
   List<PieChartSectionData> showingSections(List<Task> taskList) {
@@ -117,7 +138,7 @@ class _TaskStatsPieChart extends State<TaskStatsPieChart> {
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 25.0 : 16.0;
       final radius = isTouched ? 60.0 : 50.0;
-      int total = taskList.length;
+      double total = taskList.length.toDouble();
       double completed = ((Statistics.countCompleted(taskList) / total) * 100);
       double uncompleted =
           ((Statistics.countUncompleted(taskList) / total) * 100);
@@ -128,7 +149,7 @@ class _TaskStatsPieChart extends State<TaskStatsPieChart> {
         case 0:
           return PieChartSectionData(
             color: Color.fromARGB(255, 150, 243, 85),
-            value: completed,
+            value: Statistics.countCompleted(taskList),
             title: isTouched
                 ? '${Statistics.countCompleted(taskList).toStringAsFixed(0)} tasks'
                 : '${completed.toStringAsFixed(1)}%',
@@ -141,7 +162,7 @@ class _TaskStatsPieChart extends State<TaskStatsPieChart> {
         case 1:
           return PieChartSectionData(
             color: Color.fromARGB(255, 227, 242, 72),
-            value: uncompleted,
+            value: Statistics.countUncompleted(taskList),
             title: isTouched
                 ? '${Statistics.countUncompleted(taskList).toStringAsFixed(0)} tasks'
                 : '${uncompleted.toStringAsFixed(1)}%',
@@ -154,7 +175,7 @@ class _TaskStatsPieChart extends State<TaskStatsPieChart> {
         case 2:
           return PieChartSectionData(
             color: Color.fromARGB(255, 242, 88, 73),
-            value: lateCompleted,
+            value: Statistics.countLateCompleted(taskList),
             title: isTouched
                 ? '${Statistics.countLateCompleted(taskList).toStringAsFixed(0)} tasks'
                 : '${lateCompleted.toStringAsFixed(1)}%',

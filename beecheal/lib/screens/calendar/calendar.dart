@@ -58,7 +58,7 @@ class _CalendarViewState extends State<CalendarView> {
             return Column(children: <Widget>[
               TableCalendar<Occasion>(
                 focusedDay: _focusedDay,
-                firstDay: DateTime(1990),
+                firstDay: DateTime(1900),
                 lastDay: DateTime(2999),
                 calendarFormat: _calendarFormat,
                 eventLoader: (day) =>
