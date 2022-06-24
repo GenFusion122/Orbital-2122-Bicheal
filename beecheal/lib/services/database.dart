@@ -159,6 +159,7 @@ class DatabaseService {
     return userCollection
         .doc(_auth.curruid())
         .collection('occasions')
+        .orderBy('dateTime')
         .snapshots()
         .map(_OccasionListFromSnapshot);
   }
@@ -168,6 +169,7 @@ class DatabaseService {
     return userCollection
         .doc(_auth.curruid())
         .collection('entries')
+        .orderBy('dateTime', descending: true)
         .snapshots()
         .map(_EntryListFromSnapshot);
   }
@@ -177,6 +179,7 @@ class DatabaseService {
     return userCollection
         .doc(_auth.curruid())
         .collection('tasks')
+        .orderBy('dateTime')
         .snapshots()
         .map(_TaskListFromSnapshot);
   }
