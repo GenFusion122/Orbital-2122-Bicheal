@@ -24,6 +24,9 @@ class _CalenderEditScreenState extends State<CalendarEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String newTitle = widget.occasion.getTitle();
+    String newDescription = widget.occasion.getDescription();
+
     return AlertDialog(
         backgroundColor: Colors.orange[100],
         content: Stack(children: <Widget>[
@@ -48,7 +51,7 @@ class _CalenderEditScreenState extends State<CalendarEditScreen> {
                         validator: (val) =>
                             val!.isNotEmpty ? null : 'Please enter a title',
                         onChanged: (val) {
-                          setState(() => widget.occasion.setTitle(val));
+                          newTitle = val;
                         }),
                   ),
                   Padding(
@@ -61,7 +64,7 @@ class _CalenderEditScreenState extends State<CalendarEditScreen> {
                             ? null
                             : 'Please enter a description',
                         onChanged: (val) {
-                          setState(() => widget.occasion.setDescription(val));
+                          newDescription = val;
                         }),
                   ),
                   Padding(
@@ -98,6 +101,8 @@ class _CalenderEditScreenState extends State<CalendarEditScreen> {
 
                             if (!(pickedDateTime == null &&
                                 pickedTime == null)) {
+                              widget.occasion.setTitle(newTitle);
+                              widget.occasion.setDescription(newDescription);
                               //if both aren't null, then the user didn't cancel
                               DatabaseService().updateUserOccasion(
                                   widget.occasion.getId(),
@@ -108,7 +113,6 @@ class _CalenderEditScreenState extends State<CalendarEditScreen> {
                                   .initializeOccasionNotifications();
                             }
                           }
-                          Navigator.of(context).pop(); //if he did just pop
                         }),
                   )
                 ],

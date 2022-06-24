@@ -24,6 +24,8 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String newTitle = widget.task.getTitle();
+    String newDescription = widget.task.getDescription();
     return AlertDialog(
         backgroundColor: Colors.orange[100],
         content: Stack(children: <Widget>[
@@ -48,7 +50,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                         validator: (val) =>
                             val!.isNotEmpty ? null : 'Please enter a title',
                         onChanged: (val) {
-                          setState(() => widget.task.setTitle(val));
+                          newTitle = val;
                         }),
                   ),
                   Padding(
@@ -61,7 +63,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                             ? null
                             : 'Please enter a description',
                         onChanged: (val) {
-                          setState(() => widget.task.setDescription(val));
+                          newDescription = val;
                         }),
                   ),
                   Padding(
@@ -78,6 +80,8 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                     context, widget.task.getDate());
                             if (pickedDateTime != null) {
                               //if the user didn't cancel
+                              widget.task.setTitle(newTitle);
+                              widget.task.setDescription(newDescription);
                               widget.task.setDate(pickedDateTime);
                               DatabaseService().updateUserTask(
                                   widget.task.getId(),
