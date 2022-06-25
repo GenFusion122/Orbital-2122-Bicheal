@@ -409,35 +409,14 @@ class _HomeState extends State<Home> {
                 ]),
               ),
               Expanded(
-                  flex: 4,
-                  child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Card(
-                          margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          child: Text("Custom card!"),
-                        ),
-                        Card(
-                          margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          child: Text("Custom card!"),
-                        ),
-                      ])),
-              Expanded(
-                  flex: 4,
-                  child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Card(
-                          margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          child: Text("Custom card!"),
-                        ),
-                        Card(
-                          margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          child: Text("Custom card!"),
-                        ),
-                      ])),
+                  flex: 8,
+                  child: Center(
+                    child: Image.asset(
+                      'assets/BzB.png',
+                      height: 250,
+                      width: 250,
+                    ),
+                  )),
               Expanded(
                 flex: 1,
                 child: Row(
