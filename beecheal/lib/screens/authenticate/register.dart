@@ -1,5 +1,6 @@
 import 'package:beecheal/custom%20widgets/constants.dart';
 import 'package:beecheal/services/auth.dart';
+import 'package:beecheal/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 
@@ -21,6 +22,7 @@ class _RegisterState extends State<Register> {
   // text field state
   String email = '';
   String password = '';
+  String confirm = '';
   String error = '';
 
   @override
@@ -34,7 +36,7 @@ class _RegisterState extends State<Register> {
             TextButton.icon(
               icon: Icon(Icons.person),
               style: TextButton.styleFrom(primary: Colors.brown[500]),
-              label: Text('SignIn'),
+              label: Text('Sign In'),
               onPressed: () {
                 widget.toggleSignIn();
               },
@@ -69,9 +71,20 @@ class _RegisterState extends State<Register> {
                       setState(() => password = val);
                     }),
                 SizedBox(height: 20.0),
+                // Password input
+                TextFormField(
+                    decoration: textInputDecoration.copyWith(
+                        hintText: 'Confirm Password'),
+                    validator: (val) =>
+                        val != password ? 'Passwords don\'t match' : null,
+                    obscureText: true,
+                    onChanged: (val) {
+                      setState(() => confirm = val);
+                    }),
+                SizedBox(height: 20.0),
                 ElevatedButton(
-                  child:
-                      Text('Register', style: TextStyle(color: Colors.white)),
+                  child: Text('Register',
+                      style: TextStyle(color: Colors.brown[500])),
                   style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all(Colors.amber[400])),

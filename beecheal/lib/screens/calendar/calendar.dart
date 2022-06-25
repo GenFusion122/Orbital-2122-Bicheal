@@ -1,13 +1,10 @@
-import 'package:beecheal/custom%20widgets/listtemplate.dart';
-import 'package:beecheal/screens/calendar/calendar_edit.dart';
+import 'package:beecheal/screens/calendar/calendar_occasion_edit.dart';
 import 'package:beecheal/screens/calendar/calendar_occasion_tile.dart';
-import 'package:beecheal/screens/calendar/calendar_occasions_list.dart';
 import 'package:beecheal/services/database.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-
 import 'package:beecheal/models/occasion.dart';
+import 'package:intl/intl.dart';
 
 class CalendarView extends StatefulWidget {
   const CalendarView({Key? key}) : super(key: key);
@@ -30,7 +27,8 @@ class _CalendarViewState extends State<CalendarView> {
     List<Occasion> todaysEvents = [];
 
     for (int i = 0; i < occasionList.length; i++) {
-      if (DateUtils.dateOnly(occasionList[i].date) == DateUtils.dateOnly(day)) {
+      if (DateUtils.dateOnly(occasionList[i].getDate()) ==
+          DateUtils.dateOnly(day)) {
         todaysEvents.add(occasionList[i]);
       }
     }
@@ -52,17 +50,20 @@ class _CalendarViewState extends State<CalendarView> {
       appBar: AppBar(
         title: Text('calendar skreen'),
         centerTitle: true,
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.orange[400],
       ),
       body: StreamBuilder(
           stream: DatabaseService().occasion,
           builder: (context, AsyncSnapshot<List<Occasion>> snapshot) {
             return Column(children: <Widget>[
-              TableCalendar(
-                focusedDay: DateTime.now(),
+              TableCalendar<Occasion>(
+                focusedDay: _focusedDay,
                 firstDay: DateTime(1900),
-                lastDay: DateTime(2050),
+                lastDay: DateTime(2999),
                 calendarFormat: _calendarFormat,
+                eventLoader: (day) =>
+                    _getEventsForDay(day, snapshot.data ?? []),
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                 onFormatChanged: (format) {
                   if (_calendarFormat != format) {
                     // Call `setState()` when updating calendar format
@@ -71,14 +72,11 @@ class _CalendarViewState extends State<CalendarView> {
                     });
                   }
                 },
-                selectedDayPredicate: (day) {
-                  return isSameDay(_selectedDay, day);
-                },
                 onDaySelected: (selectedDay, focusedDay) {
                   if (!isSameDay(_selectedDay, selectedDay)) {
                     setState(() {
                       _selectedDay = selectedDay;
-                      _focusedDay = focusedDay;
+                      _focusedDay = selectedDay;
                       _rangeStart = null; // Important to clean those
                       _rangeEnd = null;
                       _rangeSelectionMode = RangeSelectionMode.toggledOff;
@@ -91,9 +89,26 @@ class _CalendarViewState extends State<CalendarView> {
                   // No need to call `setState()` here
                   _focusedDay = focusedDay;
                 },
-                eventLoader: (day) {
-                  return _getEventsForDay(day, snapshot.data ?? []);
-                },
+                calendarBuilders:
+                    CalendarBuilders(markerBuilder: ((context, day, events) {
+                  return events.isEmpty
+                      ? SizedBox()
+                      : Container(
+                          margin: EdgeInsets.only(left: 40),
+                          decoration: BoxDecoration(
+                              color: Colors.orange[400],
+                              border: Border.all(
+                                  color: Color.fromARGB(255, 255, 167, 38),
+                                  width: 2),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Text(
+                            events.length.toString(),
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ));
+                })),
               ),
               SizedBox(height: 8),
               Expanded(
@@ -119,9 +134,16 @@ class _CalendarViewState extends State<CalendarView> {
           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return CalenderEditScreen(
-                  occasion:
-                      Occasion("", "", _selectedDay ?? DateTime.now(), ""),
+                return CalendarEditScreen(
+                  occasion: Occasion(
+                      "",
+                      "",
+                      DateTime(
+                          _selectedDay!.year,
+                          _selectedDay!.month,
+                          _selectedDay!
+                              .day), //passes a date with "blank" timings
+                      ""),
                   textPrompt: 'Create',
                   selectedDay: _selectedDay,
                 );

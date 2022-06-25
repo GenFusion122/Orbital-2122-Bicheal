@@ -3,6 +3,9 @@ import 'package:beecheal/screens/todo_list/todo_task_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/services/database.dart';
 
+import '../../services/notifications.dart';
+import '../home/initialize_notifications.dart';
+
 class TaskView extends StatelessWidget {
   // const EntryView({Key? key}) : super(key: key);
   Task task;
@@ -24,7 +27,7 @@ class TaskView extends StatelessWidget {
           Column(mainAxisSize: MainAxisSize.min, children: [
             Align(
                 alignment: Alignment.topRight,
-                child: Text(task.date.toString(),
+                child: Text(task.getDate().toString(),
                     style: TextStyle(
                         fontSize: 15.0, fontWeight: FontWeight.bold))),
             Card(
@@ -40,7 +43,7 @@ class TaskView extends StatelessWidget {
                     width: 400.0,
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(task.title,
+                      child: Text(task.getTitle(),
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16.0)),
                     ),
@@ -57,7 +60,7 @@ class TaskView extends StatelessWidget {
                   padding: EdgeInsets.all(6.0),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(task.description,
+                    child: Text(task.getDescription(),
                         style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                             fontSize: 14.0)),
@@ -75,7 +78,7 @@ class TaskView extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                        '${task.completedOn == DateTime(2999, 12, 12, 23, 59) ? 'Not completed' : 'Completed on ${task.completedOn}'}',
+                        '${task.getCompletedOn() == Task.incompletePlaceholder ? 'Not completed' : 'Completed on ${task.getCompletedOn()}'}',
                         style: TextStyle(color: Colors.black, fontSize: 14.0)),
                   ),
                 )),
@@ -85,7 +88,7 @@ class TaskView extends StatelessWidget {
                 ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromARGB(255, 255, 202, 0))),
+                            Color.fromARGB(255, 255, 202, 40))),
                     child: Text('Edit'),
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -96,34 +99,29 @@ class TaskView extends StatelessWidget {
                                 task: task, textPrompt: 'Update');
                           });
                     }),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromARGB(255, 255, 202, 0))),
-                    child: Text('Mark completed'),
-                    onPressed: () {
-                      DatabaseService().updateUserTask(task.id, task.title,
-                          task.date, task.description, DateTime.now());
-                      Navigator.of(context).pop();
-                    }),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Color.fromARGB(255, 255, 202, 0))),
-                    child: Text('Delete'),
-                    onPressed: () {
-                      DatabaseService().deleteUserTask(task.id, task.title);
-                      Navigator.of(context).pop();
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            Future.delayed(const Duration(seconds: 1), () {
-                              Navigator.of(context).pop();
+                if (task.getCompletedOn() == Task.incompletePlaceholder)
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromARGB(255, 255, 202, 40))),
+                      child: Text('Delete'),
+                      onPressed: () async {
+                        await NotificationService.getNotificationInstance()
+                            .cancelAll();
+                        InitializeNotifications.initializeToDoNotifications();
+                        DatabaseService()
+                            .deleteUserTask(task.getId(), task.getTitle());
+                        Navigator.of(context).pop();
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              Future.delayed(const Duration(seconds: 1), () {
+                                //Navigator.of(context).pop();
+                              });
+                              return AlertDialog(
+                                  title: Text('Deleted ${task.getTitle()}'));
                             });
-                            return AlertDialog(
-                                title: Text('Deleted ${task.title}'));
-                          });
-                    }),
+                      }),
               ],
             )
           ]),

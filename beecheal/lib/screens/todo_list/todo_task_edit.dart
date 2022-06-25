@@ -1,9 +1,11 @@
 import 'package:beecheal/models/task.dart';
+import 'package:beecheal/screens/home/initialize_notifications.dart';
 import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/custom widgets/constants.dart';
 import 'package:beecheal/services/database.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+
+import '../../custom widgets/timepicker.dart';
 
 class TaskEditScreen extends StatefulWidget {
   // const EntryScreen({Key? key}) : super(key: key);
@@ -22,6 +24,8 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String newTitle = widget.task.getTitle();
+    String newDescription = widget.task.getDescription();
     return AlertDialog(
         backgroundColor: Colors.orange[100],
         content: Stack(children: <Widget>[
@@ -40,26 +44,26 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: TextFormField(
-                        initialValue: widget.task.title,
+                        initialValue: widget.task.getTitle(),
                         decoration:
                             textInputDecoration.copyWith(hintText: 'Title'),
                         validator: (val) =>
                             val!.isNotEmpty ? null : 'Please enter a title',
                         onChanged: (val) {
-                          setState(() => widget.task.title = val);
+                          newTitle = val;
                         }),
                   ),
                   Padding(
                     padding: EdgeInsets.all(1.0),
                     child: TextFormField(
-                        initialValue: widget.task.description,
+                        initialValue: widget.task.getDescription(),
                         decoration: textInputDecoration.copyWith(
                             hintText: 'Description'),
                         validator: (val) => val!.isNotEmpty
                             ? null
                             : 'Please enter a description',
                         onChanged: (val) {
-                          setState(() => widget.task.description = val);
+                          newDescription = val;
                         }),
                   ),
                   Padding(
@@ -71,37 +75,22 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                         child: Text(widget.textPrompt),
                         onPressed: () async {
                           if (_formkey.currentState!.validate()) {
-                            if (widget.textPrompt == 'Create') {
-                              await DatePicker.showDateTimePicker(
-                                context,
-                                showTitleActions: true,
-                                onChanged: (date) {},
-                                onConfirm: (date) {
-                                  widget.task.date = date;
-                                },
-                              );
+                            DateTime? pickedDateTime =
+                                await TimePicker.dateTimePicker(
+                                    context, widget.task.getDate());
+                            if (pickedDateTime != null) {
+                              //if the user didn't cancel
+                              widget.task.setTitle(newTitle);
+                              widget.task.setDescription(newDescription);
+                              widget.task.setDate(pickedDateTime);
                               DatabaseService().updateUserTask(
-                                  '',
-                                  widget.task.title,
-                                  widget.task.date,
-                                  widget.task.description,
-                                  widget.task.completedOn);
-                              Navigator.of(context).pop();
-                            } else {
-                              await DatePicker.showDateTimePicker(
-                                context,
-                                showTitleActions: true,
-                                onChanged: (date) {},
-                                onConfirm: (date) {
-                                  widget.task.date = date;
-                                },
-                              );
-                              DatabaseService().updateUserTask(
-                                  widget.task.id,
-                                  widget.task.title,
-                                  widget.task.date,
-                                  widget.task.description,
-                                  widget.task.completedOn);
+                                  widget.task.getId(),
+                                  widget.task.getTitle(),
+                                  widget.task.getDate(),
+                                  widget.task.getDescription(),
+                                  widget.task.getCompletedOn());
+                              InitializeNotifications
+                                  .initializeToDoNotifications();
                               Navigator.of(context).pop();
                               showDialog(
                                   context: context,

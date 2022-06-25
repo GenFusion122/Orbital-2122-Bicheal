@@ -11,7 +11,8 @@ class OrangeNavButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.orange)),
+            backgroundColor: MaterialStateProperty.all<Color>(
+                Color.fromARGB(255, 255, 202, 40))),
         child: Text(text),
         onPressed: () {
           Navigator.pushNamed(context, location);

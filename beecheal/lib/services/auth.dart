@@ -56,6 +56,8 @@ class AuthService {
 
       // create uid document
       await DatabaseService().updateUserID();
+      await DatabaseService().updateUserDailyReminderPreference(true);
+      await DatabaseService().updateUserWeeklyReminderPreference(true);
 
       return _userfromUser(user);
     } catch (e) {
@@ -70,6 +72,24 @@ class AuthService {
       return await _auth.signOut();
     } catch (e) {
       print(e.toString());
+      return null;
+    }
+  }
+
+  Future forgotPassword(String email) async {
+    try {
+      return await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future changePassword(String newPassword) async {
+    try {
+      return await _auth.currentUser?.updatePassword(newPassword);
+    } catch (e) {
+      (e.toString());
       return null;
     }
   }

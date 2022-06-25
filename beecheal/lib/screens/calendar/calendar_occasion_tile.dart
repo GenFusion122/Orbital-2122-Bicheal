@@ -1,8 +1,9 @@
 import 'package:beecheal/models/occasion.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:beecheal/screens/calendar/calendar.dart';
+import 'package:beecheal/screens/calendar/calendar_occasion_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'calendar_occasion_edit.dart';
+import 'package:intl/intl.dart';
 
 class OccasionTile extends StatelessWidget {
   final Occasion occasion;
@@ -18,15 +19,17 @@ class OccasionTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: ListTile(
-            title: Text(occasion.title),
-            subtitle: Text(occasion.description),
-            trailing: Text(occasion.date.toString()),
+            title: Text(occasion.getTitle()),
+            subtitle: Text(occasion.getDescription()),
+            trailing: Text(DateFormat('yyyy-MM-dd   hh:mm a')
+                .format(occasion.getDate())
+                .toString()),
             onTap: () {
-              /*showDialog(
+              showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return OccasionView(occasion);
-                  });*/
+                  });
             },
           ),
         ));
