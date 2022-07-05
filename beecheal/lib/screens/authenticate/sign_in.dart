@@ -3,6 +3,8 @@ import 'package:beecheal/services/auth.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:beecheal/custom widgets/constants.dart';
 import 'package:flutter/gestures.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {
   // const SignIn({Key? key}) : super(key: key);
@@ -84,6 +86,19 @@ class _SignInState extends State<SignIn> {
                     }
                   },
                   child: Text('Sign In',
+                      style: TextStyle(color: Colors.brown[500])),
+                ),
+                SizedBox(height: 5.0),
+                ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.amber[400])),
+                  onPressed: () async {
+                    final provider =
+                        Provider.of<AuthService>(context, listen: false);
+                    provider.googleLogin();
+                  },
+                  child: Text('Sign In with Google',
                       style: TextStyle(color: Colors.brown[500])),
                 ),
                 SizedBox(height: 5.0),
