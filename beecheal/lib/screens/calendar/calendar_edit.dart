@@ -2,14 +2,15 @@ import 'package:beecheal/custom%20widgets/timepicker.dart';
 import 'package:beecheal/models/occasion.dart';
 import 'package:beecheal/screens/home/initialize_notifications.dart';
 import 'package:flutter/material.dart';
-import '../../../custom widgets/constants.dart';
+import '../../custom widgets/constants.dart';
 
 import 'package:beecheal/services/notifications.dart';
 
-import '../../../services/database.dart';
+import '../../models/task.dart';
+import '../../services/database.dart';
 
-class CalendarEditScreen extends StatefulWidget {
-  Occasion occasion;
+class CalendarEditScreen<T extends Occasion> extends StatefulWidget {
+  T occasion;
   String textPrompt;
   DateTime? selectedDay;
 
@@ -18,10 +19,11 @@ class CalendarEditScreen extends StatefulWidget {
       required this.textPrompt,
       required this.selectedDay});
   @override
-  State<CalendarEditScreen> createState() => _CalenderEditScreenState();
+  State<CalendarEditScreen<T>> createState() => _CalenderEditScreen<T>();
 }
 
-class _CalenderEditScreenState extends State<CalendarEditScreen> {
+class _CalenderEditScreen<T extends Occasion>
+    extends State<CalendarEditScreen<T>> {
   final _formkey = GlobalKey<FormState>();
 
   @override
@@ -105,12 +107,22 @@ class _CalenderEditScreenState extends State<CalendarEditScreen> {
                                 pickedTime == null)) {
                               widget.occasion.setTitle(newTitle);
                               widget.occasion.setDescription(newDescription);
+                              print(T);
                               //if both aren't null, then the user didn't cancel
-                              DatabaseService().updateUserOccasion(
-                                  widget.occasion.getId(),
-                                  widget.occasion.getTitle(),
-                                  widget.occasion.getDate(),
-                                  widget.occasion.getDescription());
+                              if (T.toString() == "Task") {
+                                DatabaseService().updateUserTask(
+                                    widget.occasion.getId(),
+                                    widget.occasion.getTitle(),
+                                    widget.occasion.getDate(),
+                                    widget.occasion.getDescription(),
+                                    Task.incompletePlaceholder);
+                              } else {
+                                DatabaseService().updateUserOccasion(
+                                    widget.occasion.getId(),
+                                    widget.occasion.getTitle(),
+                                    widget.occasion.getDate(),
+                                    widget.occasion.getDescription());
+                              }
                               InitializeNotifications
                                   .initializeOccasionNotifications();
                             }

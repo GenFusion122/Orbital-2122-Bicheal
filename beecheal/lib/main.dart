@@ -65,6 +65,10 @@ Future<void> main() async {
             dialogBackgroundColor: Color(0xFFFFC95C),
             fontFamily: "Rubik",
             textTheme: TextTheme(
+                headline1: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
                 button: TextStyle(
                     fontSize: 15,
                     color: Colors.black,
