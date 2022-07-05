@@ -27,23 +27,26 @@ Future<void> main() async {
       notificationAppLaunchDetails?.didNotificationLaunchApp ?? false
           ? notificationAppLaunchDetails?.payload
           : '/';
-  runApp(StreamProvider<UserID?>.value(
-    initialData: null,
-    value: AuthService().user,
-    child: StreamProvider<User?>.value(
-      initialData: User('', true, true),
-      value: DatabaseService().user,
-      child: MaterialApp(initialRoute: initialroute, routes: {
-        '/': (context) => Wrapper(),
-        '/home': (context) => StreamProvider<List<Task>>.value(
-            value: DatabaseService().tasks, initialData: [], child: Home()),
-        '/statistics': (context) => Statistics(),
-        '/calendar': (context) => CalendarView(),
-        '/journalEntries': (context) => StreamProvider<List<Entry>>.value(
-            value: DatabaseService().entries,
-            initialData: [],
-            child: JournalEntries()),
-      }),
+  runApp(ChangeNotifierProvider(
+    create: (context) => AuthService(),
+    child: StreamProvider<UserID?>.value(
+      initialData: null,
+      value: AuthService().user,
+      child: StreamProvider<User?>.value(
+        initialData: User('', true, true),
+        value: DatabaseService().user,
+        child: MaterialApp(initialRoute: initialroute, routes: {
+          '/': (context) => Wrapper(),
+          '/home': (context) => StreamProvider<List<Task>>.value(
+              value: DatabaseService().tasks, initialData: [], child: Home()),
+          '/statistics': (context) => Statistics(),
+          '/calendar': (context) => CalendarView(),
+          '/journalEntries': (context) => StreamProvider<List<Entry>>.value(
+              value: DatabaseService().entries,
+              initialData: [],
+              child: JournalEntries()),
+        }),
+      ),
     ),
   ));
 }
