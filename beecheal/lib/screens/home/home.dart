@@ -80,7 +80,7 @@ class _HomeState extends State<Home> {
     }
 
     return Container(
-      color: Colors.orange[400],
+      color: Theme.of(context).colorScheme.primary,
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Color.fromARGB(255, 255, 243, 224),

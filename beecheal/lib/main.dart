@@ -27,6 +27,7 @@ Future<void> main() async {
       notificationAppLaunchDetails?.didNotificationLaunchApp ?? false
           ? notificationAppLaunchDetails?.payload
           : '/';
+
   runApp(ChangeNotifierProvider(
     create: (context) => AuthService(),
     child: StreamProvider<UserID?>.value(
@@ -45,7 +46,30 @@ Future<void> main() async {
               value: DatabaseService().entries,
               initialData: [],
               child: JournalEntries()),
-        }),
+        },
+        theme: ThemeData(
+            appBarTheme: AppBarTheme(
+                backgroundColor: Color(0xFFFFAB00), centerTitle: true),
+            colorScheme: ColorScheme(
+                background: Color(0xFFFFE0B2),
+                primary: Color(0xFFFFAB00),
+                secondary: Color(0xFFFFDD4B),
+                tertiary: Color(0xFFFFC95C),
+                error: Colors.red,
+                surface: Colors.white,
+                onPrimary: Colors.black,
+                onSurface: Colors.black,
+                onBackground: Colors.black,
+                onSecondary: Colors.black,
+                onError: Colors.black,
+                brightness: Brightness.light),
+            dialogBackgroundColor: Color(0xFFFFC95C),
+            fontFamily: "Rubik",
+            textTheme: TextTheme(
+                button: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold))),
       ),
     ),
   ));
