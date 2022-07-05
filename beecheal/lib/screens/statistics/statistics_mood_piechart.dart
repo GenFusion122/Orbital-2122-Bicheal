@@ -153,8 +153,8 @@ class _EntryMoodPiechart extends State<EntryMoodPiechart> {
             color: positiveColor,
             value: positiveCount,
             title: isTouched
-                ? '$positiveCount entries'
-                : '${positiveCount / total * 100}%',
+                ? '${positiveCount.toStringAsFixed(0)} entries'
+                : '${(positiveCount / total * 100).toStringAsFixed(1)}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -166,8 +166,8 @@ class _EntryMoodPiechart extends State<EntryMoodPiechart> {
             color: neutralColor,
             value: neutralCount,
             title: isTouched
-                ? '$neutralCount entries'
-                : '${neutralCount / total * 100}%',
+                ? '${neutralCount.toStringAsFixed(0)} entries'
+                : '${(neutralCount / total * 100).toStringAsFixed(1)}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -179,8 +179,8 @@ class _EntryMoodPiechart extends State<EntryMoodPiechart> {
             color: negativeColor,
             value: negativeCount,
             title: isTouched
-                ? '$negativeCount entries'
-                : '${negativeCount / total * 100}%',
+                ? '${negativeCount.toStringAsFixed(0)} entries'
+                : '${(negativeCount / total * 100).toStringAsFixed(1)}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,

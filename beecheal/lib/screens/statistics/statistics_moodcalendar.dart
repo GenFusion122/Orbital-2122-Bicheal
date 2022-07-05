@@ -9,7 +9,6 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/src/intl/date_format.dart';
-import '../calendar/calendar_occasion_tile.dart';
 import 'legend_widget.dart';
 
 class EntryMoodCalendar extends StatefulWidget {

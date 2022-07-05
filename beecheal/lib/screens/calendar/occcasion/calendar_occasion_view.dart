@@ -1,10 +1,9 @@
 import 'package:beecheal/models/occasion.dart';
-import 'package:beecheal/screens/calendar/calendar_occasion_edit.dart';
 import 'package:flutter/material.dart';
-
-import '../../services/database.dart';
-import '../../services/notifications.dart';
-import '../home/initialize_notifications.dart';
+import '../../../services/database.dart';
+import '../../../services/notifications.dart';
+import '../../home/initialize_notifications.dart';
+import 'calendar_occasion_edit.dart';
 
 class OccasionView extends StatelessWidget {
   Occasion occasion;
