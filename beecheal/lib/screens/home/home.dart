@@ -113,6 +113,9 @@ class _HomeState extends State<Home> {
                           await NotificationService.getNotificationInstance()
                               .cancelAll();
                           await _auth.signOut();
+                          final provider =
+                              Provider.of<AuthService>(context, listen: false);
+                          provider.signOut();
                           setState(() {});
                         }),
                   ),

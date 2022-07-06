@@ -1,9 +1,14 @@
 import 'package:beecheal/models/userid.dart';
 import 'package:beecheal/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/material.dart';
 
-class AuthService {
+class AuthService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _googleSignIn = GoogleSignIn();
+
+  GoogleSignInAccount? _user;
 
   String? curruid() {
     final curruser = _auth.currentUser;
@@ -66,14 +71,32 @@ class AuthService {
     }
   }
 
-  // sign out
-  Future signOut() async {
+  // sign in with google
+  Future googleLogin() async {
     try {
-      return await _auth.signOut();
+      final googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) return;
+      _user = googleUser;
+
+      final googleAuth = await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
     } catch (e) {
       print(e.toString());
       return null;
     }
+    notifyListeners();
+  }
+
+  // sign out
+  Future signOut() async {
+    await _googleSignIn.signOut();
+    await _auth.signOut();
   }
 
   Future forgotPassword(String email) async {
