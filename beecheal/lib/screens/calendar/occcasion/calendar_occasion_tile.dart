@@ -18,11 +18,15 @@ class OccasionTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.0),
       ),
       child: ListTile(
-        title: Text(occasion.getTitle()),
+        title: Text(occasion.getTitle(),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
         subtitle: Text(occasion.getDescription()),
-        trailing: Text(DateFormat('yyyy-MM-dd   hh:mm a')
-            .format(occasion.getDate())
-            .toString()),
+        trailing: Text(
+          DateFormat('yyyy-MM-dd  \nhh:mm a')
+              .format(occasion.getDate())
+              .toString(),
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         onTap: () {
           showDialog(
               context: context,

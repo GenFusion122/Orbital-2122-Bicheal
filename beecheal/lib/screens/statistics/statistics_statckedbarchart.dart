@@ -21,7 +21,8 @@ class _TaskStatsStackedBarchart extends State<TaskStatsStackedBarchart> {
   final Color top = Color.fromARGB(255, 242, 88, 73);
 
   Widget bottomTitles(double value, TitleMeta meta) {
-    const style = TextStyle(color: Color(0xff939393), fontSize: 10);
+    const style = TextStyle(
+        color: Colors.black, fontSize: 13, fontWeight: FontWeight.bold);
     String text;
     text = DateFormat('EEEE')
         .format(widget.focusedDate.subtract(Duration(days: value.toInt())))
@@ -34,15 +35,11 @@ class _TaskStatsStackedBarchart extends State<TaskStatsStackedBarchart> {
   }
 
   Widget leftTitles(double value, TitleMeta meta) {
-    if (value == meta.max) {
+    if (double.parse(meta.formattedValue) % 1 != 0) {
       return Container();
     }
     const style = TextStyle(
-      color: Color(
-        0xff939393,
-      ),
-      fontSize: 10,
-    );
+        color: Colors.black, fontSize: 13, fontWeight: FontWeight.bold);
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: Text(
@@ -55,7 +52,7 @@ class _TaskStatsStackedBarchart extends State<TaskStatsStackedBarchart> {
   int touchedIndex = -1;
   BarTouchTooltipData touchToolTips() {
     return BarTouchTooltipData(
-        tooltipBgColor: Colors.amber[400],
+        tooltipBgColor: Theme.of(context).colorScheme.primary,
         getTooltipItem: (group, groupIndex, rod, rodIndex) {
           double from = rod.rodStackItems[touchedIndex].fromY;
           double to = rod.rodStackItems[touchedIndex].toY;
@@ -78,13 +75,7 @@ class _TaskStatsStackedBarchart extends State<TaskStatsStackedBarchart> {
           return Column(
             children: [
               Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20), // if you need this
-                    side: BorderSide(
-                      color: Colors.black,
-                      width: 1,
-                    ),
-                  ),
+                  elevation: 0,
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: Text(
@@ -95,59 +86,62 @@ class _TaskStatsStackedBarchart extends State<TaskStatsStackedBarchart> {
                           fontWeight: FontWeight.bold),
                     ),
                   )),
-              AspectRatio(
-                aspectRatio: 1.2,
-                child: BarChart(
-                  BarChartData(
-                    alignment: BarChartAlignment.center,
-                    barTouchData: BarTouchData(
-                      enabled: true,
-                      touchTooltipData: touchToolTips(),
-                      touchCallback: (event, touchResponse) {
-                        touchedIndex =
-                            touchResponse?.spot?.touchedStackItemIndex ?? -1;
-                        setState(() {});
-                      },
-                    ),
-                    titlesData: FlTitlesData(
-                      show: true,
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 28,
-                          getTitlesWidget: bottomTitles,
+              Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: AspectRatio(
+                  aspectRatio: 1.5,
+                  child: BarChart(
+                    BarChartData(
+                      alignment: BarChartAlignment.center,
+                      barTouchData: BarTouchData(
+                        enabled: true,
+                        touchTooltipData: touchToolTips(),
+                        touchCallback: (event, touchResponse) {
+                          touchedIndex =
+                              touchResponse?.spot?.touchedStackItemIndex ?? -1;
+                          setState(() {});
+                        },
+                      ),
+                      titlesData: FlTitlesData(
+                        show: true,
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 28,
+                            getTitlesWidget: bottomTitles,
+                          ),
+                        ),
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 30,
+                            getTitlesWidget: leftTitles,
+                          ),
+                        ),
+                        topTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: false,
+                          ),
+                        ),
+                        rightTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
                         ),
                       ),
-                      leftTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 30,
-                          getTitlesWidget: leftTitles,
+                      gridData: FlGridData(
+                        show: true,
+                        checkToShowHorizontalLine: (value) => value % 2 == 0,
+                        getDrawingHorizontalLine: (value) => FlLine(
+                          color: Colors.grey,
+                          strokeWidth: 2,
                         ),
+                        drawVerticalLine: false,
                       ),
-                      topTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: false,
-                        ),
+                      borderData: FlBorderData(
+                        show: false,
                       ),
-                      rightTitles: AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
+                      groupsSpace: 16,
+                      barGroups: getData(snapshot.data ?? []),
                     ),
-                    gridData: FlGridData(
-                      show: true,
-                      checkToShowHorizontalLine: (value) => value % 2 == 0,
-                      getDrawingHorizontalLine: (value) => FlLine(
-                        color: Colors.grey,
-                        strokeWidth: 1,
-                      ),
-                      drawVerticalLine: false,
-                    ),
-                    borderData: FlBorderData(
-                      show: false,
-                    ),
-                    groupsSpace: 16,
-                    barGroups: getData(snapshot.data ?? []),
                   ),
                 ),
               ),

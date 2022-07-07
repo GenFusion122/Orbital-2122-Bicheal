@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:beecheal/screens/statistics/statistics_mood_piechart.dart';
 import 'package:beecheal/screens/statistics/statistics_moodcalendar.dart';
 import 'package:beecheal/screens/statistics/statistics_productivity_piechart.dart';
@@ -48,76 +50,105 @@ class Statistics extends StatefulWidget {
 
 class _StatisticsState extends State<Statistics> {
   DateTime focusedDate = DateTime.now();
-  TabBar get _tabBar => TabBar(
-        tabs: [
-          Tab(text: "Productivity"),
-          Tab(text: "Mood"),
-        ],
-      );
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
           appBar: AppBar(
-              title: Text('stats skreen'),
+              elevation: 0,
+              title: Transform.rotate(
+                  angle: 350 * pi / 180,
+                  child: Icon(Icons.pie_chart_rounded,
+                      color: Colors.black, size: 45)),
+              iconTheme: IconThemeData(color: Colors.black),
               centerTitle: true,
-              backgroundColor: Colors.orange[400],
-              bottom: PreferredSize(
-                preferredSize: _tabBar.preferredSize,
-                child: Material(
-                  color: Color.fromARGB(255, 255, 202, 40),
-                  child: _tabBar,
-                ),
-              )),
-          body: TabBarView(children: [
-            ListView(children: [
-              Card(child: TaskStatsPieChart()),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(children: [
-                    TaskStatsStackedBarchart(
-                      focusedDate: focusedDate,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              bottom: TabBar(
+                  indicatorSize: TabBarIndicatorSize.label,
+                  indicator: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20)),
+                      color: Theme.of(context).colorScheme.secondary),
+                  tabs: [
+                    Tab(
+                      child: Align(
+                          alignment: Alignment.center,
+                          child: Text("Productivity",
+                              style: Theme.of(context).textTheme.headline1)),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    Colors.amber[400])),
-                            onPressed: () {
-                              setState(() {
-                                focusedDate =
-                                    focusedDate.subtract(Duration(days: 7));
-                              });
-                            },
-                            child: Icon(Icons.arrow_back)),
-                        Text(
-                            "Focused Date: ${DateFormat('yy-MM-dd').format(focusedDate)}"),
-                        ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    Colors.amber[400])),
-                            onPressed: () {
-                              setState(() {
-                                focusedDate =
-                                    focusedDate.add(Duration(days: 7));
-                              });
-                            },
-                            child: Icon(Icons.arrow_forward)),
-                      ],
-                    )
-                  ]),
-                ),
-              )
-            ]),
-            ListView(
-              children: [
-                Card(child: EntryMoodPiechart()),
-                Card(child: EntryMoodCalendar()),
-              ],
+                    Tab(
+                        child: Align(
+                            alignment: Alignment.center,
+                            child: Text("Mood",
+                                style: Theme.of(context).textTheme.headline1)))
+                  ])),
+          body: TabBarView(children: [
+            Container(
+              color: Theme.of(context).colorScheme.secondary,
+              child: ListView(children: [
+                TaskStatsPieChart(),
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(children: [
+                      TaskStatsStackedBarchart(
+                        focusedDate: focusedDate,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ElevatedButton(
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                  )),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Theme.of(context).colorScheme.primary)),
+                              onPressed: () {
+                                setState(() {
+                                  focusedDate =
+                                      focusedDate.subtract(Duration(days: 7));
+                                });
+                              },
+                              child: Icon(Icons.arrow_back)),
+                          Text(
+                              "Focused Date: ${DateFormat('dd MMMM').format(focusedDate)}"),
+                          ElevatedButton(
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                  )),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Theme.of(context).colorScheme.primary)),
+                              onPressed: () {
+                                setState(() {
+                                  focusedDate =
+                                      focusedDate.add(Duration(days: 7));
+                                });
+                              },
+                              child: Icon(Icons.arrow_forward)),
+                        ],
+                      )
+                    ]),
+                  ),
+                )
+              ]),
+            ),
+            Container(
+              color: Theme.of(context).colorScheme.secondary,
+              child: ListView(
+                children: [
+                  EntryMoodPiechart(),
+                  EntryMoodCalendar(),
+                ],
+              ),
             ),
           ])),
     );
