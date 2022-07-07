@@ -31,254 +31,329 @@ class _EntryScreenState extends State<EntryScreen> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        backgroundColor: Colors.orange[100],
-        content: Stack(children: <Widget>[
-          Positioned(
-            child: InkResponse(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-          Form(
-              key: _formkey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: TextFormField(
-                        initialValue: widget.entry.getTitle(),
-                        decoration:
-                            textInputDecoration.copyWith(hintText: 'Title'),
-                        validator: (val) =>
-                            val!.isNotEmpty ? null : 'Please enter a title',
-                        onChanged: (val) {
-                          setState(() => widget.entry.setTitle(val));
-                          // print(widget.titleInitial);
-                        }),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: TextFormField(
-                        initialValue: widget.entry.getDescription(),
-                        decoration: textInputDecoration.copyWith(
-                            hintText: 'Description'),
-                        validator: (val) => val!.isNotEmpty
-                            ? null
-                            : 'Please enter a description',
-                        onChanged: (val) {
-                          setState(() => widget.entry.setDescription(val));
-                          // print(widget.descriptionInitial);
-                        }),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: Container(
-                      constraints: BoxConstraints(maxHeight: 180.0),
-                      child: SingleChildScrollView(
-                        child: TextFormField(
-                            initialValue: widget.entry.getBody(),
-                            textAlignVertical: TextAlignVertical.top,
-                            keyboardType: TextInputType.multiline,
-                            maxLines: null,
-                            minLines: 7,
-                            decoration:
-                                textInputDecoration.copyWith(hintText: 'Body'),
-                            validator: (val) =>
-                                val!.isNotEmpty ? null : 'Please enter a body',
-                            onChanged: (val) {
-                              setState(() => widget.entry.setBody(val));
-                              // print(widget.bodyInitial);
-                            }),
+        contentPadding: EdgeInsets.all(10.0),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+                MediaQuery.of(context).size.width * 0.04)),
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Form(
+                key: _formkey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            0.0,
+                            MediaQuery.of(context).size.height * 0.005,
+                            0.0,
+                            0.0),
+                        child: Text('Title',
+                            style: TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.w900,
+                                color: Color(0xff000000))),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Color.fromARGB(255, 255, 202, 0))),
-                        child: Text(widget.textPrompt),
-                        onPressed: () async {
-                          if (_formkey.currentState!.validate()) {
-                            int prediction = await Classify();
-                            widget.entry.setSentiment(prediction);
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return StatefulBuilder(
-                                      builder: (context, setState) {
-                                    return AlertDialog(
-                                        backgroundColor:
-                                            Color.fromARGB(255, 255, 243, 224),
-                                        content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.center,
-                                                child: Text(
-                                                  'How are you feeling as you write this entry?',
-                                                  style: TextStyle(
-                                                      fontSize:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.4 *
-                                                              0.0875),
+                    Padding(
+                      padding: EdgeInsets.all(1.0),
+                      child: TextFormField(
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xff000000)),
+                          initialValue: widget.entry.getTitle(),
+                          cursorColor: Color(0xff000000),
+                          decoration: textInputDecorationFormField,
+                          validator: (val) =>
+                              val!.isNotEmpty ? null : 'Please enter a title',
+                          onChanged: (val) {
+                            setState(() => widget.entry.setTitle(val));
+                          }),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            0.0,
+                            MediaQuery.of(context).size.height * 0.005,
+                            0.0,
+                            0.0),
+                        child: Text('Description',
+                            style: TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.w900,
+                                color: Color(0xff000000))),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(1.0),
+                      child: TextFormField(
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xff000000)),
+                          initialValue: widget.entry.getDescription(),
+                          cursorColor: Color(0xff000000),
+                          decoration: textInputDecorationFormField,
+                          validator: (val) => val!.isNotEmpty
+                              ? null
+                              : 'Please enter a description',
+                          onChanged: (val) {
+                            setState(() => widget.entry.setDescription(val));
+                            // print(widget.descriptionInitial);
+                          }),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            0.0,
+                            MediaQuery.of(context).size.height * 0.005,
+                            0.0,
+                            0.0),
+                        child: Text('Body',
+                            style: TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.w900,
+                                color: Color(0xff000000))),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(1.0),
+                      child: Container(
+                        constraints: BoxConstraints(maxHeight: 180.0),
+                        child: SingleChildScrollView(
+                          child: TextFormField(
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xff000000)),
+                              initialValue: widget.entry.getBody(),
+                              cursorColor: Color(0xff000000),
+                              textAlignVertical: TextAlignVertical.top,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
+                              minLines: 7,
+                              decoration: textInputDecorationFormField,
+                              validator: (val) => val!.isNotEmpty
+                                  ? null
+                                  : 'Please enter a body',
+                              onChanged: (val) {
+                                setState(() => widget.entry.setBody(val));
+                                // print(widget.bodyInitial);
+                              }),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 100.0,
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                              )),
+                              backgroundColor:
+                                  MaterialStateProperty.all(Color(0xFFFFE98C)),
+                              elevation:
+                                  MaterialStateProperty.resolveWith<double>(
+                                      (states) => 0)),
+                          child: Text(widget.textPrompt,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xff000000))),
+                          onPressed: () async {
+                            if (_formkey.currentState!.validate()) {
+                              int prediction = await Classify();
+                              widget.entry.setSentiment(prediction);
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return StatefulBuilder(
+                                        builder: (context, setState) {
+                                      return AlertDialog(
+                                          backgroundColor: Color.fromARGB(
+                                              255, 255, 243, 224),
+                                          content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Align(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    'How are you feeling as you write this entry?',
+                                                    style: TextStyle(
+                                                        fontSize: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.4 *
+                                                            0.0875),
+                                                  ),
                                                 ),
-                                              ),
-                                              SizedBox(height: 20.0),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  Column(children: [
-                                                    Text('Negative'),
-                                                    IconButton(
-                                                        onPressed: (() {
-                                                          setState(() {
-                                                            widget.entry
-                                                                .setSentiment(
-                                                                    -1);
-                                                          });
-                                                        }),
-                                                        icon: Icon(
-                                                            Icons
-                                                                .circle_rounded,
-                                                            color: (widget.entry
-                                                                        .getSentiment() ==
-                                                                    -1)
-                                                                ? Colors.red
-                                                                : Colors.grey[
-                                                                    200])),
-                                                  ]),
-                                                  Column(children: [
-                                                    Text('Neutral'),
-                                                    IconButton(
-                                                        onPressed: (() {
-                                                          setState(() {
-                                                            widget.entry
-                                                                .setSentiment(
-                                                                    0);
-                                                          });
-                                                        }),
-                                                        icon: Icon(
-                                                            Icons
-                                                                .circle_rounded,
-                                                            color: (widget.entry
-                                                                        .getSentiment() ==
-                                                                    0)
-                                                                ? Colors.grey
-                                                                : Colors.grey[
-                                                                    200])),
-                                                  ]),
-                                                  Column(children: [
-                                                    Text('Positive'),
-                                                    IconButton(
-                                                        onPressed: (() {
-                                                          setState(() {
-                                                            widget.entry
-                                                                .setSentiment(
-                                                                    1);
-                                                          });
-                                                        }),
-                                                        icon: Icon(
-                                                            Icons
-                                                                .circle_rounded,
-                                                            color: (widget.entry
-                                                                        .getSentiment() ==
-                                                                    1)
-                                                                ? Colors.green
-                                                                : Colors.grey[
-                                                                    200])),
-                                                  ])
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                      'BzB feels that you are feeling ',
-                                                      style: TextStyle(
-                                                          fontSize: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.4 *
-                                                              0.0875)),
-                                                  Text(
-                                                      (prediction == -1
-                                                          ? 'negative'
-                                                          : prediction == 0
-                                                              ? 'neutral'
-                                                              : 'positive'),
-                                                      style: TextStyle(
-                                                          fontSize: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.4 *
-                                                              0.0875,
-                                                          color: prediction ==
-                                                                  -1
-                                                              ? Colors.red
-                                                              : prediction == 0
+                                                SizedBox(height: 20.0),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    Column(children: [
+                                                      Text('Negative'),
+                                                      IconButton(
+                                                          onPressed: (() {
+                                                            setState(() {
+                                                              widget.entry
+                                                                  .setSentiment(
+                                                                      -1);
+                                                            });
+                                                          }),
+                                                          icon: Icon(
+                                                              Icons
+                                                                  .circle_rounded,
+                                                              color: (widget
+                                                                          .entry
+                                                                          .getSentiment() ==
+                                                                      -1)
+                                                                  ? Colors.red
+                                                                  : Colors.grey[
+                                                                      200])),
+                                                    ]),
+                                                    Column(children: [
+                                                      Text('Neutral'),
+                                                      IconButton(
+                                                          onPressed: (() {
+                                                            setState(() {
+                                                              widget.entry
+                                                                  .setSentiment(
+                                                                      0);
+                                                            });
+                                                          }),
+                                                          icon: Icon(
+                                                              Icons
+                                                                  .circle_rounded,
+                                                              color: (widget
+                                                                          .entry
+                                                                          .getSentiment() ==
+                                                                      0)
                                                                   ? Colors.grey
-                                                                  : Colors
-                                                                      .green))
-                                                ],
-                                              ),
-                                              SizedBox(height: 20.0),
-                                              ElevatedButton(
-                                                style: ButtonStyle(
-                                                    backgroundColor:
-                                                        MaterialStateProperty
-                                                            .all<Color>(
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    255,
-                                                                    202,
-                                                                    40))),
-                                                child: Text('Confirm'),
-                                                onPressed: () {
-                                                  DatabaseService()
-                                                      .updateUserEntry(
-                                                          widget.entry.getId(),
-                                                          widget.entry
-                                                              .getTitle(),
-                                                          widget.entry
-                                                              .getDate(),
-                                                          widget.entry
-                                                              .getDescription(),
-                                                          widget.entry
-                                                              .getBody(),
-                                                          widget.entry
-                                                              .getSentiment());
-                                                  Navigator.of(context).pop();
-                                                  Navigator.of(context).pop();
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return EntryView(
-                                                            widget.entry,
-                                                            false);
-                                                      });
-                                                },
-                                              )
-                                            ]));
+                                                                  : Colors.grey[
+                                                                      200])),
+                                                    ]),
+                                                    Column(children: [
+                                                      Text('Positive'),
+                                                      IconButton(
+                                                          onPressed: (() {
+                                                            setState(() {
+                                                              widget.entry
+                                                                  .setSentiment(
+                                                                      1);
+                                                            });
+                                                          }),
+                                                          icon: Icon(
+                                                              Icons
+                                                                  .circle_rounded,
+                                                              color: (widget
+                                                                          .entry
+                                                                          .getSentiment() ==
+                                                                      1)
+                                                                  ? Colors.green
+                                                                  : Colors.grey[
+                                                                      200])),
+                                                    ])
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                        'BzB feels that you are feeling ',
+                                                        style: TextStyle(
+                                                            fontSize: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.4 *
+                                                                0.0875)),
+                                                    Text(
+                                                        (prediction == -1
+                                                            ? 'negative'
+                                                            : prediction == 0
+                                                                ? 'neutral'
+                                                                : 'positive'),
+                                                        style: TextStyle(
+                                                            fontSize: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.4 *
+                                                                0.0875,
+                                                            color: prediction ==
+                                                                    -1
+                                                                ? Colors.red
+                                                                : prediction ==
+                                                                        0
+                                                                    ? Colors
+                                                                        .grey
+                                                                    : Colors
+                                                                        .green))
+                                                  ],
+                                                ),
+                                                SizedBox(height: 20.0),
+                                                ElevatedButton(
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all<Color>(Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      255,
+                                                                      202,
+                                                                      40))),
+                                                  child: Text('Confirm'),
+                                                  onPressed: () {
+                                                    DatabaseService()
+                                                        .updateUserEntry(
+                                                            widget.entry
+                                                                .getId(),
+                                                            widget.entry
+                                                                .getTitle(),
+                                                            widget.entry
+                                                                .getDate(),
+                                                            widget.entry
+                                                                .getDescription(),
+                                                            widget.entry
+                                                                .getBody(),
+                                                            widget.entry
+                                                                .getSentiment());
+                                                    Navigator.of(context).pop();
+                                                    Navigator.of(context).pop();
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return EntryView(
+                                                              widget.entry,
+                                                              false);
+                                                        });
+                                                  },
+                                                )
+                                              ]));
+                                    });
                                   });
-                                });
-                          }
-                        }),
-                  )
-                ],
-              ))
-        ]));
+                            }
+                          }),
+                    )
+                  ],
+                ))
+          ],
+        ));
   }
 
   // Performs inference on body
