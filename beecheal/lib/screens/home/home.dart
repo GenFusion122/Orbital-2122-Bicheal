@@ -7,8 +7,10 @@ import 'package:beecheal/screens/todo_list/todo_task_edit.dart';
 import 'package:beecheal/screens/todo_list/todo_task_tile.dart';
 import 'package:beecheal/services/auth.dart';
 import 'package:beecheal/services/database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hexagon/hexagon.dart';
@@ -43,8 +45,29 @@ class _HomeState extends State<Home> {
     }
   }
 
+  int numberOfTasksToday = 0;
+  Future<void> getNumberOfTasksToday() async {
+    var itemsList = [];
+    DateTime start = DateUtils.dateOnly(DateTime.now());
+    DateTime end = start.add(Duration(hours: 23, minutes: 59, seconds: 59));
+    final taskList = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(_auth.curruid())
+        .collection("tasks")
+        .where('dateTime',
+            isGreaterThanOrEqualTo: start, isLessThanOrEqualTo: end)
+        .get()
+        .then((snapshot) {
+      snapshot.docs.forEach((element) {
+        itemsList.add(element);
+      });
+    });
+    numberOfTasksToday = itemsList.length;
+  }
+
   @override
   Widget build(BuildContext context) {
+    getNumberOfTasksToday();
     // refreshes listview
     _everyMinute = Timer.periodic(Duration(minutes: 1), (Timer t) {
       // print('Rebuilt at ${DateTime.now()}');
@@ -101,7 +124,7 @@ class _HomeState extends State<Home> {
           iconTheme: IconThemeData(color: Colors.black, size: 40),
           title: Icon(Icons.home_outlined, color: Colors.black, size: 45),
           centerTitle: true,
-          backgroundColor: Colors.orange[400],
+          backgroundColor: Theme.of(context).colorScheme.primary,
           elevation: 0.0,
         ),
         endDrawer: Drawer(
@@ -407,7 +430,64 @@ class _HomeState extends State<Home> {
           children: <Widget>[
             Expanded(
               flex: 8,
-              child: Container(),
+              child: Padding(
+                padding: const EdgeInsets.all(3),
+                child: GridView.count(
+                  physics: NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  childAspectRatio: 1.35,
+                  children: [
+                    displayCard(Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            "Tasks Due \nToday: ${numberOfTasksToday}",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        )
+                      ],
+                    )),
+                    displayCard(Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            "Events Happening \nToday:",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        )
+                      ],
+                    )),
+                    displayCard(Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            "Upcoming Task:",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        )
+                      ],
+                    )),
+                    displayCard(Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            "Upcoming Event:",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        )
+                      ],
+                    )),
+                  ],
+                ),
+              ),
             ),
             Container(
               color: Color(0xFFFFAB00),
@@ -545,5 +625,16 @@ class _HomeState extends State<Home> {
               fontWeight: FontWeight.w900,
               color: Color(0xff000000)),
         )));
+  }
+
+  Widget displayCard(Widget child) {
+    return Card(
+      color: Colors.white,
+      margin: EdgeInsets.all(3),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: child,
+    );
   }
 }
