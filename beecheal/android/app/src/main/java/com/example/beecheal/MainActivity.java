@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 import org.tensorflow.lite.support.label.Category;
 import org.tensorflow.lite.task.text.nlclassifier.NLClassifier;
-
 import com.google.firebase.ml.modeldownloader.CustomModelDownloadConditions;
 import com.google.firebase.ml.modeldownloader.DownloadType;
 import com.google.firebase.ml.modeldownloader.FirebaseModelDownloader;
@@ -68,16 +67,19 @@ public class MainActivity extends FlutterActivity {
         String body = (String)arguments.get("string");
         try {
         List<Category> results = textClassifier.classify(body);
-        int output;
+        List<Integer> output = new ArrayList();
 
         if (-0.10 < (results.get(0).getScore() - results.get(1).getScore()) && (results.get(0).getScore() - results.get(1).getScore()) < 0.10) {
-          output = 0;
+          output.add(0);
+          output.add(Math.abs(Math.round((results.get(0).getScore() - results.get(1).getScore()) * 1000)));
         }
         else if (results.get(0).getScore() > results.get(1).getScore()) {
-          output = -1;
+          output.add(-1);
+          output.add(Math.round(results.get(0).getScore() * 100));
         }
         else {
-          output = 1;
+          output.add(1);
+          output.add(Math.round(results.get(1).getScore() * 100));
         }
         // return prediction
         result.success(output);
