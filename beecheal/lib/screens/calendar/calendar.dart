@@ -119,7 +119,7 @@ class _CalendarViewState extends State<CalendarView> {
                                 toggleButtonWidget(constraints.maxWidth / 3.1,
                                     isSelected[1], "Completed"),
                                 toggleButtonWidget(constraints.maxWidth / 3.1,
-                                    isSelected[2], "Incompleted"),
+                                    isSelected[2], "Incomplete"),
                               ],
                             ),
                           );
@@ -149,7 +149,6 @@ class _CalendarViewState extends State<CalendarView> {
         child: Center(
             child: Text(
           text,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         )));
   }
 }
