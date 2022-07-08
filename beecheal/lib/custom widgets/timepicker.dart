@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hexagon/hexagon.dart';
 
 class TimePicker {
   static Future<DateTime?> dateTimePicker(
@@ -8,10 +10,8 @@ class TimePicker {
       Navigator.of(context).pop();
       return null;
     }
-    TimeOfDay? finalTime =
-        await timePicker(context, TimeOfDay.fromDateTime(initDate));
+    TimeOfDay? finalTime = await timePicker(context, initDate);
     if (finalTime == null) {
-      Navigator.of(context).pop();
       return null;
     }
     finalDate = finalDate
@@ -29,18 +29,20 @@ class TimePicker {
         builder: (context, child) {
           return Theme(
             data: Theme.of(context).copyWith(
-              //backgroundColor: Color.fromARGB(255, 255, 202, 0),
               colorScheme: ColorScheme.light(
-                primary: Color.fromARGB(
-                    255, 255, 202, 0), // header background colour
+                tertiary: Colors.white,
+                primary: Theme.of(context)
+                    .colorScheme
+                    .primary, // header background colour
                 onPrimary: Colors.black, // header text colour
                 onSurface: Colors.black, // body text colour
               ),
+              dialogBackgroundColor: Colors.white,
               textButtonTheme: TextButtonThemeData(
                 style: TextButton.styleFrom(
                   backgroundColor:
-                      Color.fromARGB(255, 255, 202, 0), //button colour
-                  primary: Colors.white,
+                      Theme.of(context).colorScheme.primary, //button colour
+                  primary: Colors.black,
                 ),
               ),
             ),
@@ -51,33 +53,59 @@ class TimePicker {
   }
 
   static Future<TimeOfDay?> timePicker(
-      BuildContext context, TimeOfDay initTime) async {
-    TimeOfDay? pickedTime = await showTimePicker(
+      BuildContext context, DateTime initTime) async {
+    TimeOfDay? pickedTime =
+        TimeOfDay(hour: initTime.hour, minute: initTime.minute);
+    await showDialog(
         context: context,
-        initialEntryMode: TimePickerEntryMode.input,
-        initialTime: initTime,
-        builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              backgroundColor: Color.fromARGB(255, 255, 202, 0),
-              colorScheme: ColorScheme.light(
-                primary: Color.fromARGB(
-                    255, 255, 202, 0), // header background colour
-                onPrimary: Colors.black, // header text colour
-                onSurface: Colors.black, // body text colour
-              ),
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  backgroundColor:
-                      Color.fromARGB(255, 255, 202, 0), //button colour
-                  primary: Colors.white,
+        builder: (BuildContext context) => Padding(
+              padding: EdgeInsets.fromLTRB(
+                  MediaQuery.of(context).size.width * 1 / 6,
+                  MediaQuery.of(context).size.height * 1 / 3,
+                  MediaQuery.of(context).size.width * 1 / 6,
+                  MediaQuery.of(context).size.height * 1 / 3),
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    color: Colors.white),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 2 / 3,
+                      height: MediaQuery.of(context).size.height * 1 / 6,
+                      child: CupertinoDatePicker(
+                          minimumDate: DateTime(1990),
+                          maximumDate: DateTime(3000),
+                          mode: CupertinoDatePickerMode.time,
+                          initialDateTime: initTime,
+                          onDateTimeChanged: (value) {
+                            pickedTime = TimeOfDay(
+                                hour: value.hour, minute: value.minute);
+                          }),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              pickedTime = null;
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("Cancel")),
+                        SizedBox(width: 10),
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("Ok")),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            ),
-            child: child!,
-          );
-        });
-
+            ));
     return pickedTime;
   }
 }

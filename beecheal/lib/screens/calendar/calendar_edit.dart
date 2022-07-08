@@ -83,8 +83,8 @@ class _CalenderEditScreen<T extends Occasion>
                           DateTime? pickedDateTime;
                           if (_formkey.currentState!.validate()) {
                             if (widget.textPrompt == 'Create') {
-                              pickedTime = await TimePicker.timePicker(context,
-                                  TimeOfDay.fromDateTime(DateTime.now()));
+                              pickedTime = await TimePicker.timePicker(
+                                  context, DateTime.now());
                               if (pickedTime != null) {
                                 //if the user didn't cancel
                                 widget.occasion.setDate(widget.occasion
@@ -126,6 +126,7 @@ class _CalenderEditScreen<T extends Occasion>
                               InitializeNotifications
                                   .initializeOccasionNotifications();
                             }
+                            Navigator.of(context).pop();
                           }
                         }),
                   )

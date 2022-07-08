@@ -10,6 +10,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/src/intl/date_format.dart';
+import '../journal/journal_entry_tile.dart';
 import 'legend_widget.dart';
 
 class EntryMoodCalendar extends StatefulWidget {
@@ -189,31 +190,10 @@ class _EntryMoodCalendar extends State<EntryMoodCalendar> {
                     return Container(
                       color: Theme.of(context).colorScheme.secondary,
                       child: ListView.builder(
-                          scrollDirection: Axis.vertical,
                           shrinkWrap: true,
                           itemCount: items.length,
                           itemBuilder: (context, index) {
-                            return Card(
-                              margin: EdgeInsets.symmetric(vertical: 1.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: ListTile(
-                                title: Text(items[index].getTitle()),
-                                subtitle: Text(items[index].getDescription()),
-                                trailing: Text(
-                                    DateFormat('yyyy-MM-dd   hh:mm a')
-                                        .format(items[index].getDate())
-                                        .toString()),
-                                onTap: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return EntryView(items[index], true);
-                                      });
-                                },
-                              ),
-                            );
+                            return EntryTile(items[index], true);
                           }),
                     );
                   }),

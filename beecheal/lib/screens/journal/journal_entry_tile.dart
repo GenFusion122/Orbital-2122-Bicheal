@@ -9,8 +9,9 @@ class EntryTile extends StatelessWidget {
   // const EntryTile({Key? key}) : super(key: key);
 
   var occasion;
+  bool viewOnly;
 
-  EntryTile(this.occasion);
+  EntryTile(this.occasion, this.viewOnly);
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +70,7 @@ class EntryTile extends StatelessWidget {
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return EntryView(occasion, false);
+                    return EntryView(occasion, viewOnly);
                   });
             },
           ),

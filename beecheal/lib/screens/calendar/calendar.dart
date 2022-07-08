@@ -146,6 +146,10 @@ class _CalendarViewState extends State<CalendarView> {
                 ? Theme.of(context).colorScheme.primary
                 : Theme.of(context).colorScheme.secondary,
             borderRadius: const BorderRadius.all(Radius.circular(20))),
-        child: Center(child: Text(text)));
+        child: Center(
+            child: Text(
+          text,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        )));
   }
 }
