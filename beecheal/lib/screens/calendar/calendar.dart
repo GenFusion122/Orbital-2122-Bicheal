@@ -119,7 +119,7 @@ class _CalendarViewState extends State<CalendarView> {
                                 toggleButtonWidget(constraints.maxWidth / 3.1,
                                     isSelected[1], "Completed"),
                                 toggleButtonWidget(constraints.maxWidth / 3.1,
-                                    isSelected[2], "Incompleted"),
+                                    isSelected[2], "Incomplete"),
                               ],
                             ),
                           );
@@ -146,6 +146,9 @@ class _CalendarViewState extends State<CalendarView> {
                 ? Theme.of(context).colorScheme.primary
                 : Theme.of(context).colorScheme.secondary,
             borderRadius: const BorderRadius.all(Radius.circular(20))),
-        child: Center(child: Text(text)));
+        child: Center(
+            child: Text(
+          text,
+        )));
   }
 }

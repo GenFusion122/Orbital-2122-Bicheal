@@ -68,6 +68,7 @@ Future<void> main() async {
                     onError: Colors.black,
                     brightness: Brightness.light),
                 dialogBackgroundColor: Color(0xFFFFC95C),
+                bottomAppBarColor: Color(0xFFFFAB00),
                 fontFamily: "Rubik",
                 textTheme: TextTheme(
                     headline1: TextStyle(

@@ -59,7 +59,7 @@ class _StatisticsState extends State<Statistics> {
               elevation: 0,
               title: Transform.rotate(
                   angle: 350 * pi / 180,
-                  child: Icon(Icons.pie_chart_rounded,
+                  child: Icon(Icons.pie_chart_outline_rounded,
                       color: Colors.black, size: 45)),
               iconTheme: IconThemeData(color: Colors.black),
               centerTitle: true,
