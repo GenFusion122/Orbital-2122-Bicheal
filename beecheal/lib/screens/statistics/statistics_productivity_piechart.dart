@@ -18,92 +18,95 @@ class TaskStatsPieChart extends StatefulWidget {
 
 class _TaskStatsPieChart extends State<TaskStatsPieChart> {
   int touchedIndex = -1;
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: DatabaseService().tasks,
-        builder: (context, AsyncSnapshot<List<Task>> snapshot) {
-          return Column(children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20), // if you need this
-                    side: BorderSide(
-                      color: Colors.black,
-                      width: 1,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Text(
-                      "Overall Productivity",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  )),
-            ),
-            Row(children: [
-              Expanded(
-                  child: AspectRatio(
-                      aspectRatio: 1.4,
-                      child: PieChart(
-                        PieChartData(
-                            pieTouchData: PieTouchData(touchCallback:
-                                (FlTouchEvent event, pieTouchResponse) {
-                              setState(() {
-                                if (!event.isInterestedForInteractions ||
-                                    pieTouchResponse == null ||
-                                    pieTouchResponse.touchedSection == null) {
-                                  touchedIndex = -1;
-                                  return;
-                                }
-                                touchedIndex = pieTouchResponse
-                                    .touchedSection!.touchedSectionIndex;
-                              });
-                            }),
-                            borderData: FlBorderData(
-                              show: false,
-                            ),
-                            sectionsSpace: 0,
-                            centerSpaceRadius: 40,
-                            sections: showingSections(snapshot.data ?? [])),
-                      ))),
-              Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const <Widget>[
-                    Legend(
-                      color: Color.fromARGB(255, 150, 243, 85),
-                      text: 'On Time',
-                      isSquare: true,
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Legend(
-                      color: Color.fromARGB(255, 227, 242, 72),
-                      text: 'Uncompleted',
-                      isSquare: true,
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Legend(
-                      color: Color.fromARGB(255, 242, 88, 73),
-                      text: 'Late',
-                      isSquare: true,
-                    ),
-                    SizedBox(
-                      height: 4,
-                    )
-                  ])
-            ])
-          ]);
-        });
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: StreamBuilder(
+          stream: DatabaseService().tasks,
+          builder: (context, AsyncSnapshot<List<Task>> snapshot) {
+            return Column(children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Card(
+                    elevation: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(
+                        "Overall Productivity",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )),
+              ),
+              Row(children: [
+                Expanded(
+                    child: AspectRatio(
+                        aspectRatio: 1.5,
+                        child: PieChart(
+                          PieChartData(
+                              pieTouchData: PieTouchData(touchCallback:
+                                  (FlTouchEvent event, pieTouchResponse) {
+                                setState(() {
+                                  if (!event.isInterestedForInteractions ||
+                                      pieTouchResponse == null ||
+                                      pieTouchResponse.touchedSection == null) {
+                                    touchedIndex = -1;
+                                    return;
+                                  }
+                                  touchedIndex = pieTouchResponse
+                                      .touchedSection!.touchedSectionIndex;
+                                });
+                              }),
+                              borderData: FlBorderData(
+                                show: false,
+                              ),
+                              sectionsSpace: 0,
+                              centerSpaceRadius: 40,
+                              sections: showingSections(snapshot.data ?? [])),
+                        ))),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const <Widget>[
+                        Legend(
+                          color: Color(0xFF96F355),
+                          text: 'On Time',
+                          isSquare: true,
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Legend(
+                          color: Color(0xFFe3f248),
+                          text: 'Uncompleted',
+                          isSquare: true,
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Legend(
+                          color: Color(0xFFF25849),
+                          text: 'Late',
+                          isSquare: true,
+                        ),
+                        SizedBox(
+                          height: 4,
+                        )
+                      ]),
+                )
+              ])
+            ]);
+          }),
+    );
   }
 
   List<PieChartSectionData> showingSections(List<Task> taskList) {
@@ -121,7 +124,7 @@ class _TaskStatsPieChart extends State<TaskStatsPieChart> {
       switch (i) {
         case 0:
           return PieChartSectionData(
-            color: Color.fromARGB(255, 150, 243, 85),
+            color: Color(0xFF96F355),
             value: Statistics.countCompleted(taskList),
             title: isTouched
                 ? '${Statistics.countCompleted(taskList).toStringAsFixed(0)} tasks'
@@ -134,7 +137,7 @@ class _TaskStatsPieChart extends State<TaskStatsPieChart> {
           );
         case 1:
           return PieChartSectionData(
-            color: Color.fromARGB(255, 227, 242, 72),
+            color: Color(0xFFe3f248),
             value: Statistics.countUncompleted(taskList),
             title: isTouched
                 ? '${Statistics.countUncompleted(taskList).toStringAsFixed(0)} tasks'
@@ -147,7 +150,7 @@ class _TaskStatsPieChart extends State<TaskStatsPieChart> {
           );
         case 2:
           return PieChartSectionData(
-            color: Color.fromARGB(255, 242, 88, 73),
+            color: Color(0xFFF25849),
             value: Statistics.countLateCompleted(taskList),
             title: isTouched
                 ? '${Statistics.countLateCompleted(taskList).toStringAsFixed(0)} tasks'

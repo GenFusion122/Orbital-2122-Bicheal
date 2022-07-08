@@ -49,6 +49,7 @@ class _CalendarViewState extends State<CalendarView> {
                   ])),
           body: TabBarView(children: [
             Scaffold(
+              resizeToAvoidBottomInset: false,
               backgroundColor: Theme.of(context).colorScheme.secondary,
               body: StreamBuilder(
                 stream: DatabaseService().occasion,
@@ -59,6 +60,7 @@ class _CalendarViewState extends State<CalendarView> {
               ),
             ),
             Scaffold(
+              resizeToAvoidBottomInset: false,
               backgroundColor: Theme.of(context).colorScheme.secondary,
               body: StreamBuilder(
                 stream: DatabaseService().tasks,
@@ -104,16 +106,20 @@ class _CalendarViewState extends State<CalendarView> {
                                 });
                               },
                               borderColor: Colors.transparent,
+                              selectedBorderColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
                               isSelected: isSelected,
                               color: Colors.black,
-                              fillColor: Theme.of(context).colorScheme.primary,
                               selectedColor: Colors.black,
                               constraints: BoxConstraints.expand(
                                   width: constraints.maxWidth / 3.1),
                               children: [
-                                Text("Default"),
-                                Text("Complete"),
-                                Text("Incomplete")
+                                toggleButtonWidget(constraints.maxWidth / 3.1,
+                                    isSelected[0], "Default"),
+                                toggleButtonWidget(constraints.maxWidth / 3.1,
+                                    isSelected[1], "Completed"),
+                                toggleButtonWidget(constraints.maxWidth / 3.1,
+                                    isSelected[2], "Incompleted"),
                               ],
                             ),
                           );
@@ -130,5 +136,16 @@ class _CalendarViewState extends State<CalendarView> {
             ),
           ]),
         ));
+  }
+
+  Widget toggleButtonWidget(double width, bool selected, String text) {
+    return Container(
+        width: width,
+        decoration: BoxDecoration(
+            color: selected
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.secondary,
+            borderRadius: const BorderRadius.all(Radius.circular(20))),
+        child: Center(child: Text(text)));
   }
 }

@@ -69,14 +69,7 @@ class _CalendarTemplate<T extends Occasion> extends State<CalendarTemplate<T>> {
             calendarFormat: _calendarFormat,
             eventLoader: (day) => _getEventsForDay(day, widget.snapshotList),
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            onFormatChanged: (format) {
-              if (_calendarFormat != format) {
-                // Call `setState()` when updating calendar format
-                setState(() {
-                  _calendarFormat = format;
-                });
-              }
-            },
+            availableGestures: AvailableGestures.horizontalSwipe,
             onDaySelected: (selectedDay, focusedDay) {
               if (!isSameDay(_selectedDay, selectedDay)) {
                 setState(() {
