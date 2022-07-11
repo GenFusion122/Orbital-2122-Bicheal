@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../custom widgets/constants.dart';
 
 import 'package:beecheal/services/notifications.dart';
-
+import 'package:intl/intl.dart';
 import '../../models/task.dart';
 import '../../services/database.dart';
 
@@ -107,7 +107,6 @@ class _CalenderEditScreen<T extends Occasion>
                                 pickedTime == null)) {
                               widget.occasion.setTitle(newTitle);
                               widget.occasion.setDescription(newDescription);
-                              print(T);
                               //if both aren't null, then the user didn't cancel
                               if (T.toString() == "Task") {
                                 DatabaseService().updateUserTask(

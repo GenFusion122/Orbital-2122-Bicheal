@@ -4,6 +4,7 @@ import '../../../services/database.dart';
 import '../../../services/notifications.dart';
 import '../../home/initialize_notifications.dart';
 import '../calendar_edit.dart';
+import 'package:intl/intl.dart';
 
 class OccasionView extends StatelessWidget {
   Occasion occasion;
@@ -24,7 +25,10 @@ class OccasionView extends StatelessWidget {
           Column(mainAxisSize: MainAxisSize.min, children: [
             Align(
                 alignment: Alignment.topRight,
-                child: Text(occasion.getDate().toString(),
+                child: Text(
+                    DateFormat('yyyy-MM-dd hh:mm a')
+                        .format(occasion.getDate())
+                        .toString(),
                     style: TextStyle(
                         fontSize: 15.0, fontWeight: FontWeight.bold))),
             Card(

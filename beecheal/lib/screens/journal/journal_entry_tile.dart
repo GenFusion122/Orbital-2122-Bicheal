@@ -20,7 +20,7 @@ class EntryTile extends StatelessWidget {
         child: Card(
           margin: EdgeInsets.symmetric(
               vertical: MediaQuery.of(context).size.height * 0.005),
-          shape: BeveledRectangleBorder(
+          shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(
                   MediaQuery.of(context).size.width * 0.04)),
           child: ListTile(
@@ -30,12 +30,13 @@ class EntryTile extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.w900,
+                    overflow: TextOverflow.ellipsis,
                     color: Color(0xff000000))),
             subtitle: Text(occasion.getDescription(),
                 style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w900,
-                )),
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w900,
+                    overflow: TextOverflow.ellipsis)),
             trailing: Row(mainAxisSize: MainAxisSize.min, children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,

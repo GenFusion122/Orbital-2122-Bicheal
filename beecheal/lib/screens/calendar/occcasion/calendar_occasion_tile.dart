@@ -19,8 +19,11 @@ class OccasionTile extends StatelessWidget {
       ),
       child: ListTile(
         title: Text(occasion.getTitle(),
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-        subtitle: Text(occasion.getDescription()),
+            style: TextStyle(overflow: TextOverflow.ellipsis)),
+        subtitle: Text(
+          occasion.getDescription(),
+          style: TextStyle(overflow: TextOverflow.ellipsis),
+        ),
         trailing: Text(
           DateFormat('yyyy-MM-dd  \nhh:mm a')
               .format(occasion.getDate())

@@ -41,7 +41,7 @@ class TimePicker {
               textButtonTheme: TextButtonThemeData(
                 style: TextButton.styleFrom(
                   backgroundColor:
-                      Theme.of(context).colorScheme.primary, //button colour
+                      Theme.of(context).colorScheme.secondary, //button colour
                   primary: Colors.black,
                 ),
               ),
@@ -89,6 +89,10 @@ class TimePicker {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<
+                                        Color>(
+                                    Theme.of(context).colorScheme.secondary)),
                             onPressed: () {
                               pickedTime = null;
                               Navigator.of(context).pop();
@@ -96,6 +100,10 @@ class TimePicker {
                             child: Text("Cancel")),
                         SizedBox(width: 10),
                         ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<
+                                        Color>(
+                                    Theme.of(context).colorScheme.secondary)),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },

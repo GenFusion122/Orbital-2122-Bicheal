@@ -46,16 +46,21 @@ class _HomeState extends State<Home> {
   }
 
   int numberOfTasksToday = 0;
+  int numberOfEventsToday = 0;
+  String upcomingTask = "";
+  String upcomingEvent = "";
+
   Future<void> getNumberOfTasksToday() async {
     var itemsList = [];
     DateTime start = DateUtils.dateOnly(DateTime.now());
     DateTime end = start.add(Duration(hours: 23, minutes: 59, seconds: 59));
-    final taskList = await FirebaseFirestore.instance
+    final query = await FirebaseFirestore.instance
         .collection("users")
         .doc(_auth.curruid())
         .collection("tasks")
         .where('dateTime',
             isGreaterThanOrEqualTo: start, isLessThanOrEqualTo: end)
+        .where('completedOn', isEqualTo: Task.incompletePlaceholder)
         .get()
         .then((snapshot) {
       snapshot.docs.forEach((element) {
@@ -65,9 +70,65 @@ class _HomeState extends State<Home> {
     numberOfTasksToday = itemsList.length;
   }
 
+  Future<void> getNumberOfEventsToday() async {
+    var itemsList = [];
+    DateTime start = DateUtils.dateOnly(DateTime.now());
+    DateTime end = start.add(Duration(hours: 23, minutes: 59, seconds: 59));
+    final query = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(_auth.curruid())
+        .collection("occasions")
+        .where('dateTime',
+            isGreaterThanOrEqualTo: start, isLessThanOrEqualTo: end)
+        .get()
+        .then((snapshot) {
+      snapshot.docs.forEach((element) {
+        itemsList.add(element);
+      });
+    });
+    numberOfEventsToday = itemsList.length;
+  }
+
+  Future<void> getClosestTask() async {
+    try {
+      final query = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(_auth.curruid())
+          .collection("tasks")
+          .where("completedOn", isEqualTo: Task.incompletePlaceholder)
+          .orderBy('dateTime')
+          .get()
+          .then((snapshot) {
+        upcomingTask = snapshot.docs[0]['title'];
+      });
+    } catch (RangeError) {
+      upcomingTask = "No upcoming Tasks";
+    }
+  }
+
+  Future<void> getClosestEvent() async {
+    try {
+      final query = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(_auth.curruid())
+          .collection("occasions")
+          .orderBy('dateTime')
+          .limit(1)
+          .get()
+          .then((snapshot) {
+        upcomingEvent = snapshot.docs[0]['title'];
+      });
+    } catch (RangeError) {
+      upcomingEvent = "No upcoming Events";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     getNumberOfTasksToday();
+    getNumberOfEventsToday();
+    getClosestEvent();
+    getClosestTask();
     // refreshes listview
     _everyMinute = Timer.periodic(Duration(minutes: 1), (Timer t) {
       // print('Rebuilt at ${DateTime.now()}');
@@ -437,53 +498,89 @@ class _HomeState extends State<Home> {
                   crossAxisCount: 2,
                   childAspectRatio: 1.35,
                   children: [
-                    displayCard(Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            "Tasks Due \nToday: ${numberOfTasksToday}",
+                    displayCard(Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Stack(
+                        children: [
+                          Text(
+                            "Tasks Due \nToday:",
                             style: TextStyle(fontSize: 18),
                           ),
-                        )
-                      ],
+                          Align(
+                              alignment: Alignment.bottomRight,
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Text(numberOfTasksToday.toString(),
+                                    style: TextStyle(
+                                        fontSize: 50,
+                                        fontWeight: FontWeight.bold)),
+                              ))
+                        ],
+                      ),
                     )),
-                    displayCard(Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            "Events Happening \nToday:",
+                    displayCard(Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Stack(
+                        children: [
+                          Text(
+                            "Events Happening \nToday: ",
                             style: TextStyle(fontSize: 18),
                           ),
-                        )
-                      ],
+                          Align(
+                              alignment: Alignment.bottomRight,
+                              child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Text(numberOfEventsToday.toString(),
+                                    style: TextStyle(
+                                        fontSize: 50,
+                                        fontWeight: FontWeight.bold)),
+                              ))
+                        ],
+                      ),
                     )),
-                    displayCard(Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
+                    displayCard(Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
                             "Upcoming Task:",
                             style: TextStyle(fontSize: 18),
                           ),
-                        )
-                      ],
+                          Flexible(
+                              child: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Text(upcomingTask,
+                                maxLines: 3,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    overflow: TextOverflow.ellipsis)),
+                          ))
+                        ],
+                      ),
                     )),
-                    displayCard(Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
+                    displayCard(Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
                             "Upcoming Event:",
                             style: TextStyle(fontSize: 18),
                           ),
-                        )
-                      ],
+                          Flexible(
+                              child: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Text(upcomingEvent,
+                                maxLines: 3,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    overflow: TextOverflow.ellipsis)),
+                          ))
+                        ],
+                      ),
                     )),
                   ],
                 ),

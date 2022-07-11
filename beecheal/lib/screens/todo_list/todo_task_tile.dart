@@ -21,11 +21,17 @@ class TaskTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: ListTile(
-            title: Text(occasion.getTitle()),
+            title: Text(
+              occasion.getTitle(),
+              style: TextStyle(overflow: TextOverflow.ellipsis),
+            ),
             subtitle: Column(children: [
               Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(occasion.getDescription())),
+                  child: Text(
+                    occasion.getDescription(),
+                    style: TextStyle(overflow: TextOverflow.ellipsis),
+                  )),
               Align(
                   alignment: Alignment.centerRight,
                   // changes text color based on current completedOn status and time relative to due date
