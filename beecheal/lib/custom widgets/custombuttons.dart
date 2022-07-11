@@ -13,14 +13,14 @@ class OrangeNavButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        style: ButtonStyle(
+        /*style: ButtonStyle(
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18.0),
             )),
             backgroundColor: MaterialStateProperty.all(Color(0xFFFFDD4B)),
             elevation:
-                MaterialStateProperty.resolveWith<double>((states) => 0)),
+                MaterialStateProperty.resolveWith<double>((states) => 0)),*/
         icon: HexagonWidget.flat(
             width: 60,
             color: Color(0xFFFFDD4B),

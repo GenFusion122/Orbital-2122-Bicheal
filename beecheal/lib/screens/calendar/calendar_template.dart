@@ -185,49 +185,52 @@ class _CalendarTemplate<T extends Occasion> extends State<CalendarTemplate<T>> {
           ),
         )
       ]),
-      Padding(
-        padding: const EdgeInsets.only(top: 500, left: 300),
-        child: FloatingActionButton(
-            backgroundColor: Colors.transparent,
-            elevation: 15,
-            child: HexagonWidget.flat(
-                width: 100,
-                color: Theme.of(context).colorScheme.primary,
-                child: Icon(Icons.add, size: 30)),
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    if (T.toString() == "Task") {
-                      return CalendarEditScreen<Task>(
-                          occasion: Task(
-                              "",
-                              "",
-                              DateTime(
-                                  _selectedDay!.year,
-                                  _selectedDay!.month,
-                                  _selectedDay!
-                                      .day), //passes a date with "blank" timings
-                              "",
-                              Task.incompletePlaceholder),
-                          textPrompt: 'Create',
-                          selectedDay: _selectedDay);
-                    }
-                    return CalendarEditScreen<Occasion>(
-                      occasion: Occasion(
-                          "",
-                          "",
-                          DateTime(
-                              _selectedDay!.year,
-                              _selectedDay!.month,
-                              _selectedDay!
-                                  .day), //passes a date with "blank" timings
-                          ""),
-                      textPrompt: 'Create',
-                      selectedDay: _selectedDay,
-                    );
-                  });
-            }),
+      Align(
+        alignment: Alignment.bottomRight,
+        child: Padding(
+          padding: EdgeInsets.only(right: 5, bottom: 50),
+          child: FloatingActionButton(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              child: HexagonWidget.flat(
+                  width: 100,
+                  color: Theme.of(context).colorScheme.primary,
+                  child: Icon(Icons.add, size: 30)),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      if (T.toString() == "Task") {
+                        return CalendarEditScreen<Task>(
+                            occasion: Task(
+                                "",
+                                "",
+                                DateTime(
+                                    _selectedDay!.year,
+                                    _selectedDay!.month,
+                                    _selectedDay!
+                                        .day), //passes a date with "blank" timings
+                                "",
+                                Task.incompletePlaceholder),
+                            textPrompt: 'Create',
+                            selectedDay: _selectedDay);
+                      }
+                      return CalendarEditScreen<Occasion>(
+                        occasion: Occasion(
+                            "",
+                            "",
+                            DateTime(
+                                _selectedDay!.year,
+                                _selectedDay!.month,
+                                _selectedDay!
+                                    .day), //passes a date with "blank" timings
+                            ""),
+                        textPrompt: 'Create',
+                        selectedDay: _selectedDay,
+                      );
+                    });
+              }),
+        ),
       )
     ]);
   }

@@ -9,8 +9,9 @@ class EntryTile extends StatelessWidget {
   // const EntryTile({Key? key}) : super(key: key);
 
   var occasion;
+  bool viewOnly;
 
-  EntryTile(this.occasion);
+  EntryTile(this.occasion, this.viewOnly);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class EntryTile extends StatelessWidget {
         child: Card(
           margin: EdgeInsets.symmetric(
               vertical: MediaQuery.of(context).size.height * 0.005),
-          shape: BeveledRectangleBorder(
+          shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(
                   MediaQuery.of(context).size.width * 0.04)),
           child: ListTile(
@@ -29,12 +30,13 @@ class EntryTile extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.w900,
+                    overflow: TextOverflow.ellipsis,
                     color: Color(0xff000000))),
             subtitle: Text(occasion.getDescription(),
                 style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w900,
-                )),
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w900,
+                    overflow: TextOverflow.ellipsis)),
             trailing: Row(mainAxisSize: MainAxisSize.min, children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -69,7 +71,7 @@ class EntryTile extends StatelessWidget {
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return EntryView(occasion, false);
+                    return EntryView(occasion, viewOnly);
                   });
             },
           ),

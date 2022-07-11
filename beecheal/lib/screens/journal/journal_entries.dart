@@ -35,7 +35,7 @@ class _JournalEntriesState extends State<JournalEntries> {
                     itemCount: Provider.of<List<Entry>>(context).length,
                     itemBuilder: (context, index) {
                       return EntryTile(
-                          Provider.of<List<Entry>>(context)[index]);
+                          Provider.of<List<Entry>>(context)[index], false);
                     });
               }),
         ),
