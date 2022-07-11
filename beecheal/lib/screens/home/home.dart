@@ -504,7 +504,10 @@ class _HomeState extends State<Home> {
                         children: [
                           Text(
                             "Tasks Due \nToday:",
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w900,
+                                color: Color(0xff000000)),
                           ),
                           Align(
                               alignment: Alignment.bottomRight,
@@ -522,10 +525,11 @@ class _HomeState extends State<Home> {
                       padding: const EdgeInsets.all(10.0),
                       child: Stack(
                         children: [
-                          Text(
-                            "Events Happening \nToday: ",
-                            style: TextStyle(fontSize: 18),
-                          ),
+                          Text("Events Happening \nToday: ",
+                              style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xff000000))),
                           Align(
                               alignment: Alignment.bottomRight,
                               child: Padding(
@@ -546,7 +550,10 @@ class _HomeState extends State<Home> {
                         children: [
                           Text(
                             "Upcoming Task:",
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w900,
+                                color: Color(0xff000000)),
                           ),
                           Flexible(
                               child: Padding(
@@ -568,7 +575,10 @@ class _HomeState extends State<Home> {
                         children: [
                           Text(
                             "Upcoming Event:",
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w900,
+                                color: Color(0xff000000)),
                           ),
                           Flexible(
                               child: Padding(

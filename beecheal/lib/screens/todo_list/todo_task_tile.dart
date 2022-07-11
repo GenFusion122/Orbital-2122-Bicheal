@@ -16,21 +16,29 @@ class TaskTile extends StatelessWidget {
     return Padding(
         padding: EdgeInsets.only(top: 0.0),
         child: Card(
-          margin: EdgeInsets.symmetric(vertical: 1.0),
+          margin: EdgeInsets.symmetric(
+              vertical: MediaQuery.of(context).size.height * 0.005),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
+              borderRadius: BorderRadius.circular(
+                  MediaQuery.of(context).size.width * 0.04)),
           child: ListTile(
             title: Text(
               occasion.getTitle(),
-              style: TextStyle(overflow: TextOverflow.ellipsis),
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w900,
+                  overflow: TextOverflow.ellipsis,
+                  color: Color(0xff000000)),
             ),
             subtitle: Column(children: [
               Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     occasion.getDescription(),
-                    style: TextStyle(overflow: TextOverflow.ellipsis),
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w900,
+                        overflow: TextOverflow.ellipsis),
                   )),
               Align(
                   alignment: Alignment.centerRight,
@@ -40,20 +48,21 @@ class TaskTile extends StatelessWidget {
                           .format(occasion.getDate())
                           .toString(),
                       style: TextStyle(
-                          color: (occasion
-                                  .getCompletedOn()
-                                  .isBefore(occasion.getDate()))
-                              ? Colors.green
-                              : ((DateTime.now()
-                                          .difference(occasion.getDate())
-                                          .inDays <
-                                      -7))
-                                  ? Color.fromARGB(255, 60, 60, 60)
-                                  : (DateTime.now()
-                                          .isBefore(occasion.getDate()))
-                                      ? Color.fromARGB(255, 255, 237, 70)
-                                      : Color.fromARGB(255, 255, 92, 80),
-                          fontWeight: FontWeight.bold))),
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w900,
+                        color: (occasion
+                                .getCompletedOn()
+                                .isBefore(occasion.getDate()))
+                            ? Colors.green
+                            : ((DateTime.now()
+                                        .difference(occasion.getDate())
+                                        .inDays <
+                                    -7))
+                                ? Color.fromARGB(255, 60, 60, 60)
+                                : (DateTime.now().isBefore(occasion.getDate()))
+                                    ? Color.fromARGB(255, 255, 237, 70)
+                                    : Color.fromARGB(255, 255, 92, 80),
+                      ))),
             ]),
             trailing: IconButton(
                 iconSize: 30.0,

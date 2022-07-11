@@ -4,7 +4,7 @@ import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/custom widgets/constants.dart';
 import 'package:beecheal/services/database.dart';
-
+import 'package:intl/intl.dart';
 import '../../custom widgets/timepicker.dart';
 
 class TaskEditScreen extends StatefulWidget {
@@ -27,52 +27,215 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
     String newTitle = widget.task.getTitle();
     String newDescription = widget.task.getDescription();
     return AlertDialog(
-        backgroundColor: Colors.orange[100],
-        content: Stack(children: <Widget>[
-          Positioned(
-            child: InkResponse(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-          Form(
-              key: _formkey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: TextFormField(
-                        initialValue: widget.task.getTitle(),
-                        decoration:
-                            textInputDecoration.copyWith(hintText: 'Title'),
-                        validator: (val) =>
-                            val!.isNotEmpty ? null : 'Please enter a title',
-                        onChanged: (val) {
-                          newTitle = val;
-                        }),
+        contentPadding: EdgeInsets.all(10.0),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+                MediaQuery.of(context).size.width * 0.04)),
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
+        content: Form(
+            key: _formkey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(0.0,
+                        MediaQuery.of(context).size.height * 0.005, 0.0, 0.0),
+                    child: Text('Title',
+                        style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xff000000))),
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(1.0),
-                    child: TextFormField(
-                        initialValue: widget.task.getDescription(),
-                        decoration: textInputDecoration.copyWith(
-                            hintText: 'Description'),
-                        validator: (val) => val!.isNotEmpty
-                            ? null
-                            : 'Please enter a description',
-                        onChanged: (val) {
-                          newDescription = val;
-                        }),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(1.0),
+                  child: TextFormField(
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xff000000)),
+                      cursorColor: Color(0xff000000),
+                      initialValue: widget.task.getTitle(),
+                      decoration: textInputDecorationFormField.copyWith(
+                          hintText: 'Title'),
+                      validator: (val) =>
+                          val!.isNotEmpty ? null : 'Please enter a title',
+                      onChanged: (val) {
+                        newTitle = val;
+                      }),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(0.0,
+                        MediaQuery.of(context).size.height * 0.005, 0.0, 0.0),
+                    child: Text('Description',
+                        style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xff000000))),
                   ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(1.0),
+                  child: TextFormField(
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xff000000)),
+                      cursorColor: Color(0xff000000),
+                      initialValue: widget.task.getDescription(),
+                      decoration: textInputDecorationFormField.copyWith(
+                          hintText: 'Description'),
+                      validator: (val) =>
+                          val!.isNotEmpty ? null : 'Please enter a description',
+                      onChanged: (val) {
+                        newDescription = val;
+                      }),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(3.0),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.001,
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                if (widget.textPrompt != 'Create')
                   Padding(
-                    padding: EdgeInsets.all(1.0),
+                    padding: EdgeInsets.symmetric(vertical: 3.0),
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 50.0,
+                                  child: Text('Date:',
+                                      style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.w900,
+                                          color: Color(0xff000000))),
+                                ),
+                                Text(
+                                    '${DateFormat('yyyy-MM-dd').format(widget.task.getDate())}',
+                                    style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w900,
+                                        color: Color(0xff000000))),
+                              ],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(1.0),
+                              child: SizedBox(
+                                width: 100.0,
+                                child: ElevatedButton(
+                                    style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(18.0),
+                                        )),
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Color(0xFFFFE98C)),
+                                        elevation:
+                                            MaterialStateProperty.resolveWith<
+                                                double>((states) => 0)),
+                                    child: Text('Edit',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                            color: Color(0xff000000))),
+                                    onPressed: () async {}),
+                              ),
+                            )
+                          ],
+                        )),
+                  ),
+                if (widget.textPrompt != 'Create')
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 3.0),
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 50.0,
+                                  child: Text('Time:',
+                                      style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.w900,
+                                          color: Color(0xff000000))),
+                                ),
+                                Text(
+                                    DateFormat('hh:mm a')
+                                        .format(widget.task.getDate()),
+                                    style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w900,
+                                        color: Color(0xff000000))),
+                              ],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(1.0),
+                              child: SizedBox(
+                                width: 100.0,
+                                child: ElevatedButton(
+                                    style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(18.0),
+                                        )),
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Color(0xFFFFE98C)),
+                                        elevation:
+                                            MaterialStateProperty.resolveWith<
+                                                double>((states) => 0)),
+                                    child: Text('Edit',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                            color: Color(0xff000000))),
+                                    onPressed: () async {}),
+                              ),
+                            )
+                          ],
+                        )),
+                  ),
+                Padding(
+                  padding: EdgeInsets.all(1.0),
+                  child: SizedBox(
+                    width: 100.0,
                     child: ElevatedButton(
                         style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Color.fromARGB(255, 255, 202, 0))),
-                        child: Text(widget.textPrompt),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            )),
+                            backgroundColor:
+                                MaterialStateProperty.all(Color(0xFFFFE98C)),
+                            elevation:
+                                MaterialStateProperty.resolveWith<double>(
+                                    (states) => 0)),
+                        child: Text(widget.textPrompt,
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xff000000))),
                         onPressed: () async {
                           if (_formkey.currentState!.validate()) {
                             DateTime? pickedDateTime =
@@ -100,9 +263,9 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                             }
                           }
                         }),
-                  )
-                ],
-              ))
-        ]));
+                  ),
+                )
+              ],
+            )));
   }
 }
