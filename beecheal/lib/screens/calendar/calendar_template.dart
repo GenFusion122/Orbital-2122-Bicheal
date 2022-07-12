@@ -10,7 +10,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../../models/occasion.dart';
 import '../../../services/database.dart';
 import 'calendar_edit.dart';
-import 'occcasion/calendar_occasion_tile.dart';
+import 'occasion/calendar_occasion_tile.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:intl/intl.dart';
 
@@ -213,7 +213,7 @@ class _CalendarTemplate<T extends Occasion> extends State<CalendarTemplate<T>> {
                                 "",
                                 Task.incompletePlaceholder),
                             textPrompt: 'Create',
-                            selectedDay: _selectedDay);
+                            selectedDay: _selectedDay ?? DateTime.now());
                       }
                       return CalendarEditScreen<Occasion>(
                         occasion: Occasion(
@@ -226,7 +226,7 @@ class _CalendarTemplate<T extends Occasion> extends State<CalendarTemplate<T>> {
                                     .day), //passes a date with "blank" timings
                             ""),
                         textPrompt: 'Create',
-                        selectedDay: _selectedDay,
+                        selectedDay: _selectedDay ?? DateTime.now(),
                       );
                     });
               }),

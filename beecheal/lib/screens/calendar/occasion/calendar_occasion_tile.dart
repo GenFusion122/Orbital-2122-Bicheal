@@ -13,22 +13,36 @@ class OccasionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 1.0),
+      margin: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).size.height * 0.005),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
+        borderRadius:
+            BorderRadius.circular(MediaQuery.of(context).size.width * 0.04),
       ),
       child: ListTile(
         title: Text(occasion.getTitle(),
-            style: TextStyle(overflow: TextOverflow.ellipsis)),
-        subtitle: Text(
-          occasion.getDescription(),
-          style: TextStyle(overflow: TextOverflow.ellipsis),
-        ),
+            style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w900,
+                overflow: TextOverflow.ellipsis,
+                color: Color(0xff000000))),
+        subtitle: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              occasion.getDescription(),
+              style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w900,
+                  overflow: TextOverflow.ellipsis),
+            )),
         trailing: Text(
           DateFormat('yyyy-MM-dd  \nhh:mm a')
               .format(occasion.getDate())
               .toString(),
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.w900,
+              color: Color.fromARGB(255, 60, 60, 60)),
         ),
         onTap: () {
           showDialog(
