@@ -222,15 +222,19 @@ class TaskView extends StatelessWidget {
                       DatabaseService()
                           .deleteUserTask(task.getId(), task.getTitle());
                       Navigator.of(context).pop();
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            Future.delayed(const Duration(seconds: 1), () {
-                              //Navigator.of(context).pop();
-                            });
-                            return AlertDialog(
-                                title: Text('Deleted ${task.getTitle()}'));
-                          });
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0)),
+                          elevation: 0.0,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondary,
+                          content: Text(
+                            'Deleted ${task.getTitle()}',
+                            style: TextStyle(
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w900,
+                                color: Color(0xff000000)),
+                          )));
                     }),
               ),
           ],

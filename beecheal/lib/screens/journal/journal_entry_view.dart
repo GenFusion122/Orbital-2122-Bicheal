@@ -196,16 +196,29 @@ class EntryView extends StatelessWidget {
                           DatabaseService().deleteUserEntry(entry.getId(),
                               entry.getTitle(), entry.getDate().toString());
                           Navigator.of(context).pop();
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                Future.delayed(const Duration(seconds: 1), () {
-                                  Navigator.of(context).pop();
-                                });
-                                return AlertDialog(
-                                    title: Text(
-                                        'Deleted ${entry.getTitle()} created on ${entry.getDate().toString()}'));
-                              });
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0)),
+                              elevation: 0.0,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
+                              content: Text(
+                                'Deleted ${entry.getTitle()} created on ${DateFormat('yyyy-MM-dd hh:mm a').format(entry.getDate()).toString()}',
+                                style: TextStyle(
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w900,
+                                    color: Color(0xff000000)),
+                              )));
+                          // showDialog(
+                          //     context: context,
+                          //     builder: (BuildContext context) {
+                          //       Future.delayed(const Duration(seconds: 1), () {
+                          //         Navigator.of(context).pop();
+                          //       });
+                          //       return AlertDialog(
+                          //           title: Text(
+                          //               'Deleted ${entry.getTitle()} created on ${entry.getDate().toString()}'));
+                          //     });
                         }),
                   )
                 ]
