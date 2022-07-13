@@ -1,13 +1,31 @@
 import 'package:flutter/material.dart';
 
 const textInputDecoration = InputDecoration(
-    hintText: '.copywith(hintText: text)',
-    fillColor: Color.fromARGB(255, 255, 243, 224),
+  filled: false,
+  enabledBorder: UnderlineInputBorder(
+    borderSide: BorderSide(),
+  ),
+  focusedBorder: UnderlineInputBorder(
+    borderSide: BorderSide(),
+  ),
+  border: UnderlineInputBorder(
+    borderSide: BorderSide(),
+  ),
+  hintStyle: TextStyle(fontWeight: FontWeight.w900, fontSize: 20),
+  hintText: '.copywith(hintText: text)',
+);
+
+const textInputDecorationFormField = InputDecoration(
+    counterText: "",
     filled: true,
-    enabledBorder: OutlineInputBorder(
-      borderSide:
-          BorderSide(color: Color.fromARGB(255, 255, 243, 224), width: 2.0),
-    ),
-    focusedBorder: OutlineInputBorder(
-        borderSide:
-            BorderSide(color: Color.fromARGB(255, 121, 85, 72), width: 2.0)));
+    fillColor: Color(0xFFFFE0B2),
+    enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.transparent),
+        borderRadius: const BorderRadius.all(const Radius.circular(10))),
+    focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.transparent),
+        borderRadius: const BorderRadius.all(const Radius.circular(10))),
+    border: UnderlineInputBorder(
+      borderSide: BorderSide(color: Colors.transparent),
+      borderRadius: const BorderRadius.all(const Radius.circular(10)),
+    ));

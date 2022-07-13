@@ -20,9 +20,9 @@ class _EntryMoodPiechart extends State<EntryMoodPiechart> {
   List<DateTime> positiveDates = [];
   List<DateTime> neutralDates = [];
   List<DateTime> negativeDates = [];
-  static const Color positiveColor = Colors.lightGreen;
+  static const Color positiveColor = Color(0xFF96F355);
   static const Color neutralColor = Colors.grey;
-  static const Color negativeColor = Colors.redAccent;
+  static const Color negativeColor = Color(0xFFF25849);
   bool datesAreFilled = false;
 
   void _fillDateLists(List<Entry> entryList) {
@@ -51,90 +51,92 @@ class _EntryMoodPiechart extends State<EntryMoodPiechart> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: DatabaseService().entries,
-        builder: (context, AsyncSnapshot<List<Entry>> snapshot) {
-          return Column(children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20), // if you need this
-                    side: BorderSide(
-                      color: Colors.black,
-                      width: 1,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Text(
-                      "Overall Mood",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  )),
-            ),
-            Row(children: [
-              Expanded(
-                  child: AspectRatio(
-                      aspectRatio: 1.4,
-                      child: PieChart(
-                        PieChartData(
-                            pieTouchData: PieTouchData(touchCallback:
-                                (FlTouchEvent event, pieTouchResponse) {
-                              setState(() {
-                                if (!event.isInterestedForInteractions ||
-                                    pieTouchResponse == null ||
-                                    pieTouchResponse.touchedSection == null) {
-                                  touchedIndex = -1;
-                                  return;
-                                }
-                                touchedIndex = pieTouchResponse
-                                    .touchedSection!.touchedSectionIndex;
-                              });
-                            }),
-                            borderData: FlBorderData(
-                              show: false,
-                            ),
-                            sectionsSpace: 0,
-                            centerSpaceRadius: 40,
-                            sections: showingSections(snapshot.data ?? [])),
-                      ))),
-              Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const <Widget>[
-                    Legend(
-                      color: Colors.lightGreen,
-                      text: 'Positive',
-                      isSquare: true,
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Legend(
-                      color: Colors.grey,
-                      text: 'Neutral',
-                      isSquare: true,
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Legend(
-                      color: Colors.redAccent,
-                      text: 'Negative',
-                      isSquare: true,
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                  ]),
-            ]),
-          ]);
-        });
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: StreamBuilder(
+          stream: DatabaseService().entries,
+          builder: (context, AsyncSnapshot<List<Entry>> snapshot) {
+            return Column(children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Card(
+                    elevation: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(
+                        "Overall Mood",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )),
+              ),
+              Row(children: [
+                Expanded(
+                    child: AspectRatio(
+                        aspectRatio: 1.64,
+                        child: PieChart(
+                          PieChartData(
+                              pieTouchData: PieTouchData(touchCallback:
+                                  (FlTouchEvent event, pieTouchResponse) {
+                                setState(() {
+                                  if (!event.isInterestedForInteractions ||
+                                      pieTouchResponse == null ||
+                                      pieTouchResponse.touchedSection == null) {
+                                    touchedIndex = -1;
+                                    return;
+                                  }
+                                  touchedIndex = pieTouchResponse
+                                      .touchedSection!.touchedSectionIndex;
+                                });
+                              }),
+                              borderData: FlBorderData(
+                                show: false,
+                              ),
+                              sectionsSpace: 0,
+                              centerSpaceRadius: 40,
+                              sections: showingSections(snapshot.data ?? [])),
+                        ))),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const <Widget>[
+                        Legend(
+                          color: positiveColor,
+                          text: 'Positive',
+                          isSquare: true,
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Legend(
+                          color: neutralColor,
+                          text: 'Neutral',
+                          isSquare: true,
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Legend(
+                          color: negativeColor,
+                          text: 'Negative',
+                          isSquare: true,
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                      ]),
+                ),
+              ]),
+            ]);
+          }),
+    );
   }
 
   List<PieChartSectionData> showingSections(List<Entry> entryList) {
@@ -153,8 +155,8 @@ class _EntryMoodPiechart extends State<EntryMoodPiechart> {
             color: positiveColor,
             value: positiveCount,
             title: isTouched
-                ? '$positiveCount entries'
-                : '${positiveCount / total * 100}%',
+                ? '${positiveCount.toStringAsFixed(0)} entries'
+                : '${(positiveCount / total * 100).toStringAsFixed(1)}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -166,8 +168,8 @@ class _EntryMoodPiechart extends State<EntryMoodPiechart> {
             color: neutralColor,
             value: neutralCount,
             title: isTouched
-                ? '$neutralCount entries'
-                : '${neutralCount / total * 100}%',
+                ? '${neutralCount.toStringAsFixed(0)} entries'
+                : '${(neutralCount / total * 100).toStringAsFixed(1)}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -179,8 +181,8 @@ class _EntryMoodPiechart extends State<EntryMoodPiechart> {
             color: negativeColor,
             value: negativeCount,
             title: isTouched
-                ? '$negativeCount entries'
-                : '${negativeCount / total * 100}%',
+                ? '${negativeCount.toStringAsFixed(0)} entries'
+                : '${(negativeCount / total * 100).toStringAsFixed(1)}%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,

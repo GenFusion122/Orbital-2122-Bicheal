@@ -7,9 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:hexagon/hexagon.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/src/intl/date_format.dart';
-import '../calendar/calendar_occasion_tile.dart';
+import '../journal/journal_entry_tile.dart';
 import 'legend_widget.dart';
 
 class EntryMoodCalendar extends StatefulWidget {
@@ -87,7 +88,7 @@ class _EntryMoodCalendar extends State<EntryMoodCalendar> {
             ? Colors.redAccent
             : neutralDates.contains(DateUtils.dateOnly(day))
                 ? Colors.grey
-                : Colors.transparent;
+                : Colors.white;
   }
 
   @override
@@ -97,155 +98,146 @@ class _EntryMoodCalendar extends State<EntryMoodCalendar> {
       builder: (context, AsyncSnapshot<List<Entry>> snapshot) {
         return Column(
           children: [
-            TableCalendar<Entry>(
-                focusedDay: _focusedDay,
-                firstDay: DateTime(1900),
-                lastDay: DateTime(2999),
-                calendarFormat: _calendarFormat,
-                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                onFormatChanged: (format) {
-                  if (_calendarFormat != format) {
-                    // Call `setState()` when updating calendar format
-                    setState(() {
-                      _calendarFormat = format;
-                    });
-                  }
-                },
-                onPageChanged: (focusedDay) {
-                  // No need to call `setState()` here
-                  _focusedDay = focusedDay;
-                },
-                onDaySelected: (selectedDay, focusedDay) {
-                  if (!isSameDay(_selectedDay, selectedDay)) {
-                    setState(() {
-                      _selectedDay = selectedDay;
-                      _focusedDay = selectedDay;
-                      _rangeStart = null; // Important to clean those
-                      _rangeEnd = null;
-                      _rangeSelectionMode = RangeSelectionMode.toggledOff;
-                    });
-                    _selectedEvents.value =
-                        _getEntriesForDay(selectedDay, snapshot.data ?? []);
-                  }
-                },
-                calendarBuilders:
-                    CalendarBuilders(todayBuilder: (context, day, focusedDay) {
-                  return Container(
-                    color: _boxColor(day),
-                    child: Center(
-                        child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color.fromARGB(255, 159, 168, 218)),
-                      child: Center(
-                          child: Text('${day.day}',
-                              style: const TextStyle(color: Colors.white))),
-                    )),
-                  );
-                }, selectedBuilder: ((context, day, focusedDay) {
-                  return Container(
-                    color: _boxColor(day),
-                    child: Center(
-                        child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color.fromARGB(255, 92, 107, 192)),
-                      child: Center(
-                          child: Text('${day.day}',
-                              style: const TextStyle(color: Colors.white))),
-                    )),
-                  );
-                }), defaultBuilder: (context, day, focusedDay) {
-                  _fillDateLists(snapshot.data ?? []);
-                  for (DateTime d in positiveDates) {
-                    if (DateUtils.dateOnly(day) == d) {
-                      return Container(
-                        decoration: const BoxDecoration(
-                          color: positiveColor,
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${day.day}',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                  for (DateTime d in neutralDates) {
-                    if (DateUtils.dateOnly(day) == d) {
-                      return Container(
-                        decoration: const BoxDecoration(
-                          color: neutralColor,
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${day.day}',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                  for (DateTime d in negativeDates) {
-                    if (DateUtils.dateOnly(day) == d) {
-                      return Container(
-                        decoration: const BoxDecoration(
-                          color: negativeColor,
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${day.day}',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                })),
-            SizedBox(height: 8),
-            ValueListenableBuilder<List<Entry>>(
-                valueListenable: _selectedEvents,
-                builder: (context, value, _) {
-                  List<Entry> items = _getEntriesForDay(
-                      _selectedDay ?? DateTime.now(), snapshot.data ?? []);
-                  return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: items.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                            padding: EdgeInsets.only(top: 0.0),
-                            child: Card(
-                              margin: EdgeInsets.symmetric(vertical: 1.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: ListTile(
-                                title: Text(items[index].getTitle()),
-                                subtitle: Text(items[index].getDescription()),
-                                trailing: Text(
-                                    DateFormat('yyyy-MM-dd   hh:mm a')
-                                        .format(items[index].getDate())
-                                        .toString()),
-                                onTap: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return EntryView(items[index], true);
-                                      });
-                                },
-                              ),
-                            ));
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: TableCalendar<Entry>(
+                  headerStyle: HeaderStyle(formatButtonVisible: false),
+                  focusedDay: _focusedDay,
+                  firstDay: DateTime(1900),
+                  lastDay: DateTime(2999),
+                  calendarFormat: _calendarFormat,
+                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                  availableGestures: AvailableGestures.horizontalSwipe,
+                  onPageChanged: (focusedDay) {
+                    // No need to call `setState()` here
+                    _focusedDay = focusedDay;
+                  },
+                  onDaySelected: (selectedDay, focusedDay) {
+                    if (!isSameDay(_selectedDay, selectedDay)) {
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = selectedDay;
+                        _rangeStart = null; // Important to clean those
+                        _rangeEnd = null;
+                        _rangeSelectionMode = RangeSelectionMode.toggledOff;
                       });
-                }),
+                      _selectedEvents.value =
+                          _getEntriesForDay(selectedDay, snapshot.data ?? []);
+                    }
+                  },
+                  calendarBuilders: CalendarBuilders(
+                      todayBuilder: (context, day, focusedDay) {
+                    return HexagonWidget.flat(
+                      width: 80,
+                      color: _boxColor(day),
+                      child: Center(
+                          child: HexagonWidget.flat(
+                        width: 20,
+                        color: Theme.of(context).colorScheme.secondary,
+                        child: Center(
+                            child: Text('${day.day}',
+                                style: const TextStyle(color: Colors.black))),
+                      )),
+                    );
+                  }, headerTitleBuilder: ((context, day) {
+                    return Center(
+                      child: Text(
+                          DateFormat('MMMM yyyy').format(day).toString(),
+                          style: Theme.of(context).textTheme.headline1),
+                    );
+                  }), selectedBuilder: ((context, day, selectedDay) {
+                    return HexagonWidget.flat(
+                      width: 80,
+                      color: Color(0xFFC67C00),
+                      child: Center(
+                          child: HexagonWidget.flat(
+                        width: 40,
+                        color: DateUtils.dateOnly(day) ==
+                                DateUtils.dateOnly(DateTime.now())
+                            ? Theme.of(context).colorScheme.secondary
+                            : Colors.white,
+                        child: Text(day.day.toString()),
+                      )),
+                    );
+                  }), markerBuilder: (context, day, focusedDay) {
+                    _fillDateLists(snapshot.data ?? []);
+                    for (DateTime d in positiveDates) {
+                      if (DateUtils.dateOnly(day) == d) {
+                        return calendarIndicator(day, positiveColor);
+                      }
+                    }
+                    for (DateTime d in neutralDates) {
+                      if (DateUtils.dateOnly(day) == d) {
+                        return calendarIndicator(day, neutralColor);
+                      }
+                    }
+                    for (DateTime d in negativeDates) {
+                      if (DateUtils.dateOnly(day) == d) {
+                        return calendarIndicator(day, negativeColor);
+                      }
+                    }
+                  })),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 4, left: 4),
+              child: ValueListenableBuilder<List<Entry>>(
+                  valueListenable: _selectedEvents,
+                  builder: (context, value, _) {
+                    List<Entry> items = _getEntriesForDay(
+                        _selectedDay ?? DateTime.now(), snapshot.data ?? []);
+                    return Container(
+                      color: Theme.of(context).colorScheme.secondary,
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: items.length,
+                          itemBuilder: (context, index) {
+                            return EntryTile(items[index], true);
+                          }),
+                    );
+                  }),
+            ),
           ],
         );
       },
+    );
+  }
+
+  Widget calendarIndicator(DateTime day, Color color) {
+    return Stack(
+      children: [
+        HexagonWidget.flat(
+          width: 80,
+          color: DateUtils.dateOnly(day) ==
+                  DateUtils.dateOnly(_selectedDay ?? DateTime.now())
+              ? Color(0xFFC67C00)
+              : Theme.of(context).colorScheme.primary,
+          child: Center(
+              child: HexagonWidget.flat(
+            width: 40,
+            color: DateUtils.dateOnly(day) == DateUtils.dateOnly(DateTime.now())
+                ? Theme.of(context).colorScheme.secondary
+                : Colors.white,
+            child: Text(day.day.toString()),
+          )),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 20, top: 30),
+          child: HexagonWidget.flat(
+            width: 20,
+            color: DateUtils.dateOnly(day) ==
+                    DateUtils.dateOnly(_selectedDay ?? DateTime.now())
+                ? Color(0xFFC67C00)
+                : Theme.of(context).colorScheme.primary,
+            child: Center(
+                child: HexagonWidget.flat(
+              width: 15,
+              color: color,
+            )),
+          ),
+        ),
+      ],
     );
   }
 }

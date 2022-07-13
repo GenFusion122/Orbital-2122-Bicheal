@@ -1,36 +1,42 @@
+import 'package:beecheal/custom%20widgets/timepicker.dart';
+import 'package:beecheal/models/occasion.dart';
 import 'package:beecheal/models/task.dart';
+import 'package:beecheal/screens/calendar/occasion/calendar_occasion_view.dart';
 import 'package:beecheal/screens/home/initialize_notifications.dart';
 import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:flutter/material.dart';
-import 'package:beecheal/custom widgets/constants.dart';
-import 'package:beecheal/services/database.dart';
+import '../../custom widgets/constants.dart';
 import 'package:intl/intl.dart';
-import '../../custom widgets/timepicker.dart';
+import 'package:beecheal/services/notifications.dart';
+import '../../models/occasion.dart';
+import '../../services/database.dart';
 
-class TaskEditScreen extends StatefulWidget {
-  // const EntryScreen({Key? key}) : super(key: key);
-
-  Task task;
+class CalendarEditScreen<T extends Occasion> extends StatefulWidget {
+  T occasion;
   String textPrompt;
+  DateTime selectedDay;
 
-  TaskEditScreen({required this.task, required this.textPrompt});
-
+  CalendarEditScreen(
+      {required this.occasion,
+      required this.textPrompt,
+      required this.selectedDay});
   @override
-  State<TaskEditScreen> createState() => _TaskEditScreenState();
+  State<CalendarEditScreen<T>> createState() => _CalenderEditScreen<T>();
 }
 
-class _TaskEditScreenState extends State<TaskEditScreen> {
+class _CalenderEditScreen<T extends Occasion>
+    extends State<CalendarEditScreen<T>> {
   final _formkey = GlobalKey<FormState>();
   DateTime? newDate;
   TimeOfDay? newTime;
   @override
   Widget build(BuildContext context) {
-    String newTitle = widget.task.getTitle();
-    String newDescription = widget.task.getDescription();
+    String newTitle = widget.occasion.getTitle();
+    String newDescription = widget.occasion.getDescription();
     String dateLabel =
-        DateFormat('yyyy-MM-dd').format(newDate ?? widget.task.getDate());
+        DateFormat('yyyy-MM-dd').format(newDate ?? widget.occasion.getDate());
     String timeLabel =
-        (newTime ?? TimeOfDay.fromDateTime(widget.task.getDate()))
+        (newTime ?? TimeOfDay.fromDateTime(widget.occasion.getDate()))
             .format(context);
     return AlertDialog(
         contentPadding: EdgeInsets.all(10.0),
@@ -64,9 +70,9 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                           fontWeight: FontWeight.w900,
                           color: Color(0xff000000)),
                       cursorColor: Color(0xff000000),
-                      initialValue: widget.task.getTitle(),
+                      initialValue: widget.occasion.getTitle(),
                       decoration: textInputDecorationFormField.copyWith(
-                          counterText: "", hintText: 'Title'),
+                          hintText: 'Title'),
                       validator: (val) =>
                           val!.isNotEmpty ? null : 'Please enter a title',
                       onChanged: (val) {
@@ -94,9 +100,9 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                           fontWeight: FontWeight.w900,
                           color: Color(0xff000000)),
                       cursorColor: Color(0xff000000),
-                      initialValue: widget.task.getDescription(),
+                      initialValue: widget.occasion.getDescription(),
                       decoration: textInputDecorationFormField.copyWith(
-                          counterText: "", hintText: 'Description'),
+                          hintText: 'Description'),
                       validator: (val) =>
                           val!.isNotEmpty ? null : 'Please enter a description',
                       onChanged: (val) {
@@ -167,9 +173,9 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                             await TimePicker.datePicker(
                                                     context,
                                                     newDate ??
-                                                        widget.task
+                                                        widget.occasion
                                                             .getDate()) ??
-                                                widget.task.getDate();
+                                                widget.occasion.getDate();
                                         setState(() {
                                           newDate = tempDate;
                                         });
@@ -234,10 +240,10 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                             await TimePicker.timePicker(
                                                     context,
                                                     newDate ??
-                                                        widget.task
+                                                        widget.occasion
                                                             .getDate()) ??
                                                 TimeOfDay.fromDateTime(
-                                                    widget.task.getDate());
+                                                    widget.occasion.getDate());
                                         setState(() {
                                           newTime = tempTime;
                                         });
@@ -271,33 +277,51 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                         onPressed: () async {
                           if (_formkey.currentState!.validate()) {
                             if (widget.textPrompt == "Create") {
-                              DateTime? pickedDateTime =
-                                  await TimePicker.dateTimePicker(
-                                      context, widget.task.getDate());
+                              TimeOfDay? pickedDateTime =
+                                  await TimePicker.timePicker(
+                                      context, DateTime.now());
                               if (pickedDateTime != null) {
                                 //if the user didn't cancel
-                                widget.task.setTitle(newTitle);
-                                widget.task.setDescription(newDescription);
-                                widget.task.setDate(pickedDateTime);
-                                DatabaseService().updateUserTask(
-                                    widget.task.getId(),
-                                    widget.task.getTitle(),
-                                    widget.task.getDate(),
-                                    widget.task.getDescription(),
-                                    widget.task.getCompletedOn());
+                                widget.occasion.setTitle(newTitle);
+                                widget.occasion.setDescription(newDescription);
+                                widget.occasion.setDate(widget.occasion
+                                    .getDate()
+                                    .add(Duration(
+                                        hours: pickedDateTime.hour,
+                                        minutes: pickedDateTime.minute)));
+                                if (T.toString() == "Task") {
+                                  //Task uses this view when creating
+                                  DatabaseService().updateUserTask(
+                                      widget.occasion.getId(),
+                                      widget.occasion.getTitle(),
+                                      widget.occasion.getDate(),
+                                      widget.occasion.getDescription(),
+                                      Task.incompletePlaceholder);
+                                } else {
+                                  DatabaseService().updateUserOccasion(
+                                      widget.occasion.getId(),
+                                      widget.occasion.getTitle(),
+                                      widget.occasion.getDate(),
+                                      widget.occasion.getDescription());
+                                }
                                 InitializeNotifications
                                     .initializeToDoNotifications();
                                 Navigator.of(context).pop();
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      return TaskView(widget.task);
+                                      if (T.toString() == "Task") {
+                                        return TaskView(
+                                            widget.occasion as Task);
+                                      }
+                                      return OccasionView(widget.occasion);
                                     });
                               }
                             } else {
-                              widget.task.setTitle(newTitle);
-                              widget.task.setDescription(newDescription);
-                              DateTime originalDateTime = widget.task.getDate();
+                              widget.occasion.setTitle(newTitle);
+                              widget.occasion.setDescription(newDescription);
+                              DateTime originalDateTime =
+                                  widget.occasion.getDate();
                               DateTime combinedDateTime = (newDate ??
                                       DateTime(
                                           originalDateTime.year,
@@ -313,14 +337,13 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                                   originalDateTime))
                                           .minute));
                               newDate != null
-                                  ? widget.task.setDate(combinedDateTime)
+                                  ? widget.occasion.setDate(combinedDateTime)
                                   : null;
-                              DatabaseService().updateUserTask(
-                                  widget.task.getId(),
-                                  widget.task.getTitle(),
-                                  widget.task.getDate(),
-                                  widget.task.getDescription(),
-                                  Task.incompletePlaceholder);
+                              DatabaseService().updateUserOccasion(
+                                  widget.occasion.getId(),
+                                  widget.occasion.getTitle(),
+                                  widget.occasion.getDate(),
+                                  widget.occasion.getDescription());
                               InitializeNotifications
                                   .initializeToDoNotifications();
                               Navigator.of(context).pop();
