@@ -58,6 +58,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                 Padding(
                   padding: EdgeInsets.all(1.0),
                   child: TextFormField(
+                      maxLength: 50,
                       style: TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.w900,
@@ -65,7 +66,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                       cursorColor: Color(0xff000000),
                       initialValue: widget.task.getTitle(),
                       decoration: textInputDecorationFormField.copyWith(
-                          hintText: 'Title'),
+                          counterText: "", hintText: 'Title'),
                       validator: (val) =>
                           val!.isNotEmpty ? null : 'Please enter a title',
                       onChanged: (val) {
@@ -87,6 +88,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                 Padding(
                   padding: EdgeInsets.all(1.0),
                   child: TextFormField(
+                      maxLength: 100,
                       style: TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.w900,
@@ -94,7 +96,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                       cursorColor: Color(0xff000000),
                       initialValue: widget.task.getDescription(),
                       decoration: textInputDecorationFormField.copyWith(
-                          hintText: 'Description'),
+                          counterText: "", hintText: 'Description'),
                       validator: (val) =>
                           val!.isNotEmpty ? null : 'Please enter a description',
                       onChanged: (val) {

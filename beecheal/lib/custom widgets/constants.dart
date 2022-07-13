@@ -16,6 +16,7 @@ const textInputDecoration = InputDecoration(
 );
 
 const textInputDecorationFormField = InputDecoration(
+    counterText: "",
     filled: true,
     fillColor: Color(0xFFFFE0B2),
     enabledBorder: UnderlineInputBorder(

@@ -42,17 +42,15 @@ class TaskView extends StatelessWidget {
             ),
             child: Padding(
               padding: EdgeInsets.all(6.0),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.035,
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(task.getTitle(),
-                      style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xff000000))),
-                ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(task.getTitle(),
+                    softWrap: true,
+                    maxLines: 3,
+                    style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xff000000))),
               ),
             )),
         Align(
@@ -76,17 +74,15 @@ class TaskView extends StatelessWidget {
             ),
             child: Padding(
               padding: EdgeInsets.all(6.0),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.035,
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(task.getDescription(),
-                      style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xff000000))),
-                ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(task.getDescription(),
+                    softWrap: true,
+                    maxLines: 3,
+                    style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xff000000))),
               ),
             )),
         Padding(

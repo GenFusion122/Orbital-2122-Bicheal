@@ -64,6 +64,7 @@ class _EntryScreenState extends State<EntryScreen> {
                     Padding(
                       padding: EdgeInsets.all(1.0),
                       child: TextFormField(
+                          maxLength: 50,
                           style: TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.w900,
@@ -95,6 +96,7 @@ class _EntryScreenState extends State<EntryScreen> {
                     Padding(
                       padding: EdgeInsets.all(1.0),
                       child: TextFormField(
+                          maxLength: 100,
                           style: TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.w900,

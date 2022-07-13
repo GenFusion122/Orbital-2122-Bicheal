@@ -40,17 +40,15 @@ class OccasionView extends StatelessWidget {
             ),
             child: Padding(
               padding: EdgeInsets.all(6.0),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.035,
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(occasion.getTitle(),
-                      style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xff000000))),
-                ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(occasion.getTitle(),
+                    softWrap: true,
+                    maxLines: 5,
+                    style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xff000000))),
               ),
             )),
         Align(
@@ -75,11 +73,11 @@ class OccasionView extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.all(6.0),
               child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.035,
-                width: MediaQuery.of(context).size.width * 0.8,
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(occasion.getDescription(),
+                      softWrap: true,
+                      maxLines: 5,
                       style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w900,
