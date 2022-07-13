@@ -46,7 +46,7 @@ class TaskView extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(task.getTitle(),
                     softWrap: true,
-                    maxLines: 3,
+                    maxLines: 5,
                     style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w900,
@@ -78,7 +78,7 @@ class TaskView extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(task.getDescription(),
                     softWrap: true,
-                    maxLines: 3,
+                    maxLines: 5,
                     style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w900,
