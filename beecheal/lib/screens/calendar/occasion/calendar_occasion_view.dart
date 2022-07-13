@@ -1,16 +1,14 @@
-import 'package:beecheal/models/task.dart';
-import 'package:beecheal/screens/todo_list/todo_task_edit.dart';
+import 'package:beecheal/models/occasion.dart';
 import 'package:flutter/material.dart';
-import 'package:beecheal/services/database.dart';
+import '../../../services/database.dart';
+import '../../../services/notifications.dart';
+import '../../home/initialize_notifications.dart';
+import '../calendar_edit.dart';
 import 'package:intl/intl.dart';
-import '../../services/notifications.dart';
-import '../home/initialize_notifications.dart';
 
-class TaskView extends StatelessWidget {
-  // const EntryView({Key? key}) : super(key: key);
-  Task task;
-
-  TaskView(this.task);
+class OccasionView extends StatelessWidget {
+  Occasion occasion;
+  OccasionView(this.occasion);
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +42,9 @@ class TaskView extends StatelessWidget {
               padding: EdgeInsets.all(6.0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(task.getTitle(),
+                child: Text(occasion.getTitle(),
                     softWrap: true,
-                    maxLines: 3,
+                    maxLines: 5,
                     style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w900,
@@ -74,43 +72,19 @@ class TaskView extends StatelessWidget {
             ),
             child: Padding(
               padding: EdgeInsets.all(6.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(task.getDescription(),
-                    softWrap: true,
-                    maxLines: 3,
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xff000000))),
+              child: SizedBox(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(occasion.getDescription(),
+                      softWrap: true,
+                      maxLines: 5,
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xff000000))),
+                ),
               ),
             )),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 6.0),
-          child: Card(
-              clipBehavior: Clip.none,
-              margin: EdgeInsets.symmetric(vertical: 1.0),
-              color: Theme.of(context).colorScheme.background,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(6.0),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.035,
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                        '${task.getCompletedOn() == Task.incompletePlaceholder ? 'Incomplete' : 'Completed on: ${DateFormat('yyyy-MM-dd hh:mm a').format(task.getCompletedOn())}'}',
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xff000000))),
-                  ),
-                ),
-              )),
-        ),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 3.0),
           child: Align(
@@ -128,7 +102,7 @@ class TaskView extends StatelessWidget {
                   SizedBox(
                     width: 150.0,
                     child: Text(
-                        '${DateFormat('yyyy-MM-dd').format(task.getDate())}',
+                        '${DateFormat('yyyy-MM-dd').format(occasion.getDate())}',
                         style: TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.w900,
@@ -153,7 +127,8 @@ class TaskView extends StatelessWidget {
                   ),
                   SizedBox(
                     width: 150.0,
-                    child: Text(DateFormat('hh:mm a').format(task.getDate()),
+                    child: Text(
+                        DateFormat('hh:mm a').format(occasion.getDate()),
                         style: TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.w900,
@@ -187,52 +162,52 @@ class TaskView extends StatelessWidget {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return TaskEditScreen(
-                              task: task, textPrompt: 'Update');
+                          return CalendarEditScreen(
+                              occasion: occasion,
+                              textPrompt: 'Update',
+                              selectedDay: occasion.getDate());
                         });
                   }),
             ),
-            if (task.getCompletedOn() == Task.incompletePlaceholder)
-              SizedBox(
-                width: 100,
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                        )),
+            SizedBox(
+              width: 100,
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      )),
+                      backgroundColor:
+                          MaterialStateProperty.all(Color(0xFFFFE98C)),
+                      elevation: MaterialStateProperty.resolveWith<double>(
+                          (states) => 0)),
+                  child: Text('Delete',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xff000000))),
+                  onPressed: () async {
+                    await NotificationService.getNotificationInstance()
+                        .cancelAll();
+                    InitializeNotifications.initializeToDoNotifications();
+                    DatabaseService().deleteUserOccasion(
+                        occasion.getId(), occasion.getTitle());
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0)),
+                        elevation: 0.0,
                         backgroundColor:
-                            MaterialStateProperty.all(Color(0xFFFFE98C)),
-                        elevation: MaterialStateProperty.resolveWith<double>(
-                            (states) => 0)),
-                    child: Text('Delete',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff000000))),
-                    onPressed: () async {
-                      await NotificationService.getNotificationInstance()
-                          .cancelAll();
-                      InitializeNotifications.initializeToDoNotifications();
-                      DatabaseService()
-                          .deleteUserTask(task.getId(), task.getTitle());
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0)),
-                          elevation: 0.0,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.secondary,
-                          content: Text(
-                            'Deleted ${task.getTitle()}',
-                            style: TextStyle(
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xff000000)),
-                          )));
-                    }),
-              ),
+                            Theme.of(context).colorScheme.secondary,
+                        content: Text(
+                          'Deleted ${occasion.getTitle()}',
+                          style: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xff000000)),
+                        )));
+                  }),
+            ),
           ],
         )
       ]),
