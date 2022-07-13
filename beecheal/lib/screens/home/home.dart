@@ -221,48 +221,48 @@ class _HomeState extends State<Home> {
                         setState(() {});
                       }),
                 ),
-                ListTile(
-                  minLeadingWidth: 0.0,
-                  tileColor: Colors.white,
-                  leading: Icon(Icons.account_circle_outlined,
-                      color: Colors.black, size: 30),
-                  title: Text('Profile',
-                      style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xff000000))),
-                ),
-                ListTile(
-                  minLeadingWidth: 0.0,
-                  tileColor: Colors.white,
-                  leading: Icon(Icons.bookmark_outline,
-                      color: Colors.black, size: 30),
-                  title: Text('Achievements',
-                      style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xff000000))),
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            content: Text('Achievements'),
-                          );
-                        });
-                  },
-                ),
-                ListTile(
-                  minLeadingWidth: 0.0,
-                  tileColor: Colors.white,
-                  leading: Icon(Icons.settings_outlined,
-                      color: Colors.black, size: 30),
-                  title: Text('Settings',
-                      style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xff000000))),
-                ),
+                // ListTile(
+                //   minLeadingWidth: 0.0,
+                //   tileColor: Colors.white,
+                //   leading: Icon(Icons.account_circle_outlined,
+                //       color: Colors.black, size: 30),
+                //   title: Text('Profile',
+                //       style: TextStyle(
+                //           fontSize: 16.0,
+                //           fontWeight: FontWeight.w900,
+                //           color: Color(0xff000000))),
+                // ),
+                // ListTile(
+                //   minLeadingWidth: 0.0,
+                //   tileColor: Colors.white,
+                //   leading: Icon(Icons.bookmark_outline,
+                //       color: Colors.black, size: 30),
+                //   title: Text('Achievements',
+                //       style: TextStyle(
+                //           fontSize: 15.0,
+                //           fontWeight: FontWeight.w900,
+                //           color: Color(0xff000000))),
+                //   onTap: () {
+                //     showDialog(
+                //         context: context,
+                //         builder: (BuildContext context) {
+                //           return AlertDialog(
+                //             content: Text('Achievements'),
+                //           );
+                //         });
+                //   },
+                // ),
+                // ListTile(
+                //   minLeadingWidth: 0.0,
+                //   tileColor: Colors.white,
+                //   leading: Icon(Icons.settings_outlined,
+                //       color: Colors.black, size: 30),
+                //   title: Text('Settings',
+                //       style: TextStyle(
+                //           fontSize: 15.0,
+                //           fontWeight: FontWeight.w900,
+                //           color: Color(0xff000000))),
+                // ),
                 ListTile(
                   minLeadingWidth: 0.0,
                   tileColor: Colors.white,

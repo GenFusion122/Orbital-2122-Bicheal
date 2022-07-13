@@ -209,16 +209,6 @@ class EntryView extends StatelessWidget {
                                     fontWeight: FontWeight.w900,
                                     color: Color(0xff000000)),
                               )));
-                          // showDialog(
-                          //     context: context,
-                          //     builder: (BuildContext context) {
-                          //       Future.delayed(const Duration(seconds: 1), () {
-                          //         Navigator.of(context).pop();
-                          //       });
-                          //       return AlertDialog(
-                          //           title: Text(
-                          //               'Deleted ${entry.getTitle()} created on ${entry.getDate().toString()}'));
-                          //     });
                         }),
                   )
                 ]
