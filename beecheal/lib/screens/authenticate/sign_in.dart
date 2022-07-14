@@ -78,6 +78,7 @@ class _SignInState extends State<SignIn> {
                             SizedBox(height: 20.0),
                             // Email input
                             TextFormField(
+                                key: const Key('emailField'),
                                 style: TextStyle(
                                     fontSize: 20.0,
                                     fontWeight: FontWeight.w900,
@@ -95,6 +96,7 @@ class _SignInState extends State<SignIn> {
                             SizedBox(height: 20.0),
                             // Password input
                             TextFormField(
+                                key: const Key('passwordField'),
                                 style: TextStyle(
                                     fontSize: 20.0,
                                     fontWeight: FontWeight.w900,
@@ -113,6 +115,7 @@ class _SignInState extends State<SignIn> {
                             Align(
                               alignment: Alignment.centerRight,
                               child: RichText(
+                                key: const Key('forgotPassword'),
                                 text: TextSpan(
                                   text: 'Forgot Password?',
                                   style: TextStyle(
@@ -154,6 +157,8 @@ class _SignInState extends State<SignIn> {
                                                                     .min,
                                                             children: <Widget>[
                                                               TextFormField(
+                                                                  key: const Key(
+                                                                      'forgotEmail'),
                                                                   style: TextStyle(
                                                                       fontSize:
                                                                           20.0,
@@ -180,6 +185,8 @@ class _SignInState extends State<SignIn> {
                                                                             val);
                                                                   }),
                                                               ElevatedButton(
+                                                                key: const Key(
+                                                                    'resetPassword'),
                                                                 style:
                                                                     ButtonStyle(
                                                                         minimumSize: MaterialStateProperty.all(Size(
@@ -245,6 +252,7 @@ class _SignInState extends State<SignIn> {
                             ),
                             SizedBox(height: 12.5),
                             ElevatedButton(
+                              key: const Key('signIn'),
                               style: ButtonStyle(
                                   minimumSize: MaterialStateProperty.all(Size(
                                       (MediaQuery.of(context).size.width *
@@ -285,6 +293,7 @@ class _SignInState extends State<SignIn> {
                             ),
                             SizedBox(height: 5.0),
                             ElevatedButton(
+                              key: const Key('signInGoogle'),
                               style: ButtonStyle(
                                   minimumSize: MaterialStateProperty.all(Size(
                                       (MediaQuery.of(context).size.width *
@@ -321,6 +330,7 @@ class _SignInState extends State<SignIn> {
                             ),
                             SizedBox(height: 5.0),
                             ElevatedButton(
+                              key: const Key('signUp'),
                               style: ButtonStyle(
                                   minimumSize: MaterialStateProperty.all(Size(
                                       (MediaQuery.of(context).size.width *
