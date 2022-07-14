@@ -18,7 +18,17 @@ import 'package:timezone/data/latest.dart' as tz;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: "AIzaSyBIibnRKB9ozo0BSSMAIWYUtTFR-aB2Bes",
+      authDomain: "beecheal-17e08.firebaseapp.com",
+      projectId: "beecheal-17e08",
+      storageBucket: "beecheal-17e08.appspot.com",
+      messagingSenderId: "59725859836",
+      appId: "1:59725859836:web:782ce210bcb673089cc079",
+    ),
+  );
+
   tz.initializeTimeZones();
   final NotificationAppLaunchDetails? notificationAppLaunchDetails =
       await NotificationService.getNotificationInstance()
