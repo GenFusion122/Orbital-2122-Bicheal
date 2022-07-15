@@ -1,6 +1,7 @@
 import 'package:beecheal/custom%20widgets/hexagonalclipper.dart';
 import 'package:beecheal/models/entry.dart';
 import 'package:beecheal/screens/journal/journal_entry_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/custom widgets/constants.dart';
 import 'package:beecheal/services/database.dart';
@@ -25,9 +26,11 @@ class _EntryScreenState extends State<EntryScreen> {
   static const platform = MethodChannel('model.classifier/inference');
 
   void initState() {
-    // Initialize model
-    platform
-        .invokeMethod("Classify", <String, dynamic>{'string': 'initialize'});
+    if (!kIsWeb) {
+      // Initialize model
+      platform
+          .invokeMethod("Classify", <String, dynamic>{'string': 'initialize'});
+    }
   }
 
   @override
@@ -175,7 +178,10 @@ class _EntryScreenState extends State<EntryScreen> {
                                   color: Color(0xff000000))),
                           onPressed: () async {
                             if (_formkey.currentState!.validate()) {
-                              List prediction = await Classify();
+                              List prediction = [0, 0];
+                              if (!kIsWeb) {
+                                prediction = await Classify();
+                              }
                               widget.entry.setSentiment(prediction[0]);
                               showDialog(
                                   context: context,
@@ -411,17 +417,17 @@ class _EntryScreenState extends State<EntryScreen> {
                                                                 Navigator.of(
                                                                         context)
                                                                     .pop();
-                                                                showDialog(
-                                                                    context:
-                                                                        context,
-                                                                    builder:
-                                                                        (BuildContext
-                                                                            context) {
-                                                                      return EntryView(
-                                                                          widget
-                                                                              .entry,
-                                                                          false);
-                                                                    });
+                                                                // showDialog(
+                                                                //     context:
+                                                                //         context,
+                                                                //     builder:
+                                                                //         (BuildContext
+                                                                //             context) {
+                                                                //       return EntryView(
+                                                                //           widget
+                                                                //               .entry,
+                                                                //           false);
+                                                                //     });
                                                               },
                                                             )
                                                           ])))));
