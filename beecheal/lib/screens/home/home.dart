@@ -9,6 +9,7 @@ import 'package:beecheal/services/auth.dart';
 import 'package:beecheal/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -32,10 +33,13 @@ class _HomeState extends State<Home> {
   // Notifications
   void initState() {
     super.initState();
-    NotificationService.init(initScheduled: true);
-    // On clicked
-    NotificationService.onNotifications.stream.listen(
-        (String? payload) => Navigator.pushNamed(context, payload.toString()));
+    if (!kIsWeb) {
+      // checks if on mobile
+      NotificationService.init(initScheduled: true);
+      // On clicked
+      NotificationService.onNotifications.stream.listen((String? payload) =>
+          Navigator.pushNamed(context, payload.toString()));
+    }
   }
 
   _initializeNotificaitonValues() async {
@@ -136,36 +140,41 @@ class _HomeState extends State<Home> {
         setState(() {});
       }
     });
-    _initializeNotificaitonValues(); //initialize notification objects
+
     bool dailyJournalEntry = Provider.of<User>(context).getDailyJournalEntry();
     bool weeklyReminder = Provider.of<User>(context).getWeeklyReminder();
-    final _formkey = GlobalKey<FormState>();
-    // Daily journal entry notification
-    if (dailyJournalEntry) {
-      NotificationService.showDailyScheduledNotification(
-          id: 0,
-          title: 'Daily journal entry',
-          body: 'show journal entries',
-          payload: '/journalEntries',
-          time: Time(20),
-          scheduledDate: DateTime.now());
-    } else {
-      NotificationService.getNotificationInstance().cancel(0);
-    }
 
-    // Weekly notification
-    if (weeklyReminder) {
-      NotificationService.showWeeklyScheduledNotification(
-          id: 1,
-          title: 'Weekly reminder',
-          body: 'It\'s a new week!',
-          payload: '/home',
-          time: Time(8),
-          days: [DateTime.monday],
-          scheduledDate: DateTime.now());
-    } else {
-      NotificationService.getNotificationInstance().cancel(1);
+    if (!kIsWeb) {
+      //checks if on mobile
+      _initializeNotificaitonValues(); //initialize notification objects
+      // Daily journal entry notification
+      if (dailyJournalEntry) {
+        NotificationService.showDailyScheduledNotification(
+            id: 0,
+            title: 'Daily journal entry',
+            body: 'show journal entries',
+            payload: '/journalEntries',
+            time: Time(20),
+            scheduledDate: DateTime.now());
+      } else {
+        NotificationService.getNotificationInstance().cancel(0);
+      }
+
+      // Weekly notification
+      if (weeklyReminder) {
+        NotificationService.showWeeklyScheduledNotification(
+            id: 1,
+            title: 'Weekly reminder',
+            body: 'It\'s a new week!',
+            payload: '/home',
+            time: Time(8),
+            days: [DateTime.monday],
+            scheduledDate: DateTime.now());
+      } else {
+        NotificationService.getNotificationInstance().cancel(1);
+      }
     }
+    final _formkey = GlobalKey<FormState>();
 
     return SafeArea(
       child: Scaffold(
@@ -212,8 +221,11 @@ class _HomeState extends State<Home> {
                       onPressed: () async {
                         // clear all notifications
                         _everyMinute?.cancel();
-                        await NotificationService.getNotificationInstance()
-                            .cancelAll();
+                        if (!kIsWeb) {
+                          // checks if on mobile
+                          await NotificationService.getNotificationInstance()
+                              .cancelAll();
+                        }
                         await _auth.signOut();
                         final provider =
                             Provider.of<AuthService>(context, listen: false);

@@ -14,30 +14,38 @@ import 'package:provider/provider.dart';
 import 'models/userid.dart';
 import 'models/entry.dart';
 import 'services/database.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:timezone/data/latest.dart' as tz;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: FirebaseOptions(
-      apiKey: "AIzaSyBIibnRKB9ozo0BSSMAIWYUtTFR-aB2Bes",
-      authDomain: "beecheal-17e08.firebaseapp.com",
-      projectId: "beecheal-17e08",
-      storageBucket: "beecheal-17e08.appspot.com",
-      messagingSenderId: "59725859836",
-      appId: "1:59725859836:web:782ce210bcb673089cc079",
-    ),
-  );
+
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: FirebaseOptions(
+        apiKey: "AIzaSyBIibnRKB9ozo0BSSMAIWYUtTFR-aB2Bes",
+        authDomain: "beecheal-17e08.firebaseapp.com",
+        projectId: "beecheal-17e08",
+        storageBucket: "beecheal-17e08.appspot.com",
+        messagingSenderId: "59725859836",
+        appId: "1:59725859836:web:782ce210bcb673089cc079",
+      ),
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
 
   tz.initializeTimeZones();
-  final NotificationAppLaunchDetails? notificationAppLaunchDetails =
-      await NotificationService.getNotificationInstance()
-          .getNotificationAppLaunchDetails();
-  String? initialroute =
-      notificationAppLaunchDetails?.didNotificationLaunchApp ?? false
-          ? notificationAppLaunchDetails?.payload
-          : '/';
-
+  String? initialroute = '/';
+  if (!kIsWeb) {
+    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+        await NotificationService.getNotificationInstance()
+            .getNotificationAppLaunchDetails();
+    initialroute =
+        notificationAppLaunchDetails?.didNotificationLaunchApp ?? false
+            ? notificationAppLaunchDetails?.payload
+            : '/';
+  }
   runApp(ChangeNotifierProvider(
       create: (context) => AuthService(),
       child: StreamProvider<UserID?>.value(
