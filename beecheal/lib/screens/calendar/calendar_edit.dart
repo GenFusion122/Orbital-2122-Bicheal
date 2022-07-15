@@ -322,6 +322,7 @@ class _CalenderEditScreen<T extends Occasion>
                               widget.occasion.setDescription(newDescription);
                               DateTime originalDateTime =
                                   widget.occasion.getDate();
+                              print(newTime);
                               DateTime combinedDateTime = (newDate ??
                                       DateTime(
                                           originalDateTime.year,
@@ -336,9 +337,7 @@ class _CalenderEditScreen<T extends Occasion>
                                               TimeOfDay.fromDateTime(
                                                   originalDateTime))
                                           .minute));
-                              newDate != null
-                                  ? widget.occasion.setDate(combinedDateTime)
-                                  : null;
+                              widget.occasion.setDate(combinedDateTime);
                               DatabaseService().updateUserOccasion(
                                   widget.occasion.getId(),
                                   widget.occasion.getTitle(),
