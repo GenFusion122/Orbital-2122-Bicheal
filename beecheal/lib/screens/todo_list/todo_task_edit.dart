@@ -288,11 +288,6 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                 InitializeNotifications
                                     .initializeToDoNotifications();
                                 Navigator.of(context).pop();
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return TaskView(widget.task);
-                                    });
                               }
                             } else {
                               widget.task.setTitle(newTitle);
