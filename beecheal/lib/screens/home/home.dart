@@ -431,60 +431,64 @@ class _HomeState extends State<Home> {
                         });
                   },
                 ),
-                MergeSemantics(
-                  child: ListTile(
-                      leading: Container(
-                          width: MediaQuery.of(context).size.width * 0.4 * 0.5,
-                          child: Text(
-                            'Daily Journal Reminder',
-                            style: TextStyle(
-                                fontSize: MediaQuery.of(context).size.width *
-                                    0.4 *
-                                    0.084,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xff000000)),
-                          )),
-                      trailing: Transform.scale(
-                        scale: MediaQuery.of(context).size.width * 0.003,
-                        child: Switch(
-                          activeColor: Theme.of(context).colorScheme.primary,
-                          value: dailyJournalEntry,
-                          onChanged: (bool value) {
-                            setState(() {
-                              DatabaseService()
-                                  .updateUserDailyReminderPreference(value);
-                            });
-                          },
-                        ),
-                      )),
-                ),
-                MergeSemantics(
-                  child: ListTile(
-                      leading: Container(
-                          width: MediaQuery.of(context).size.width * 0.4 * 0.5,
-                          child: Text(
-                            'Weekly Reminder',
-                            style: TextStyle(
-                                fontSize: MediaQuery.of(context).size.width *
-                                    0.4 *
-                                    0.084,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xff000000)),
-                          )),
-                      trailing: Transform.scale(
-                        scale: MediaQuery.of(context).size.width * 0.003,
-                        child: Switch(
-                          activeColor: Theme.of(context).colorScheme.primary,
-                          value: weeklyReminder,
-                          onChanged: (bool value) {
-                            setState(() {
-                              DatabaseService()
-                                  .updateUserWeeklyReminderPreference(value);
-                            });
-                          },
-                        ),
-                      )),
-                )
+                if (!kIsWeb)
+                  MergeSemantics(
+                    child: ListTile(
+                        leading: Container(
+                            width:
+                                MediaQuery.of(context).size.width * 0.4 * 0.5,
+                            child: Text(
+                              'Daily Journal Reminder',
+                              style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.width *
+                                      0.4 *
+                                      0.084,
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xff000000)),
+                            )),
+                        trailing: Transform.scale(
+                          scale: MediaQuery.of(context).size.width * 0.003,
+                          child: Switch(
+                            activeColor: Theme.of(context).colorScheme.primary,
+                            value: dailyJournalEntry,
+                            onChanged: (bool value) {
+                              setState(() {
+                                DatabaseService()
+                                    .updateUserDailyReminderPreference(value);
+                              });
+                            },
+                          ),
+                        )),
+                  ),
+                if (!kIsWeb)
+                  MergeSemantics(
+                    child: ListTile(
+                        leading: Container(
+                            width:
+                                MediaQuery.of(context).size.width * 0.4 * 0.5,
+                            child: Text(
+                              'Weekly Reminder',
+                              style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.width *
+                                      0.4 *
+                                      0.084,
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xff000000)),
+                            )),
+                        trailing: Transform.scale(
+                          scale: MediaQuery.of(context).size.width * 0.003,
+                          child: Switch(
+                            activeColor: Theme.of(context).colorScheme.primary,
+                            value: weeklyReminder,
+                            onChanged: (bool value) {
+                              setState(() {
+                                DatabaseService()
+                                    .updateUserWeeklyReminderPreference(value);
+                              });
+                            },
+                          ),
+                        )),
+                  )
               ],
             ),
           ),
