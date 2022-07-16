@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import '../../custom widgets/custombuttons.dart';
 import 'package:beecheal/services/notifications.dart';
 import 'dart:async';
+import 'dart:math';
 
 class Home extends StatefulWidget {
   @override
@@ -176,262 +177,740 @@ class _HomeState extends State<Home> {
     }
     final _formkey = GlobalKey<FormState>();
 
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Color(0xFFFFE0B2),
-        appBar: AppBar(
-          leading: Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: MediaQuery.of(context).size.width * 0.01,
+    if (kIsWeb) {
+      double scaleMin = min(MediaQuery.of(context).size.width,
+          MediaQuery.of(context).size.height);
+      double scaleMax = min(MediaQuery.of(context).size.width,
+          MediaQuery.of(context).size.height);
+      // web build
+      return SafeArea(
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Color(0xFFFFE0B2),
+          appBar: AppBar(
+            leading: Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: MediaQuery.of(context).size.width * 0.01,
+              ),
+              child: Image.asset(
+                'assets/BzB.png',
+                height: (MediaQuery.of(context).size.width * 0.1),
+                width: (MediaQuery.of(context).size.width * 0.1),
+              ),
             ),
-            child: Image.asset(
-              'assets/BzB.png',
-              height: (MediaQuery.of(context).size.width * 0.1),
-              width: (MediaQuery.of(context).size.width * 0.1),
+            iconTheme: IconThemeData(color: Colors.black, size: 40),
+            title: Icon(Icons.home_outlined, color: Colors.black, size: 45),
+            centerTitle: true,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            elevation: 0.0,
+          ),
+          endDrawer: Drawer(
+            width: min(MediaQuery.of(context).size.width * 0.35, 300),
+            backgroundColor: Theme.of(context).colorScheme.background,
+            child: SafeArea(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.070,
+                    color: Colors.orange[400],
+                    child: TextButton.icon(
+                        icon: Icon(Icons.person_outline,
+                            color: Colors.black, size: scaleMin * 0.05),
+                        style: TextButton.styleFrom(primary: Colors.black),
+                        label: Text(
+                          'Sign Out',
+                          style: TextStyle(
+                              fontSize: scaleMin * 0.03,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xff000000)),
+                        ),
+                        onPressed: () async {
+                          // clear all notifications
+                          _everyMinute?.cancel();
+                          await _auth.signOut();
+                          final provider =
+                              Provider.of<AuthService>(context, listen: false);
+                          provider.signOut();
+                          setState(() {});
+                        }),
+                  ),
+                  ListTile(
+                    minLeadingWidth: 0.0,
+                    tileColor: Colors.white,
+                    leading: Icon(Icons.password_rounded,
+                        color: Colors.black, size: scaleMin * 0.05),
+                    title: Align(
+                      alignment: Alignment.center,
+                      child: Text('Change Password',
+                          style: TextStyle(
+                              fontSize: scaleMin * 0.024,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xff000000))),
+                    ),
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            String oldPassword = '';
+                            String newPassword = '';
+                            String confirmNewPassword = '';
+                            return AlertDialog(
+                              content: Form(
+                                key: _formkey,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    TextFormField(
+                                        style: TextStyle(
+                                            fontSize: scaleMin * 0.04,
+                                            fontWeight: FontWeight.w900,
+                                            color: Color(0xff000000)),
+                                        cursorColor: Color(0xff000000),
+                                        decoration: InputDecoration(
+                                            hintText: "New Password",
+                                            counterText: "",
+                                            enabledBorder: UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.black),
+                                                borderRadius: const BorderRadius
+                                                        .all(
+                                                    const Radius.circular(10))),
+                                            focusedBorder: UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.black),
+                                                borderRadius: const BorderRadius
+                                                        .all(
+                                                    const Radius.circular(10))),
+                                            border: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius: const BorderRadius
+                                                      .all(
+                                                  const Radius.circular(10)),
+                                            )),
+                                        validator: (val) => val!.length < 8
+                                            ? 'Enter a password at least 8 characters long'
+                                            : null,
+                                        obscureText: true,
+                                        onChanged: (val) {
+                                          setState(() => newPassword = val);
+                                        }),
+                                    TextFormField(
+                                        style: TextStyle(
+                                            fontSize: scaleMin * 0.04,
+                                            fontWeight: FontWeight.w900,
+                                            color: Color(0xff000000)),
+                                        cursorColor: Color(0xff000000),
+                                        decoration: InputDecoration(
+                                            hintText: "Confirm New Password",
+                                            counterText: "",
+                                            enabledBorder: UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.black),
+                                                borderRadius: const BorderRadius
+                                                        .all(
+                                                    const Radius.circular(10))),
+                                            focusedBorder: UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.black),
+                                                borderRadius: const BorderRadius
+                                                        .all(
+                                                    const Radius.circular(10))),
+                                            border: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius: const BorderRadius
+                                                      .all(
+                                                  const Radius.circular(10)),
+                                            )),
+                                        validator: (val) => val != newPassword
+                                            ? 'Passwords don\'t match'
+                                            : null,
+                                        obscureText: true,
+                                        onChanged: (val) {
+                                          setState(
+                                              () => confirmNewPassword = val);
+                                        }),
+                                    SizedBox(height: scaleMin * 0.0125),
+                                    ElevatedButton(
+                                      style: ButtonStyle(
+                                          minimumSize:
+                                              MaterialStateProperty.all(Size(
+                                                  (MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.425),
+                                                  (scaleMin * 0.1))),
+                                          shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(18.0),
+                                          )),
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Color(0xFFFFE98C)),
+                                          elevation:
+                                              MaterialStateProperty.resolveWith<
+                                                  double>((states) => 0)),
+                                      onPressed: () async {
+                                        // Validation check
+                                        if (_formkey.currentState!.validate()) {
+                                          dynamic result = await AuthService()
+                                              .changePassword(newPassword);
+                                          Navigator.of(context).pop();
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              18.0)),
+                                                  elevation: 0.0,
+                                                  backgroundColor:
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .secondary,
+                                                  content: Text(
+                                                    'Password changed',
+                                                    style: TextStyle(
+                                                        fontSize:
+                                                            scaleMin * 0.028,
+                                                        fontWeight:
+                                                            FontWeight.w900,
+                                                        color:
+                                                            Color(0xff000000)),
+                                                  )));
+                                          if (result == null) {}
+                                        }
+                                      },
+                                      child: Text('Change password',
+                                          style: TextStyle(
+                                              fontSize: scaleMin * 0.036,
+                                              color: Colors.black)),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
-          iconTheme: IconThemeData(color: Colors.black, size: 40),
-          title: Icon(Icons.home_outlined, color: Colors.black, size: 45),
-          centerTitle: true,
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          elevation: 0.0,
-        ),
-        endDrawer: Drawer(
-          width: MediaQuery.of(context).size.width * 0.45,
-          backgroundColor: Theme.of(context).colorScheme.background,
-          child: SafeArea(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.070,
-                  color: Colors.orange[400],
-                  child: TextButton.icon(
-                      icon: Icon(Icons.person_outline,
-                          color: Colors.black, size: 45),
-                      style: TextButton.styleFrom(primary: Colors.black),
-                      label: Text(
-                        'Sign Out',
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xff000000)),
+          bottomNavigationBar: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.08,
+            child: BottomAppBar(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                      child: OrangeNavButton(
+                          "/statistics", "statistics", context)),
+                  Expanded(
+                      child: OrangeNavButton("/calendar", "calendar", context)),
+                  Expanded(
+                      child: OrangeNavButton(
+                          "/journalEntries", "journal", context)),
+                ],
+              ),
+            ),
+          ),
+          body: Column(
+            children: <Widget>[
+              Expanded(
+                flex: 8,
+                child: Padding(
+                  padding: const EdgeInsets.all(3),
+                  child: GridView.count(
+                    physics: NeverScrollableScrollPhysics(),
+                    crossAxisCount: 2,
+                    childAspectRatio: 1.35,
+                    children: [
+                      displayCard(Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Stack(
+                          children: [
+                            Text(
+                              "Tasks Due \nToday:",
+                              style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xff000000)),
+                            ),
+                            Align(
+                                alignment: Alignment.bottomRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Text(numberOfTasksToday.toString(),
+                                      style: TextStyle(
+                                          fontSize: 50,
+                                          fontWeight: FontWeight.bold)),
+                                ))
+                          ],
+                        ),
+                      )),
+                      displayCard(Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Stack(
+                          children: [
+                            Text("Events Happening \nToday: ",
+                                style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w900,
+                                    color: Color(0xff000000))),
+                            Align(
+                                alignment: Alignment.bottomRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Text(numberOfEventsToday.toString(),
+                                      style: TextStyle(
+                                          fontSize: 50,
+                                          fontWeight: FontWeight.bold)),
+                                ))
+                          ],
+                        ),
+                      )),
+                      displayCard(Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Upcoming Task:",
+                              style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xff000000)),
+                            ),
+                            Flexible(
+                                child: Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: Text(upcomingTask,
+                                  maxLines: 3,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      overflow: TextOverflow.ellipsis)),
+                            ))
+                          ],
+                        ),
+                      )),
+                      displayCard(Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Upcoming Event:",
+                              style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xff000000)),
+                            ),
+                            Flexible(
+                                child: Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: Text(upcomingEvent,
+                                  maxLines: 3,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      overflow: TextOverflow.ellipsis)),
+                            ))
+                          ],
+                        ),
+                      )),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                color: Color(0xFFFFAB00),
+                width: MediaQuery.of(context).size.width,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ToggleButtons(
+                    onPressed: (int index) {
+                      setState(() {
+                        for (int buttonIndex = 0;
+                            buttonIndex < isSelected.length;
+                            buttonIndex++) {
+                          if (buttonIndex == index) {
+                            isSelected[buttonIndex] = true;
+                          } else {
+                            isSelected[buttonIndex] = false;
+                          }
+                        }
+                      });
+                    },
+                    borderColor: Colors.transparent,
+                    selectedBorderColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    isSelected: isSelected,
+                    color: Colors.black,
+                    selectedColor: Colors.black,
+                    constraints: BoxConstraints.expand(
+                        width: MediaQuery.of(context).size.width / 3.1,
+                        height: MediaQuery.of(context).size.height * 0.05),
+                    children: [
+                      toggleButtonWidget(
+                          MediaQuery.of(context).size.width / 3.1,
+                          isSelected[0],
+                          "Default"),
+                      toggleButtonWidget(
+                          MediaQuery.of(context).size.width / 3.1,
+                          isSelected[1],
+                          "Completed"),
+                      toggleButtonWidget(
+                          MediaQuery.of(context).size.width / 3.1,
+                          isSelected[2],
+                          "Incomplete"),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 8,
+                child: Stack(children: [
+                  Container(
+                      color: Color(0xFFFFE0B2),
+                      margin: EdgeInsets.all(0.0),
+                      child: StreamBuilder(
+                        stream: DatabaseService().tasks,
+                        builder: (context, AsyncSnapshot<List<Task>> snapshot) {
+                          var completed = Provider.of<List<Task>>(context)
+                              .where((task) =>
+                                  task.getCompletedOn() !=
+                                  Task.incompletePlaceholder);
+                          var notCompleted = Provider.of<List<Task>>(context)
+                              .where((task) =>
+                                  task.getCompletedOn() ==
+                                  Task.incompletePlaceholder);
+                          if (isSelected[0] == true) {
+                            return ListView.builder(
+                                itemCount:
+                                    Provider.of<List<Task>>(context).length,
+                                itemBuilder: (context, index) {
+                                  return TaskTile(
+                                      Provider.of<List<Task>>(context)[index]);
+                                });
+                          } else if (isSelected[1] == true) {
+                            return ListView.builder(
+                                itemCount: completed.length,
+                                itemBuilder: (context, index) {
+                                  return TaskTile(completed.toList()[index]);
+                                });
+                          } else if (isSelected[2] == true) {
+                            return ListView.builder(
+                                itemCount: notCompleted.length,
+                                itemBuilder: (context, index) {
+                                  return TaskTile(notCompleted.toList()[index]);
+                                });
+                          } else {
+                            return SpinKitFoldingCube(
+                              color: Color(0xFFFFE0B2),
+                            );
+                          }
+                        },
+                      )),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: EdgeInsets.all(2.0),
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0.0,
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return TaskEditScreen(
+                                    task: Task(
+                                      "",
+                                      "",
+                                      DateTime.now(),
+                                      "",
+                                      Task.incompletePlaceholder,
+                                    ),
+                                    textPrompt: 'Create');
+                              });
+                        },
+                        child: HexagonWidget.flat(
+                            width: 100,
+                            color: Theme.of(context).colorScheme.primary,
+                            child: Icon(Icons.add, size: 30)),
                       ),
-                      onPressed: () async {
-                        // clear all notifications
-                        _everyMinute?.cancel();
-                        if (!kIsWeb) {
-                          // checks if on mobile
+                    ),
+                  )
+                ]),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      // mobile build
+      return SafeArea(
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Color(0xFFFFE0B2),
+          appBar: AppBar(
+            leading: Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: MediaQuery.of(context).size.width * 0.01,
+              ),
+              child: Image.asset(
+                'assets/BzB.png',
+                height: (MediaQuery.of(context).size.width * 0.1),
+                width: (MediaQuery.of(context).size.width * 0.1),
+              ),
+            ),
+            iconTheme: IconThemeData(color: Colors.black, size: 40),
+            title: Icon(Icons.home_outlined, color: Colors.black, size: 45),
+            centerTitle: true,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            elevation: 0.0,
+          ),
+          endDrawer: Drawer(
+            width: MediaQuery.of(context).size.width * 0.45,
+            backgroundColor: Theme.of(context).colorScheme.background,
+            child: SafeArea(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.070,
+                    color: Colors.orange[400],
+                    child: TextButton.icon(
+                        icon: Icon(Icons.person_outline,
+                            color: Colors.black, size: 45),
+                        style: TextButton.styleFrom(primary: Colors.black),
+                        label: Text(
+                          'Sign Out',
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xff000000)),
+                        ),
+                        onPressed: () async {
+                          // clear all notifications
+                          _everyMinute?.cancel();
+
                           await NotificationService.getNotificationInstance()
                               .cancelAll();
-                        }
-                        await _auth.signOut();
-                        final provider =
-                            Provider.of<AuthService>(context, listen: false);
-                        provider.signOut();
-                        setState(() {});
-                      }),
-                ),
-                // ListTile(
-                //   minLeadingWidth: 0.0,
-                //   tileColor: Colors.white,
-                //   leading: Icon(Icons.account_circle_outlined,
-                //       color: Colors.black, size: 30),
-                //   title: Text('Profile',
-                //       style: TextStyle(
-                //           fontSize: 16.0,
-                //           fontWeight: FontWeight.w900,
-                //           color: Color(0xff000000))),
-                // ),
-                // ListTile(
-                //   minLeadingWidth: 0.0,
-                //   tileColor: Colors.white,
-                //   leading: Icon(Icons.bookmark_outline,
-                //       color: Colors.black, size: 30),
-                //   title: Text('Achievements',
-                //       style: TextStyle(
-                //           fontSize: 15.0,
-                //           fontWeight: FontWeight.w900,
-                //           color: Color(0xff000000))),
-                //   onTap: () {
-                //     showDialog(
-                //         context: context,
-                //         builder: (BuildContext context) {
-                //           return AlertDialog(
-                //             content: Text('Achievements'),
-                //           );
-                //         });
-                //   },
-                // ),
-                // ListTile(
-                //   minLeadingWidth: 0.0,
-                //   tileColor: Colors.white,
-                //   leading: Icon(Icons.settings_outlined,
-                //       color: Colors.black, size: 30),
-                //   title: Text('Settings',
-                //       style: TextStyle(
-                //           fontSize: 15.0,
-                //           fontWeight: FontWeight.w900,
-                //           color: Color(0xff000000))),
-                // ),
-                ListTile(
-                  minLeadingWidth: 0.0,
-                  tileColor: Colors.white,
-                  leading: Icon(Icons.password_rounded,
-                      color: Colors.black, size: 30),
-                  title: Text('Change Password',
-                      style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xff000000))),
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          String oldPassword = '';
-                          String newPassword = '';
-                          String confirmNewPassword = '';
-                          return ClipPath(
-                              clipper: HexagonalClipper(),
-                              child: Material(
-                                  color: Color(0xFFFFC95C),
-                                  child: Center(
-                                      child: Container(
-                                          alignment:
-                                              FractionalOffset(0.5, 0.375),
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.75,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.75,
-                                          child: Form(
-                                            key: _formkey,
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: <Widget>[
-                                                TextFormField(
-                                                    style: TextStyle(
-                                                        fontSize: 20.0,
-                                                        fontWeight:
-                                                            FontWeight.w900,
-                                                        color:
-                                                            Color(0xff000000)),
-                                                    cursorColor:
-                                                        Color(0xff000000),
-                                                    decoration: textInputDecoration
-                                                        .copyWith(
-                                                            hintText:
-                                                                'New Password'),
-                                                    validator: (val) => val!
-                                                                .length <
-                                                            8
-                                                        ? 'Enter a password at least 8 characters long'
-                                                        : null,
-                                                    obscureText: true,
-                                                    onChanged: (val) {
-                                                      setState(() =>
-                                                          newPassword = val);
-                                                    }),
-                                                TextFormField(
-                                                    style: TextStyle(
-                                                        fontSize: 20.0,
-                                                        fontWeight:
-                                                            FontWeight.w900,
-                                                        color:
-                                                            Color(0xff000000)),
-                                                    cursorColor:
-                                                        Color(0xff000000),
-                                                    decoration: textInputDecoration
-                                                        .copyWith(
-                                                            hintText:
-                                                                'Confirm New Password'),
-                                                    validator: (val) => val !=
-                                                            newPassword
-                                                        ? 'Passwords don\'t match'
-                                                        : null,
-                                                    obscureText: true,
-                                                    onChanged: (val) {
-                                                      setState(() =>
-                                                          confirmNewPassword =
-                                                              val);
-                                                    }),
-                                                ElevatedButton(
-                                                  style: ButtonStyle(
-                                                      minimumSize: MaterialStateProperty.all(Size(
-                                                          (MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.75),
-                                                          (MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.1))),
-                                                      shape: MaterialStateProperty.all<
-                                                              RoundedRectangleBorder>(
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(18.0),
-                                                      )),
-                                                      backgroundColor: MaterialStateProperty.all(
-                                                          Color(0xFFFFE98C)),
-                                                      elevation:
-                                                          MaterialStateProperty
-                                                              .resolveWith<double>(
-                                                                  (states) =>
-                                                                      0)),
-                                                  onPressed: () async {
-                                                    // Validation check
-                                                    if (_formkey.currentState!
-                                                        .validate()) {
-                                                      dynamic result =
-                                                          await AuthService()
-                                                              .changePassword(
-                                                                  newPassword);
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      ScaffoldMessenger.of(context).showSnackBar(
-                                                          SnackBar(
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              18.0)),
-                                                              elevation: 0.0,
-                                                              backgroundColor:
-                                                                  Theme.of(
-                                                                          context)
-                                                                      .colorScheme
-                                                                      .secondary,
-                                                              content: Text(
-                                                                'Password changed',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        12.0,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w900,
-                                                                    color: Color(
-                                                                        0xff000000)),
-                                                              )));
-                                                      if (result == null) {}
-                                                    }
-                                                  },
-                                                  child: Text('Change password',
+
+                          await _auth.signOut();
+                          final provider =
+                              Provider.of<AuthService>(context, listen: false);
+                          provider.signOut();
+                          setState(() {});
+                        }),
+                  ),
+                  // ListTile(
+                  //   minLeadingWidth: 0.0,
+                  //   tileColor: Colors.white,
+                  //   leading: Icon(Icons.account_circle_outlined,
+                  //       color: Colors.black, size: 30),
+                  //   title: Text('Profile',
+                  //       style: TextStyle(
+                  //           fontSize: 16.0,
+                  //           fontWeight: FontWeight.w900,
+                  //           color: Color(0xff000000))),
+                  // ),
+                  // ListTile(
+                  //   minLeadingWidth: 0.0,
+                  //   tileColor: Colors.white,
+                  //   leading: Icon(Icons.bookmark_outline,
+                  //       color: Colors.black, size: 30),
+                  //   title: Text('Achievements',
+                  //       style: TextStyle(
+                  //           fontSize: 15.0,
+                  //           fontWeight: FontWeight.w900,
+                  //           color: Color(0xff000000))),
+                  //   onTap: () {
+                  //     showDialog(
+                  //         context: context,
+                  //         builder: (BuildContext context) {
+                  //           return AlertDialog(
+                  //             content: Text('Achievements'),
+                  //           );
+                  //         });
+                  //   },
+                  // ),
+                  // ListTile(
+                  //   minLeadingWidth: 0.0,
+                  //   tileColor: Colors.white,
+                  //   leading: Icon(Icons.settings_outlined,
+                  //       color: Colors.black, size: 30),
+                  //   title: Text('Settings',
+                  //       style: TextStyle(
+                  //           fontSize: 15.0,
+                  //           fontWeight: FontWeight.w900,
+                  //           color: Color(0xff000000))),
+                  // ),
+                  ListTile(
+                    minLeadingWidth: 0.0,
+                    tileColor: Colors.white,
+                    leading: Icon(Icons.password_rounded,
+                        color: Colors.black, size: 30),
+                    title: Text('Change Password',
+                        style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xff000000))),
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            String oldPassword = '';
+                            String newPassword = '';
+                            String confirmNewPassword = '';
+                            return ClipPath(
+                                clipper: HexagonalClipper(),
+                                child: Material(
+                                    color: Color(0xFFFFC95C),
+                                    child: Center(
+                                        child: Container(
+                                            alignment:
+                                                FractionalOffset(0.5, 0.375),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.75,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.75,
+                                            child: Form(
+                                              key: _formkey,
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  TextFormField(
                                                       style: TextStyle(
-                                                          color: Colors.black)),
-                                                ),
-                                              ],
-                                            ),
-                                          )))));
-                        });
-                  },
-                ),
-                if (!kIsWeb)
+                                                          fontSize: 20.0,
+                                                          fontWeight:
+                                                              FontWeight.w900,
+                                                          color: Color(
+                                                              0xff000000)),
+                                                      cursorColor:
+                                                          Color(0xff000000),
+                                                      decoration:
+                                                          textInputDecoration
+                                                              .copyWith(
+                                                                  hintText:
+                                                                      'New Password'),
+                                                      validator: (val) => val!
+                                                                  .length <
+                                                              8
+                                                          ? 'Enter a password at least 8 characters long'
+                                                          : null,
+                                                      obscureText: true,
+                                                      onChanged: (val) {
+                                                        setState(() =>
+                                                            newPassword = val);
+                                                      }),
+                                                  TextFormField(
+                                                      style: TextStyle(
+                                                          fontSize: 20.0,
+                                                          fontWeight:
+                                                              FontWeight.w900,
+                                                          color: Color(
+                                                              0xff000000)),
+                                                      cursorColor:
+                                                          Color(0xff000000),
+                                                      decoration:
+                                                          textInputDecoration
+                                                              .copyWith(
+                                                                  hintText:
+                                                                      'Confirm New Password'),
+                                                      validator: (val) => val !=
+                                                              newPassword
+                                                          ? 'Passwords don\'t match'
+                                                          : null,
+                                                      obscureText: true,
+                                                      onChanged: (val) {
+                                                        setState(() =>
+                                                            confirmNewPassword =
+                                                                val);
+                                                      }),
+                                                  ElevatedButton(
+                                                    style: ButtonStyle(
+                                                        minimumSize: MaterialStateProperty.all(Size(
+                                                            (MediaQuery.of(context)
+                                                                    .size
+                                                                    .width *
+                                                                0.75),
+                                                            (MediaQuery.of(context)
+                                                                    .size
+                                                                    .width *
+                                                                0.1))),
+                                                        shape: MaterialStateProperty.all<
+                                                                RoundedRectangleBorder>(
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      18.0),
+                                                        )),
+                                                        backgroundColor: MaterialStateProperty.all(
+                                                            Color(0xFFFFE98C)),
+                                                        elevation:
+                                                            MaterialStateProperty
+                                                                .resolveWith<double>(
+                                                                    (states) =>
+                                                                        0)),
+                                                    onPressed: () async {
+                                                      // Validation check
+                                                      if (_formkey.currentState!
+                                                          .validate()) {
+                                                        dynamic result =
+                                                            await AuthService()
+                                                                .changePassword(
+                                                                    newPassword);
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        ScaffoldMessenger.of(context).showSnackBar(
+                                                            SnackBar(
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            18.0)),
+                                                                elevation: 0.0,
+                                                                backgroundColor: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .secondary,
+                                                                content: Text(
+                                                                  'Password changed',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          12.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w900,
+                                                                      color: Color(
+                                                                          0xff000000)),
+                                                                )));
+                                                        if (result == null) {}
+                                                      }
+                                                    },
+                                                    child: Text(
+                                                        'Change password',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black)),
+                                                  ),
+                                                ],
+                                              ),
+                                            )))));
+                          });
+                    },
+                  ),
+
                   MergeSemantics(
                     child: ListTile(
                         leading: Container(
@@ -460,7 +939,7 @@ class _HomeState extends State<Home> {
                           ),
                         )),
                   ),
-                if (!kIsWeb)
+
                   MergeSemantics(
                     child: ListTile(
                         leading: Container(
@@ -489,255 +968,262 @@ class _HomeState extends State<Home> {
                           ),
                         )),
                   )
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        bottomNavigationBar: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.08,
-          child: BottomAppBar(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
-                    child:
-                        OrangeNavButton("/statistics", "statistics", context)),
-                Expanded(
-                    child: OrangeNavButton("/calendar", "calendar", context)),
-                Expanded(
-                    child:
-                        OrangeNavButton("/journalEntries", "journal", context)),
-              ],
+          bottomNavigationBar: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.08,
+            child: BottomAppBar(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                      child: OrangeNavButton(
+                          "/statistics", "statistics", context)),
+                  Expanded(
+                      child: OrangeNavButton("/calendar", "calendar", context)),
+                  Expanded(
+                      child: OrangeNavButton(
+                          "/journalEntries", "journal", context)),
+                ],
+              ),
             ),
           ),
-        ),
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 8,
-              child: Padding(
-                padding: const EdgeInsets.all(3),
-                child: GridView.count(
-                  physics: NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  childAspectRatio: 1.35,
-                  children: [
-                    displayCard(Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Stack(
-                        children: [
-                          Text(
-                            "Tasks Due \nToday:",
-                            style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xff000000)),
-                          ),
-                          Align(
-                              alignment: Alignment.bottomRight,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Text(numberOfTasksToday.toString(),
-                                    style: TextStyle(
-                                        fontSize: 50,
-                                        fontWeight: FontWeight.bold)),
-                              ))
-                        ],
-                      ),
-                    )),
-                    displayCard(Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Stack(
-                        children: [
-                          Text("Events Happening \nToday: ",
+          body: Column(
+            children: <Widget>[
+              Expanded(
+                flex: 8,
+                child: Padding(
+                  padding: const EdgeInsets.all(3),
+                  child: GridView.count(
+                    physics: NeverScrollableScrollPhysics(),
+                    crossAxisCount: 2,
+                    childAspectRatio: 1.35,
+                    children: [
+                      displayCard(Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Stack(
+                          children: [
+                            Text(
+                              "Tasks Due \nToday:",
                               style: TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.w900,
-                                  color: Color(0xff000000))),
-                          Align(
-                              alignment: Alignment.bottomRight,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Text(numberOfEventsToday.toString(),
-                                    style: TextStyle(
-                                        fontSize: 50,
-                                        fontWeight: FontWeight.bold)),
-                              ))
-                        ],
-                      ),
-                    )),
-                    displayCard(Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Upcoming Task:",
-                            style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xff000000)),
-                          ),
-                          Flexible(
-                              child: Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: Text(upcomingTask,
-                                maxLines: 3,
+                                  color: Color(0xff000000)),
+                            ),
+                            Align(
+                                alignment: Alignment.bottomRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Text(numberOfTasksToday.toString(),
+                                      style: TextStyle(
+                                          fontSize: 50,
+                                          fontWeight: FontWeight.bold)),
+                                ))
+                          ],
+                        ),
+                      )),
+                      displayCard(Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Stack(
+                          children: [
+                            Text("Events Happening \nToday: ",
                                 style: TextStyle(
-                                    fontSize: 20,
-                                    overflow: TextOverflow.ellipsis)),
-                          ))
-                        ],
-                      ),
-                    )),
-                    displayCard(Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Upcoming Event:",
-                            style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xff000000)),
-                          ),
-                          Flexible(
-                              child: Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: Text(upcomingEvent,
-                                maxLines: 3,
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    overflow: TextOverflow.ellipsis)),
-                          ))
-                        ],
-                      ),
-                    )),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              color: Color(0xFFFFAB00),
-              width: MediaQuery.of(context).size.width,
-              child: Align(
-                alignment: Alignment.center,
-                child: ToggleButtons(
-                  onPressed: (int index) {
-                    setState(() {
-                      for (int buttonIndex = 0;
-                          buttonIndex < isSelected.length;
-                          buttonIndex++) {
-                        if (buttonIndex == index) {
-                          isSelected[buttonIndex] = true;
-                        } else {
-                          isSelected[buttonIndex] = false;
-                        }
-                      }
-                    });
-                  },
-                  borderColor: Colors.transparent,
-                  selectedBorderColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  isSelected: isSelected,
-                  color: Colors.black,
-                  selectedColor: Colors.black,
-                  constraints: BoxConstraints.expand(
-                      width: MediaQuery.of(context).size.width / 3.1,
-                      height: MediaQuery.of(context).size.height * 0.05),
-                  children: [
-                    toggleButtonWidget(MediaQuery.of(context).size.width / 3.1,
-                        isSelected[0], "Default"),
-                    toggleButtonWidget(MediaQuery.of(context).size.width / 3.1,
-                        isSelected[1], "Completed"),
-                    toggleButtonWidget(MediaQuery.of(context).size.width / 3.1,
-                        isSelected[2], "Incomplete"),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 8,
-              child: Stack(children: [
-                Container(
-                    color: Color(0xFFFFE0B2),
-                    margin: EdgeInsets.all(0.0),
-                    child: StreamBuilder(
-                      stream: DatabaseService().tasks,
-                      builder: (context, AsyncSnapshot<List<Task>> snapshot) {
-                        var completed = Provider.of<List<Task>>(context).where(
-                            (task) =>
-                                task.getCompletedOn() !=
-                                Task.incompletePlaceholder);
-                        var notCompleted = Provider.of<List<Task>>(context)
-                            .where((task) =>
-                                task.getCompletedOn() ==
-                                Task.incompletePlaceholder);
-                        if (isSelected[0] == true) {
-                          return ListView.builder(
-                              itemCount:
-                                  Provider.of<List<Task>>(context).length,
-                              itemBuilder: (context, index) {
-                                return TaskTile(
-                                    Provider.of<List<Task>>(context)[index]);
-                              });
-                        } else if (isSelected[1] == true) {
-                          return ListView.builder(
-                              itemCount: completed.length,
-                              itemBuilder: (context, index) {
-                                return TaskTile(completed.toList()[index]);
-                              });
-                        } else if (isSelected[2] == true) {
-                          return ListView.builder(
-                              itemCount: notCompleted.length,
-                              itemBuilder: (context, index) {
-                                return TaskTile(notCompleted.toList()[index]);
-                              });
-                        } else {
-                          return SpinKitFoldingCube(
-                            color: Color(0xFFFFE0B2),
-                          );
-                        }
-                      },
-                    )),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: EdgeInsets.all(2.0),
-                    child: FloatingActionButton(
-                      backgroundColor: Colors.transparent,
-                      elevation: 0.0,
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return TaskEditScreen(
-                                  task: Task(
-                                    "",
-                                    "",
-                                    DateTime.now(),
-                                    "",
-                                    Task.incompletePlaceholder,
-                                  ),
-                                  textPrompt: 'Create');
-                            });
-                      },
-                      child: HexagonWidget.flat(
-                          width: 100,
-                          color: Theme.of(context).colorScheme.primary,
-                          child: Icon(Icons.add, size: 30)),
-                    ),
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w900,
+                                    color: Color(0xff000000))),
+                            Align(
+                                alignment: Alignment.bottomRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Text(numberOfEventsToday.toString(),
+                                      style: TextStyle(
+                                          fontSize: 50,
+                                          fontWeight: FontWeight.bold)),
+                                ))
+                          ],
+                        ),
+                      )),
+                      displayCard(Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Upcoming Task:",
+                              style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xff000000)),
+                            ),
+                            Flexible(
+                                child: Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: Text(upcomingTask,
+                                  maxLines: 3,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      overflow: TextOverflow.ellipsis)),
+                            ))
+                          ],
+                        ),
+                      )),
+                      displayCard(Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Upcoming Event:",
+                              style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w900,
+                                  color: Color(0xff000000)),
+                            ),
+                            Flexible(
+                                child: Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: Text(upcomingEvent,
+                                  maxLines: 3,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      overflow: TextOverflow.ellipsis)),
+                            ))
+                          ],
+                        ),
+                      )),
+                    ],
                   ),
-                )
-              ]),
-            ),
-          ],
+                ),
+              ),
+              Container(
+                color: Color(0xFFFFAB00),
+                width: MediaQuery.of(context).size.width,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ToggleButtons(
+                    onPressed: (int index) {
+                      setState(() {
+                        for (int buttonIndex = 0;
+                            buttonIndex < isSelected.length;
+                            buttonIndex++) {
+                          if (buttonIndex == index) {
+                            isSelected[buttonIndex] = true;
+                          } else {
+                            isSelected[buttonIndex] = false;
+                          }
+                        }
+                      });
+                    },
+                    borderColor: Colors.transparent,
+                    selectedBorderColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    isSelected: isSelected,
+                    color: Colors.black,
+                    selectedColor: Colors.black,
+                    constraints: BoxConstraints.expand(
+                        width: MediaQuery.of(context).size.width / 3.1,
+                        height: MediaQuery.of(context).size.height * 0.05),
+                    children: [
+                      toggleButtonWidget(
+                          MediaQuery.of(context).size.width / 3.1,
+                          isSelected[0],
+                          "Default"),
+                      toggleButtonWidget(
+                          MediaQuery.of(context).size.width / 3.1,
+                          isSelected[1],
+                          "Completed"),
+                      toggleButtonWidget(
+                          MediaQuery.of(context).size.width / 3.1,
+                          isSelected[2],
+                          "Incomplete"),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 8,
+                child: Stack(children: [
+                  Container(
+                      color: Color(0xFFFFE0B2),
+                      margin: EdgeInsets.all(0.0),
+                      child: StreamBuilder(
+                        stream: DatabaseService().tasks,
+                        builder: (context, AsyncSnapshot<List<Task>> snapshot) {
+                          var completed = Provider.of<List<Task>>(context)
+                              .where((task) =>
+                                  task.getCompletedOn() !=
+                                  Task.incompletePlaceholder);
+                          var notCompleted = Provider.of<List<Task>>(context)
+                              .where((task) =>
+                                  task.getCompletedOn() ==
+                                  Task.incompletePlaceholder);
+                          if (isSelected[0] == true) {
+                            return ListView.builder(
+                                itemCount:
+                                    Provider.of<List<Task>>(context).length,
+                                itemBuilder: (context, index) {
+                                  return TaskTile(
+                                      Provider.of<List<Task>>(context)[index]);
+                                });
+                          } else if (isSelected[1] == true) {
+                            return ListView.builder(
+                                itemCount: completed.length,
+                                itemBuilder: (context, index) {
+                                  return TaskTile(completed.toList()[index]);
+                                });
+                          } else if (isSelected[2] == true) {
+                            return ListView.builder(
+                                itemCount: notCompleted.length,
+                                itemBuilder: (context, index) {
+                                  return TaskTile(notCompleted.toList()[index]);
+                                });
+                          } else {
+                            return SpinKitFoldingCube(
+                              color: Color(0xFFFFE0B2),
+                            );
+                          }
+                        },
+                      )),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: EdgeInsets.all(2.0),
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0.0,
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return TaskEditScreen(
+                                    task: Task(
+                                      "",
+                                      "",
+                                      DateTime.now(),
+                                      "",
+                                      Task.incompletePlaceholder,
+                                    ),
+                                    textPrompt: 'Create');
+                              });
+                        },
+                        child: HexagonWidget.flat(
+                            width: 100,
+                            color: Theme.of(context).colorScheme.primary,
+                            child: Icon(Icons.add, size: 30)),
+                      ),
+                    ),
+                  )
+                ]),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   Widget toggleButtonWidget(double width, bool selected, String text) {
