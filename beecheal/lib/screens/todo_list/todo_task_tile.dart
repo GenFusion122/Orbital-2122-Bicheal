@@ -20,7 +20,7 @@ class TaskTile extends StatelessWidget {
               vertical: MediaQuery.of(context).size.height * 0.005),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(
-                  MediaQuery.of(context).size.width * 0.04)),
+                  MediaQuery.of(context).size.width * 0.02)),
           child: ListTile(
             title: Text(
               occasion.getTitle(),
