@@ -107,7 +107,7 @@ class TimePicker {
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text("Ok")),
+                            child: Text("OK")),
                       ],
                     ),
                   ],

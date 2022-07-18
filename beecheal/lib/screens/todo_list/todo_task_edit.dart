@@ -23,10 +23,10 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
   final _formkey = GlobalKey<FormState>();
   DateTime? newDate;
   TimeOfDay? newTime;
+  String? newTitle;
+  String? newDescription;
   @override
   Widget build(BuildContext context) {
-    String newTitle = widget.task.getTitle();
-    String newDescription = widget.task.getDescription();
     String dateLabel =
         DateFormat('yyyy-MM-dd').format(newDate ?? widget.task.getDate());
     String timeLabel =
@@ -58,6 +58,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                 Padding(
                   padding: EdgeInsets.all(1.0),
                   child: TextFormField(
+                      key: Key("taskTitleField"),
                       maxLength: 50,
                       style: TextStyle(
                           fontSize: 20.0,
@@ -70,7 +71,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                       validator: (val) =>
                           val!.isNotEmpty ? null : 'Please enter a title',
                       onChanged: (val) {
-                        newTitle = val;
+                        setState(() => newTitle = val);
                       }),
                 ),
                 Align(
@@ -88,6 +89,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                 Padding(
                   padding: EdgeInsets.all(1.0),
                   child: TextFormField(
+                      key: Key("taskDescriptionField"),
                       maxLength: 100,
                       style: TextStyle(
                           fontSize: 20.0,
@@ -100,7 +102,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                       validator: (val) =>
                           val!.isNotEmpty ? null : 'Please enter a description',
                       onChanged: (val) {
-                        newDescription = val;
+                        setState(() => newDescription = val);
                       }),
                 ),
                 Padding(
@@ -143,6 +145,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                               child: SizedBox(
                                 width: 100.0,
                                 child: ElevatedButton(
+                                    key: Key("taskSelectDateButton"),
                                     style: ButtonStyle(
                                         shape: MaterialStateProperty.all<
                                                 RoundedRectangleBorder>(
@@ -210,6 +213,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                               child: SizedBox(
                                 width: 100.0,
                                 child: ElevatedButton(
+                                    key: Key("taskSelectTimeButton"),
                                     style: ButtonStyle(
                                         shape: MaterialStateProperty.all<
                                                 RoundedRectangleBorder>(
@@ -253,6 +257,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                   child: SizedBox(
                     width: 100.0,
                     child: ElevatedButton(
+                        key: Key("taskCreateEditButton"),
                         style: ButtonStyle(
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(RoundedRectangleBorder(
@@ -276,8 +281,10 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                       context, widget.task.getDate());
                               if (pickedDateTime != null) {
                                 //if the user didn't cancel
-                                widget.task.setTitle(newTitle);
-                                widget.task.setDescription(newDescription);
+                                widget.task.setTitle(
+                                    newTitle ?? widget.task.getTitle());
+                                widget.task.setDescription(newDescription ??
+                                    widget.task.getDescription());
                                 widget.task.setDate(pickedDateTime);
                                 DatabaseService().updateUserTask(
                                     widget.task.getId(),
@@ -295,8 +302,10 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                 //     });
                               }
                             } else {
-                              widget.task.setTitle(newTitle);
-                              widget.task.setDescription(newDescription);
+                              widget.task
+                                  .setTitle(newTitle ?? widget.task.getTitle());
+                              widget.task.setDescription(newDescription ??
+                                  widget.task.getDescription());
                               DateTime originalDateTime = widget.task.getDate();
                               DateTime combinedDateTime = (newDate ??
                                       DateTime(

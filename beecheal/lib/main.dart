@@ -59,12 +59,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     initializeEverything();
+
     return ChangeNotifierProvider(
         create: (context) => AuthService(),
         child: StreamProvider<UserID?>.value(
+          catchError: ((context, error) {}),
           initialData: null,
           value: AuthService().user,
           child: StreamProvider<User?>.value(
+            catchError: ((context, error) {}),
             initialData: User('', true, true),
             value: DatabaseService().user,
             child: MaterialApp(
