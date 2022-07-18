@@ -42,7 +42,7 @@ class _CalenderEditScreen<T extends Occasion>
         contentPadding: EdgeInsets.all(10.0),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
-                MediaQuery.of(context).size.width * 0.04)),
+                MediaQuery.of(context).size.width * 0.02)),
         backgroundColor: Theme.of(context).colorScheme.tertiary,
         content: Form(
             key: _formkey,
@@ -307,14 +307,21 @@ class _CalenderEditScreen<T extends Occasion>
                                 InitializeNotifications
                                     .initializeToDoNotifications();
                                 Navigator.of(context).pop();
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      if (T.toString() == "Task") {
+                                        return TaskView(
+                                            widget.occasion as Task);
+                                      }
+                                      return OccasionView(widget.occasion);
+                                    });
                               }
-                              Navigator.of(context).pop();
                             } else {
                               widget.occasion.setTitle(newTitle);
                               widget.occasion.setDescription(newDescription);
                               DateTime originalDateTime =
                                   widget.occasion.getDate();
-                              print(newTime);
                               DateTime combinedDateTime = (newDate ??
                                       DateTime(
                                           originalDateTime.year,
@@ -329,7 +336,9 @@ class _CalenderEditScreen<T extends Occasion>
                                               TimeOfDay.fromDateTime(
                                                   originalDateTime))
                                           .minute));
-                              widget.occasion.setDate(combinedDateTime);
+                              newDate != null
+                                  ? widget.occasion.setDate(combinedDateTime)
+                                  : null;
                               DatabaseService().updateUserOccasion(
                                   widget.occasion.getId(),
                                   widget.occasion.getTitle(),
