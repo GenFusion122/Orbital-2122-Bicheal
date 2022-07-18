@@ -307,21 +307,14 @@ class _CalenderEditScreen<T extends Occasion>
                                 InitializeNotifications
                                     .initializeToDoNotifications();
                                 Navigator.of(context).pop();
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      if (T.toString() == "Task") {
-                                        return TaskView(
-                                            widget.occasion as Task);
-                                      }
-                                      return OccasionView(widget.occasion);
-                                    });
                               }
+                              Navigator.of(context).pop();
                             } else {
                               widget.occasion.setTitle(newTitle);
                               widget.occasion.setDescription(newDescription);
                               DateTime originalDateTime =
                                   widget.occasion.getDate();
+                              print(newTime);
                               DateTime combinedDateTime = (newDate ??
                                       DateTime(
                                           originalDateTime.year,
@@ -336,9 +329,7 @@ class _CalenderEditScreen<T extends Occasion>
                                               TimeOfDay.fromDateTime(
                                                   originalDateTime))
                                           .minute));
-                              newDate != null
-                                  ? widget.occasion.setDate(combinedDateTime)
-                                  : null;
+                              widget.occasion.setDate(combinedDateTime);
                               DatabaseService().updateUserOccasion(
                                   widget.occasion.getId(),
                                   widget.occasion.getTitle(),
