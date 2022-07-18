@@ -288,6 +288,11 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                 InitializeNotifications
                                     .initializeToDoNotifications();
                                 Navigator.of(context).pop();
+                                // showDialog(
+                                //     context: context,
+                                //     builder: (BuildContext context) {
+                                //       return TaskView(widget.task);
+                                //     });
                               }
                             } else {
                               widget.task.setTitle(newTitle);
@@ -307,8 +312,9 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                               TimeOfDay.fromDateTime(
                                                   originalDateTime))
                                           .minute));
-
-                              widget.task.setDate(combinedDateTime);
+                              newDate != null
+                                  ? widget.task.setDate(combinedDateTime)
+                                  : null;
                               DatabaseService().updateUserTask(
                                   widget.task.getId(),
                                   widget.task.getTitle(),

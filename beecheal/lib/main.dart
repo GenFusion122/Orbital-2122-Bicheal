@@ -14,85 +14,90 @@ import 'package:provider/provider.dart';
 import 'models/userid.dart';
 import 'models/entry.dart';
 import 'services/database.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:timezone/data/latest.dart' as tz;
 
-String? initialRoute;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
 
-  runApp(MyApp());
-}
-
-Future<void> initEverything() async {
-  tz.initializeTimeZones();
-  final NotificationAppLaunchDetails? notificationAppLaunchDetails =
-      await NotificationService.getNotificationInstance()
-          .getNotificationAppLaunchDetails();
-  initialRoute = notificationAppLaunchDetails?.didNotificationLaunchApp ?? false
-      ? notificationAppLaunchDetails?.payload
-      : '/';
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    initEverything();
-    return ChangeNotifierProvider(
-        create: (context) => AuthService(),
-        child: StreamProvider<UserID?>.value(
-          initialData: null,
-          value: AuthService().user,
-          child: StreamProvider<User?>.value(
-            initialData: User('', true, true),
-            value: DatabaseService().user,
-            child: MaterialApp(
-              initialRoute: initialRoute,
-              routes: {
-                '/': (context) => Wrapper(),
-                '/home': (context) => StreamProvider<List<Task>>.value(
-                    value: DatabaseService().tasks,
-                    initialData: [],
-                    child: Home()),
-                '/statistics': (context) => Statistics(),
-                '/calendar': (context) => CalendarView(),
-                '/journalEntries': (context) =>
-                    StreamProvider<List<Entry>>.value(
-                        value: DatabaseService().entries,
-                        initialData: [],
-                        child: JournalEntries()),
-              },
-              theme: ThemeData(
-                  appBarTheme: AppBarTheme(
-                      backgroundColor: Color(0xFFFFAB00), centerTitle: true),
-                  colorScheme: ColorScheme(
-                      background: Color(0xFFFFE0B2),
-                      primary: Color(0xFFFFAB00),
-                      secondary: Color(0xFFFFDD4B),
-                      tertiary: Color(0xFFFFC95C),
-                      error: Colors.red,
-                      surface: Colors.white,
-                      onPrimary: Colors.black,
-                      onSurface: Colors.black,
-                      onBackground: Colors.black,
-                      onSecondary: Colors.black,
-                      onError: Colors.black,
-                      brightness: Brightness.light),
-                  dialogBackgroundColor: Color(0xFFFFC95C),
-                  bottomAppBarColor: Color(0xFFFFAB00),
-                  fontFamily: "Rubik",
-                  textTheme: TextTheme(
-                      headline1: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
-                      button: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold))),
-            ),
-          ),
-        ));
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: FirebaseOptions(
+        apiKey: "AIzaSyBIibnRKB9ozo0BSSMAIWYUtTFR-aB2Bes",
+        authDomain: "beecheal-17e08.firebaseapp.com",
+        projectId: "beecheal-17e08",
+        storageBucket: "beecheal-17e08.appspot.com",
+        messagingSenderId: "59725859836",
+        appId: "1:59725859836:web:782ce210bcb673089cc079",
+      ),
+    );
+  } else {
+    await Firebase.initializeApp();
   }
+
+  tz.initializeTimeZones();
+  String? initialroute = '/';
+  if (!kIsWeb) {
+    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+        await NotificationService.getNotificationInstance()
+            .getNotificationAppLaunchDetails();
+    initialroute =
+        notificationAppLaunchDetails?.didNotificationLaunchApp ?? false
+            ? notificationAppLaunchDetails?.payload
+            : '/';
+  }
+  runApp(ChangeNotifierProvider(
+      create: (context) => AuthService(),
+      child: StreamProvider<UserID?>.value(
+        initialData: null,
+        value: AuthService().user,
+        child: StreamProvider<User?>.value(
+          initialData: User('', true, true),
+          value: DatabaseService().user,
+          child: MaterialApp(
+            initialRoute: initialroute,
+            routes: {
+              '/': (context) => Wrapper(),
+              '/home': (context) => StreamProvider<List<Task>>.value(
+                  value: DatabaseService().tasks,
+                  initialData: [],
+                  child: Home()),
+              '/statistics': (context) => Statistics(),
+              '/calendar': (context) => CalendarView(),
+              '/journalEntries': (context) => StreamProvider<List<Entry>>.value(
+                  value: DatabaseService().entries,
+                  initialData: [],
+                  child: JournalEntries()),
+            },
+            theme: ThemeData(
+                appBarTheme: AppBarTheme(
+                    backgroundColor: Color(0xFFFFAB00), centerTitle: true),
+                colorScheme: ColorScheme(
+                    background: Color(0xFFFFE0B2),
+                    primary: Color(0xFFFFAB00),
+                    secondary: Color(0xFFFFDD4B),
+                    tertiary: Color(0xFFFFC95C),
+                    error: Colors.red,
+                    surface: Colors.white,
+                    onPrimary: Colors.black,
+                    onSurface: Colors.black,
+                    onBackground: Colors.black,
+                    onSecondary: Colors.black,
+                    onError: Colors.black,
+                    brightness: Brightness.light),
+                dialogBackgroundColor: Color(0xFFFFC95C),
+                bottomAppBarColor: Color(0xFFFFAB00),
+                fontFamily: "Rubik",
+                textTheme: TextTheme(
+                    headline1: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                    button: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold))),
+          ),
+        ),
+      )));
 }
