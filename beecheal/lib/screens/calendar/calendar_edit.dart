@@ -308,7 +308,6 @@ class _CalenderEditScreen<T extends Occasion>
                                     .initializeToDoNotifications();
                                 Navigator.of(context).pop();
                               }
-                              Navigator.of(context).pop();
                             } else {
                               widget.occasion.setTitle(newTitle);
                               widget.occasion.setDescription(newDescription);
