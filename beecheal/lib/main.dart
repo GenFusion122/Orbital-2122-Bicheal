@@ -74,7 +74,8 @@ class MyApp extends StatelessWidget {
               initialRoute: initialroute,
               routes: {
                 '/': (context) => Wrapper(),
-                '/home': (context) => StreamProvider<List<Task>>.value(
+                '/home': (context) => StreamProvider<List<Task>?>.value(
+                    catchError: ((context, error) {}),
                     value: DatabaseService().tasks,
                     initialData: [],
                     child: Home()),

@@ -132,10 +132,12 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    getNumberOfTasksToday();
-    getNumberOfEventsToday();
-    getClosestEvent();
-    getClosestTask();
+    try {
+      getNumberOfTasksToday();
+      getNumberOfEventsToday();
+      getClosestEvent();
+      getClosestTask();
+    } on FirebaseException {}
     // refreshes listview
     _everyMinute = Timer.periodic(Duration(minutes: 1), (Timer t) {
       // print('Rebuilt at ${DateTime.now()}');
@@ -412,10 +414,15 @@ class _HomeState extends State<Home> {
                 children: [
                   Expanded(
                       child: OrangeNavButton(
-                          "/statistics", "statistics", context)),
+                          key: Key("homeStatisticsNavButton"),
+                          "/statistics",
+                          "statistics",
+                          context)),
                   Expanded(
+                      key: Key("homeCalendarNavButton"),
                       child: OrangeNavButton("/calendar", "calendar", context)),
                   Expanded(
+                      key: Key("homeJournalNavButton"),
                       child: OrangeNavButton(
                           "/journalEntries", "journal", context)),
                 ],
@@ -986,10 +993,15 @@ class _HomeState extends State<Home> {
                 children: [
                   Expanded(
                       child: OrangeNavButton(
-                          "/statistics", "statistics", context)),
+                          key: Key("homeStatisticsNavButton"),
+                          "/statistics",
+                          "statistics",
+                          context)),
                   Expanded(
+                      key: Key("homeCalendarNavButton"),
                       child: OrangeNavButton("/calendar", "calendar", context)),
                   Expanded(
+                      key: Key("homeJournalNavButton"),
                       child: OrangeNavButton(
                           "/journalEntries", "journal", context)),
                 ],
@@ -1169,6 +1181,7 @@ class _HomeState extends State<Home> {
                                   Task.incompletePlaceholder);
                           if (isSelected[0] == true) {
                             return ListView.builder(
+                                key: Key("taskListView"),
                                 itemCount:
                                     Provider.of<List<Task>>(context).length,
                                 itemBuilder: (context, index) {

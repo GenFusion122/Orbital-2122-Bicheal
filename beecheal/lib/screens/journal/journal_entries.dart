@@ -40,6 +40,7 @@ class _JournalEntriesState extends State<JournalEntries> {
               }),
         ),
         floatingActionButton: FloatingActionButton(
+          key: Key("journalCreateEntryButton"),
           backgroundColor: Colors.transparent,
           elevation: 0,
           child: HexagonWidget.flat(

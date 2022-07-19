@@ -1,14 +1,18 @@
+import 'package:beecheal/custom%20widgets/hexagonalclipper.dart';
 import 'package:beecheal/main.dart';
 import 'package:beecheal/screens/home/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hexagon/hexagon.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:intl/intl.dart';
+import '../../lib/globals.dart' as globals;
 
 Future<void> signIn(
     WidgetTester tester, String username, String password) async {
+  globals.testingActive = true;
   await tester.pumpAndSettle();
   await tester.enterText(find.byKey(Key("emailField")), username);
   await tester.enterText(find.byKey(Key("passwordField")), password);
@@ -26,20 +30,21 @@ Future<void> signOutFromHomepage(WidgetTester tester) async {
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
   String username =
       "testacc${DateFormat('ddMMyyhhmmss').format(DateTime.now())}@test.com";
-  /*testWidgets('SignIn/SignOut Test', (WidgetTester tester) async {
-    await Firebase.initializeApp();
-    await tester.pumpWidget(MyApp());
-    await signIn(tester, "test1@test.com", "test12345");
-    expect(find.byKey(Key("homeBar")), findsOneWidget);
-    await signOutFromHomepage(tester);
-    expect(find.byKey(Key("signIn")), findsOneWidget);
-    await tester.pumpAndSettle();
-  });*/
+  // testWidgets('SignIn/SignOut Test', (WidgetTester tester) async {
+  //   await Firebase.initializeApp();
+  //   await tester.pumpWidget(MyApp());
+  //   await signIn(tester, "test1@test.com", "test12345");
+  //   expect(find.byKey(Key("homeBar")), findsOneWidget);
+  //   await signOutFromHomepage(tester);
+  //   expect(find.byKey(Key("signIn")), findsOneWidget);
+  //   await tester.pumpAndSettle();
+  // });
 
-  group("Features Test", () {
-    /*testWidgets('Register', (WidgetTester tester) async {
+  group("End-to-end Features test", () {
+    testWidgets('Register', (WidgetTester tester) async {
       await Firebase.initializeApp();
       await tester.pumpWidget(MyApp());
       await tester.pumpAndSettle();
@@ -53,11 +58,12 @@ void main() {
       await tester.tap(find.byKey(Key("confirmButton")));
       await tester.pumpAndSettle();
       await signOutFromHomepage(tester);
-    });*/
-    testWidgets('Create Task from Homepage', (WidgetTester tester) async {
+    });
+    /*testWidgets('Test Create, Edit & Deletion, also Testing Filter Buttons ',
+        (WidgetTester tester) async {
       await Firebase.initializeApp();
       await tester.pumpWidget(MyApp());
-      await signIn(tester, "testacc180722065333@test.com", "test12345");
+      await signIn(tester, username, "test12345");
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(Key("homeCreateTaskButton")));
       await tester.pumpAndSettle();
@@ -73,6 +79,79 @@ void main() {
       await tester.tap(find.text("OK"));
       await tester.pumpAndSettle();
       expect(find.text("A Task Title!"), findsWidgets);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("A Task Description!"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Edit"));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+          find.byKey(Key("taskTitleField")), "An Edited Task Title!");
+      await tester.enterText(find.byKey(Key("taskDescriptionField")),
+          "An Edited Task Description!");
+      await tester.tap(find.byKey(Key("taskSelectDateButton")));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("10"));
+      await tester.tap(find.text("OK"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key("taskSelectTimeButton")));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("OK"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Update"));
+      await tester.pumpAndSettle();
+      expect(find.text("An Edited Task Description!"), findsOneWidget);
+      await tester.tap(find.text("Completed"));
+      await tester.pumpAndSettle();
+      expect(find.text("An Edited Task Description!"), findsNothing);
+      await tester.tap(find.text("Incomplete"));
+      await tester.pumpAndSettle();
+      expect(find.text("An Edited Task Description!"), findsOneWidget);
+      await tester.tap(find.text("An Edited Task Description!"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Delete"));
+      await Future.delayed(Duration(seconds: 5), (){});
+      await tester.pumpAndSettle();
+      expect(find.text("An Edited Task Description!"), findsNothing);
+      await signOutFromHomepage(tester);
+    });*/
+
+    testWidgets('Test Create, Edit and Deletion of Journal Entries',
+        (WidgetTester tester) async {
+      await Firebase.initializeApp();
+      await tester.pumpWidget(MyApp());
+      await signIn(tester, username, "test12345");
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key("homeJournalNavButton")));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key("journalCreateEntryButton")));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byKey(Key("journalTitleField")), "Happy!");
+      await tester.enterText(
+          find.byKey(Key("journalDescriptionField")), "A Happy Description!");
+      await tester.enterText(find.byKey(Key("journalBodyField")),
+          "I am very Happy today! It is a wonderful looking day outside today!");
+      await tester.tap(find.text("Create"));
+      await tester.pumpAndSettle(Duration(seconds: 5));
+      //find fix for ML and int testing
+      await tester.tap(find.text("Confirm"));
+      expect(find.text("Happy!"), findsOneWidget);
+      await tester.tap(find.text("Happy!"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Edit"));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byKey(Key("journalTitleField")), "Sad!");
+      await tester.enterText(
+          find.byKey(Key("journalDescriptionField")), "A Sad Description!");
+      await tester.enterText(find.byKey(Key("journalBodyField")),
+          "I am very Sad today! It is a terrible looking day outside today :(");
+      await tester.pumpAndSettle(Duration(seconds: 5));
+      await tester.tap(find.text("Confirm"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Sad!"));
+      await tester.tap(find.text("Delete"));
+      await tester.pump(Duration(seconds: 5));
+      expect(find.text("I am very Sad today!"), findsNothing);
+      await signOutFromHomepage(tester);
     });
   });
 }

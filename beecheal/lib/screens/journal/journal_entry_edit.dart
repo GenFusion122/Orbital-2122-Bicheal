@@ -8,6 +8,7 @@ import 'package:beecheal/services/database.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:hexagon/hexagon.dart';
+import '/../globals.dart' as globals;
 
 class EntryScreen extends StatefulWidget {
   // const EntryScreen({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class _EntryScreenState extends State<EntryScreen> {
   static const platform = MethodChannel('model.classifier/inference');
 
   void initState() {
-    if (!kIsWeb) {
+    if (!kIsWeb || !globals.testingActive) {
       // Initialize model
       platform
           .invokeMethod("Classify", <String, dynamic>{'string': 'initialize'});
@@ -67,6 +68,7 @@ class _EntryScreenState extends State<EntryScreen> {
                     Padding(
                       padding: EdgeInsets.all(1.0),
                       child: TextFormField(
+                          key: Key("journalTitleField"),
                           maxLength: 50,
                           style: TextStyle(
                               fontSize: 16.0,
@@ -99,6 +101,7 @@ class _EntryScreenState extends State<EntryScreen> {
                     Padding(
                       padding: EdgeInsets.all(1.0),
                       child: TextFormField(
+                          key: Key("journalDescriptionField"),
                           maxLength: 100,
                           style: TextStyle(
                               fontSize: 16.0,
@@ -136,6 +139,7 @@ class _EntryScreenState extends State<EntryScreen> {
                         constraints: BoxConstraints(maxHeight: 180.0),
                         child: SingleChildScrollView(
                           child: TextFormField(
+                              key: Key("journalBodyField"),
                               style: TextStyle(
                                   fontSize: 16.0,
                                   fontWeight: FontWeight.w900,
@@ -179,7 +183,7 @@ class _EntryScreenState extends State<EntryScreen> {
                           onPressed: () async {
                             if (_formkey.currentState!.validate()) {
                               List prediction = [0, 0];
-                              if (!kIsWeb) {
+                              if (!kIsWeb || !globals.testingActive) {
                                 prediction = await Classify();
                               }
                               widget.entry.setSentiment(prediction[0]);
@@ -318,6 +322,7 @@ class _EntryScreenState extends State<EntryScreen> {
                                                                             });
                                                                           }),
                                                                           icon: HexagonWidget.flat(
+                                                                              key: Key("journalNegativeButton"),
                                                                               width: MediaQuery.of(context).size.width * 0.2,
                                                                               elevation: 0.0,
                                                                               color: (widget.entry.getSentiment() == -1) ? Colors.red : Colors.grey.withOpacity(0.4))),
@@ -341,6 +346,7 @@ class _EntryScreenState extends State<EntryScreen> {
                                                                             });
                                                                           }),
                                                                           icon: HexagonWidget.flat(
+                                                                              key: Key("journalNeutralButton"),
                                                                               width: MediaQuery.of(context).size.width * 0.2,
                                                                               elevation: 0.0,
                                                                               color: (widget.entry.getSentiment() == 0) ? Colors.grey : Colors.grey.withOpacity(0.4))),
@@ -364,6 +370,7 @@ class _EntryScreenState extends State<EntryScreen> {
                                                                             });
                                                                           }),
                                                                           icon: HexagonWidget.flat(
+                                                                              key: Key("journalPositiveButton"),
                                                                               width: MediaQuery.of(context).size.width * 0.2,
                                                                               elevation: 0.0,
                                                                               color: (widget.entry.getSentiment() == 1) ? Colors.green : Colors.grey.withOpacity(0.4))),
