@@ -67,6 +67,7 @@ class _EntryScreenState extends State<EntryScreen> {
                     Padding(
                       padding: EdgeInsets.all(1.0),
                       child: TextFormField(
+                          key: Key("journalTitleField"),
                           maxLength: 50,
                           style: TextStyle(
                               fontSize: 16.0,
@@ -99,6 +100,7 @@ class _EntryScreenState extends State<EntryScreen> {
                     Padding(
                       padding: EdgeInsets.all(1.0),
                       child: TextFormField(
+                          key: Key("journalDescriptionField"),
                           maxLength: 100,
                           style: TextStyle(
                               fontSize: 16.0,
@@ -136,6 +138,7 @@ class _EntryScreenState extends State<EntryScreen> {
                         constraints: BoxConstraints(maxHeight: 180.0),
                         child: SingleChildScrollView(
                           child: TextFormField(
+                              key: Key("journalBodyField"),
                               style: TextStyle(
                                   fontSize: 16.0,
                                   fontWeight: FontWeight.w900,

@@ -54,6 +54,8 @@ class _HomeState extends State<Home> {
   int numberOfEventsToday = 0;
   String upcomingTask = "";
   String upcomingEvent = "";
+  bool dailyJournalEntry = false;
+  bool weeklyReminder = false;
 
   Future<void> getNumberOfTasksToday() async {
     var itemsList = [];
@@ -106,7 +108,7 @@ class _HomeState extends State<Home> {
           .then((snapshot) {
         upcomingTask = snapshot.docs[0]['title'];
       });
-    } catch (RangeError) {
+    } on RangeError {
       upcomingTask = "No upcoming Tasks";
     }
   }
@@ -123,17 +125,19 @@ class _HomeState extends State<Home> {
           .then((snapshot) {
         upcomingEvent = snapshot.docs[0]['title'];
       });
-    } catch (RangeError) {
+    } on RangeError {
       upcomingEvent = "No upcoming Events";
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    getNumberOfTasksToday();
-    getNumberOfEventsToday();
-    getClosestEvent();
-    getClosestTask();
+    try {
+      getNumberOfTasksToday();
+      getNumberOfEventsToday();
+      getClosestEvent();
+      getClosestTask();
+    } on FirebaseException {}
     // refreshes listview
     _everyMinute = Timer.periodic(Duration(minutes: 1), (Timer t) {
       // print('Rebuilt at ${DateTime.now()}');
@@ -142,8 +146,10 @@ class _HomeState extends State<Home> {
       }
     });
 
-    bool dailyJournalEntry = Provider.of<User>(context).getDailyJournalEntry();
-    bool weeklyReminder = Provider.of<User>(context).getWeeklyReminder();
+    try {
+      dailyJournalEntry = Provider.of<User>(context).getDailyJournalEntry();
+      weeklyReminder = Provider.of<User>(context).getWeeklyReminder();
+    } on ProviderNullException {}
 
     if (!kIsWeb) {
       //checks if on mobile
@@ -408,10 +414,15 @@ class _HomeState extends State<Home> {
                 children: [
                   Expanded(
                       child: OrangeNavButton(
-                          "/statistics", "statistics", context)),
+                          key: Key("homeStatisticsNavButton"),
+                          "/statistics",
+                          "statistics",
+                          context)),
                   Expanded(
+                      key: Key("homeCalendarNavButton"),
                       child: OrangeNavButton("/calendar", "calendar", context)),
                   Expanded(
+                      key: Key("homeJournalNavButton"),
                       child: OrangeNavButton(
                           "/journalEntries", "journal", context)),
                 ],
@@ -909,6 +920,7 @@ class _HomeState extends State<Home> {
           resizeToAvoidBottomInset: false,
           backgroundColor: Color(0xFFFFE0B2),
           appBar: AppBar(
+            key: Key("homeBar"),
             leading: Padding(
               padding: EdgeInsets.symmetric(
                 vertical: MediaQuery.of(context).size.width * 0.01,
@@ -936,6 +948,7 @@ class _HomeState extends State<Home> {
                     height: MediaQuery.of(context).size.height * 0.070,
                     color: Colors.orange[400],
                     child: TextButton.icon(
+                        key: Key("signOutButton"),
                         icon: Icon(Icons.person_outline,
                             color: Colors.black, size: 45),
                         style: TextButton.styleFrom(primary: Colors.black),
@@ -1231,10 +1244,15 @@ class _HomeState extends State<Home> {
                 children: [
                   Expanded(
                       child: OrangeNavButton(
-                          "/statistics", "statistics", context)),
+                          key: Key("homeStatisticsNavButton"),
+                          "/statistics",
+                          "statistics",
+                          context)),
                   Expanded(
+                      key: Key("homeCalendarNavButton"),
                       child: OrangeNavButton("/calendar", "calendar", context)),
                   Expanded(
+                      key: Key("homeJournalNavButton"),
                       child: OrangeNavButton(
                           "/journalEntries", "journal", context)),
                 ],
@@ -1414,6 +1432,7 @@ class _HomeState extends State<Home> {
                                   Task.incompletePlaceholder);
                           if (isSelected[0] == true) {
                             return ListView.builder(
+                                key: Key("taskListView"),
                                 itemCount:
                                     Provider.of<List<Task>>(context).length,
                                 itemBuilder: (context, index) {
@@ -1444,6 +1463,7 @@ class _HomeState extends State<Home> {
                     child: Padding(
                       padding: EdgeInsets.all(2.0),
                       child: FloatingActionButton(
+                        key: Key("homeCreateTaskButton"),
                         backgroundColor: Colors.transparent,
                         elevation: 0.0,
                         onPressed: () {

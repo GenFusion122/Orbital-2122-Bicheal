@@ -70,6 +70,7 @@ class _RegisterState extends State<Register> {
                             children: <Widget>[
                               // Email input
                               TextFormField(
+                                  key: Key("registerEmailField"),
                                   style: TextStyle(
                                       fontSize: scaleMin * 0.04,
                                       fontWeight: FontWeight.w900,
@@ -104,6 +105,7 @@ class _RegisterState extends State<Register> {
                               SizedBox(height: 20.0),
                               // Password input
                               TextFormField(
+                                  key: Key("registerPasswordField"),
                                   style: TextStyle(
                                       fontSize: scaleMin * 0.04,
                                       fontWeight: FontWeight.w900,
@@ -138,6 +140,7 @@ class _RegisterState extends State<Register> {
                               SizedBox(height: 20.0),
                               // Password input
                               TextFormField(
+                                  key: Key("confirmPasswordField"),
                                   style: TextStyle(
                                       fontSize: scaleMin * 0.04,
                                       fontWeight: FontWeight.w900,
@@ -171,6 +174,7 @@ class _RegisterState extends State<Register> {
                                   }),
                               SizedBox(height: scaleMin * 0.02),
                               ElevatedButton(
+                                key: Key("confirmButton"),
                                 style: ButtonStyle(
                                     minimumSize: MaterialStateProperty.all(Size(
                                         (MediaQuery.of(context).size.width *
@@ -258,6 +262,7 @@ class _RegisterState extends State<Register> {
                             children: <Widget>[
                               // Email input
                               TextFormField(
+                                  key: Key("registerEmailField"),
                                   style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.w900,
@@ -275,6 +280,7 @@ class _RegisterState extends State<Register> {
                               SizedBox(height: 20.0),
                               // Password input
                               TextFormField(
+                                  key: Key("registerPasswordField"),
                                   style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.w900,
@@ -292,6 +298,7 @@ class _RegisterState extends State<Register> {
                               SizedBox(height: 20.0),
                               // Password input
                               TextFormField(
+                                  key: Key("registerConfirmPasswordField"),
                                   style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.w900,
@@ -308,6 +315,7 @@ class _RegisterState extends State<Register> {
                                   }),
                               SizedBox(height: 20),
                               ElevatedButton(
+                                key: Key("confirmButton"),
                                 style: ButtonStyle(
                                     minimumSize: MaterialStateProperty.all(Size(
                                         (MediaQuery.of(context).size.width *
