@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:beecheal/custom%20widgets/constants.dart';
 import 'package:beecheal/custom%20widgets/loading.dart';
 import 'package:beecheal/services/auth.dart';
@@ -52,7 +51,7 @@ class _RegisterState extends State<Register> {
                 // widget.toggleSignIn();
               },
             ),
-            backgroundColor: Colors.transparent,
+            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
             elevation: 0.0,
           ),
           body: Stack(children: [
@@ -74,27 +73,19 @@ class _RegisterState extends State<Register> {
                                   style: TextStyle(
                                       fontSize: scaleMin * 0.04,
                                       fontWeight: FontWeight.w900,
-                                      color: Color(0xff000000)),
-                                  cursorColor: Color(0xff000000),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   decoration: InputDecoration(
                                       hintText: "Email",
                                       counterText: "",
-                                      enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
-                                          borderRadius: const BorderRadius.all(
-                                              const Radius.circular(10))),
-                                      focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
-                                          borderRadius: const BorderRadius.all(
-                                              const Radius.circular(10))),
-                                      border: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.black),
-                                        borderRadius: const BorderRadius.all(
-                                            const Radius.circular(10)),
-                                      )),
+                                      enabledBorder:
+                                          underlineInputBorderDecoration,
+                                      focusedBorder:
+                                          underlineInputBorderDecoration,
+                                      border: underlineInputBorderDecoration),
                                   validator: (val) =>
                                       EmailValidator.validate(val!)
                                           ? null
@@ -109,27 +100,19 @@ class _RegisterState extends State<Register> {
                                   style: TextStyle(
                                       fontSize: scaleMin * 0.04,
                                       fontWeight: FontWeight.w900,
-                                      color: Color(0xff000000)),
-                                  cursorColor: Color(0xff000000),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   decoration: InputDecoration(
                                       hintText: "Password",
                                       counterText: "",
-                                      enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
-                                          borderRadius: const BorderRadius.all(
-                                              const Radius.circular(10))),
-                                      focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
-                                          borderRadius: const BorderRadius.all(
-                                              const Radius.circular(10))),
-                                      border: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.black),
-                                        borderRadius: const BorderRadius.all(
-                                            const Radius.circular(10)),
-                                      )),
+                                      enabledBorder:
+                                          underlineInputBorderDecoration,
+                                      focusedBorder:
+                                          underlineInputBorderDecoration,
+                                      border: underlineInputBorderDecoration),
                                   validator: (val) => val!.length < 8
                                       ? 'Enter a password at least 8 characters long'
                                       : null,
@@ -144,27 +127,19 @@ class _RegisterState extends State<Register> {
                                   style: TextStyle(
                                       fontSize: scaleMin * 0.04,
                                       fontWeight: FontWeight.w900,
-                                      color: Color(0xff000000)),
-                                  cursorColor: Color(0xff000000),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   decoration: InputDecoration(
                                       hintText: "Confirm Password",
                                       counterText: "",
-                                      enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
-                                          borderRadius: const BorderRadius.all(
-                                              const Radius.circular(10))),
-                                      focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
-                                          borderRadius: const BorderRadius.all(
-                                              const Radius.circular(10))),
-                                      border: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.black),
-                                        borderRadius: const BorderRadius.all(
-                                            const Radius.circular(10)),
-                                      )),
+                                      enabledBorder:
+                                          underlineInputBorderDecoration,
+                                      focusedBorder:
+                                          underlineInputBorderDecoration,
+                                      border: underlineInputBorderDecoration),
                                   validator: (val) => val != password
                                       ? 'Passwords don\'t match'
                                       : null,
@@ -186,7 +161,9 @@ class _RegisterState extends State<Register> {
                                       borderRadius: BorderRadius.circular(18.0),
                                     )),
                                     backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFFFFDD4b)),
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
                                     elevation: MaterialStateProperty
                                         .resolveWith<double>((states) => 0)),
                                 onPressed: () async {
@@ -209,7 +186,9 @@ class _RegisterState extends State<Register> {
                                     style: TextStyle(
                                         fontSize: scaleMin * 0.036,
                                         fontWeight: FontWeight.w600,
-                                        color: Color(0xff000000))),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary)),
                               ),
                               SizedBox(
                                 height: 5.0,
@@ -227,7 +206,7 @@ class _RegisterState extends State<Register> {
       return Scaffold(
           extendBodyBehindAppBar: true,
           resizeToAvoidBottomInset: false,
-          backgroundColor: Colors.orange[100],
+          backgroundColor: Theme.of(context).colorScheme.background,
           appBar: AppBar(
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
@@ -236,7 +215,7 @@ class _RegisterState extends State<Register> {
                 // widget.toggleSignIn();
               },
             ),
-            backgroundColor: Colors.transparent,
+            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
             elevation: 0.0,
           ),
           body: Stack(children: [
@@ -244,7 +223,7 @@ class _RegisterState extends State<Register> {
               right: -(MediaQuery.of(context).size.width * 0.45),
               top: 0.0,
               child: HexagonWidget.flat(
-                color: Color(0xFFFFAB00),
+                color: Theme.of(context).colorScheme.primary,
                 width: (MediaQuery.of(context).size.width * 3),
               ),
             ),
@@ -263,11 +242,9 @@ class _RegisterState extends State<Register> {
                               // Email input
                               TextFormField(
                                   key: Key("registerEmailField"),
-                                  style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.w900,
-                                      color: Color(0xff000000)),
-                                  cursorColor: Color(0xff000000),
+                                  style: textFormFieldStyle,
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   decoration: textInputDecoration.copyWith(
                                       hintText: 'Email'),
                                   validator: (val) =>
@@ -281,11 +258,9 @@ class _RegisterState extends State<Register> {
                               // Password input
                               TextFormField(
                                   key: Key("registerPasswordField"),
-                                  style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.w900,
-                                      color: Color(0xff000000)),
-                                  cursorColor: Color(0xff000000),
+                                  style: textFormFieldStyle,
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   decoration: textInputDecoration.copyWith(
                                       hintText: 'Password'),
                                   validator: (val) => val!.length < 8
@@ -299,11 +274,9 @@ class _RegisterState extends State<Register> {
                               // Password input
                               TextFormField(
                                   key: Key("registerConfirmPasswordField"),
-                                  style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.w900,
-                                      color: Color(0xff000000)),
-                                  cursorColor: Color(0xff000000),
+                                  style: textFormFieldStyle,
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   decoration: textInputDecoration.copyWith(
                                       hintText: 'Confirm Password'),
                                   validator: (val) => val != password
@@ -328,7 +301,9 @@ class _RegisterState extends State<Register> {
                                       borderRadius: BorderRadius.circular(18.0),
                                     )),
                                     backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFFFFDD4b)),
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
                                     elevation: MaterialStateProperty
                                         .resolveWith<double>((states) => 0)),
                                 onPressed: () async {
@@ -347,11 +322,7 @@ class _RegisterState extends State<Register> {
                                     }
                                   }
                                 },
-                                child: Text('Register',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xff000000))),
+                                child: Text('Register', style: buttonTextStyle),
                               ),
                               SizedBox(
                                 height: 5.0,

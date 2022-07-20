@@ -53,6 +53,8 @@ class _AuthenticateState extends State<Authenticate> {
               primary: Color(0xFFFFAB00),
               secondary: Color(0xFFFFDD4B),
               tertiary: Color(0xFFFFC95C),
+              primaryContainer: Color(0xFFFFE98C),
+              secondaryContainer: Colors.transparent,
               error: Colors.red,
               surface: Colors.white,
               onPrimary: Colors.black,
@@ -62,8 +64,13 @@ class _AuthenticateState extends State<Authenticate> {
               onError: Colors.black,
               brightness: Brightness.light),
           dialogBackgroundColor: Color(0xFFFFC95C),
+          bottomAppBarColor: Color(0xFFFFAB00),
           fontFamily: "Rubik",
           textTheme: TextTheme(
+              headline1: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
               button: TextStyle(
                   fontSize: 15,
                   color: Colors.black,

@@ -1,3 +1,4 @@
+import 'package:beecheal/custom%20widgets/constants.dart';
 import 'package:beecheal/models/task.dart';
 import 'package:beecheal/screens/todo_list/todo_task_edit.dart';
 import 'package:flutter/material.dart';
@@ -26,11 +27,7 @@ class TaskView extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.fromLTRB(
                 0.0, MediaQuery.of(context).size.height * 0.005, 0.0, 0.0),
-            child: Text('Title',
-                style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w900,
-                    color: Color(0xff000000))),
+            child: Text('Title', style: viewHeaderTextStyle),
           ),
         ),
         Card(
@@ -45,12 +42,7 @@ class TaskView extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(task.getTitle(),
-                    softWrap: true,
-                    maxLines: 5,
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xff000000))),
+                    softWrap: true, maxLines: 5, style: viewBodyTextStyle),
               ),
             )),
         Align(
@@ -58,11 +50,7 @@ class TaskView extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.fromLTRB(
                 0.0, MediaQuery.of(context).size.height * 0.005, 0.0, 0.0),
-            child: Text('Description',
-                style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w900,
-                    color: Color(0xff000000))),
+            child: Text('Description', style: viewHeaderTextStyle),
           ),
         ),
         Card(
@@ -77,12 +65,7 @@ class TaskView extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(task.getDescription(),
-                    softWrap: true,
-                    maxLines: 5,
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xff000000))),
+                    softWrap: true, maxLines: 5, style: viewBodyTextStyle),
               ),
             )),
         Padding(
@@ -103,10 +86,7 @@ class TaskView extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                         '${task.getCompletedOn() == Task.incompletePlaceholder ? 'Incomplete' : 'Completed on: ${DateFormat('yyyy-MM-dd hh:mm a').format(task.getCompletedOn())}'}',
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xff000000))),
+                        style: viewBodyTextStyle),
                   ),
                 ),
               )),
@@ -119,20 +99,13 @@ class TaskView extends StatelessWidget {
                 children: [
                   SizedBox(
                     width: 50.0,
-                    child: Text('Date:',
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xff000000))),
+                    child: Text('Date:', style: viewDateTextStyle),
                   ),
                   SizedBox(
                     width: 150.0,
                     child: Text(
                         '${DateFormat('yyyy-MM-dd').format(task.getDate())}',
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xff000000))),
+                        style: viewDateTextStyle),
                   ),
                 ],
               )),
@@ -145,19 +118,12 @@ class TaskView extends StatelessWidget {
                 children: [
                   SizedBox(
                     width: 50.0,
-                    child: Text('Time:',
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xff000000))),
+                    child: Text('Time:', style: viewDateTextStyle),
                   ),
                   SizedBox(
                     width: 150.0,
                     child: Text(DateFormat('hh:mm a').format(task.getDate()),
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xff000000))),
+                        style: viewDateTextStyle),
                   ),
                 ],
               )),
@@ -173,15 +139,11 @@ class TaskView extends StatelessWidget {
                           RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
                       )),
-                      backgroundColor:
-                          MaterialStateProperty.all(Color(0xFFFFE98C)),
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).colorScheme.primaryContainer),
                       elevation: MaterialStateProperty.resolveWith<double>(
                           (states) => 0)),
-                  child: Text('Edit',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xff000000))),
+                  child: Text('Edit', style: buttonTextStyle),
                   onPressed: () {
                     Navigator.of(context).pop();
                     showDialog(
@@ -202,15 +164,11 @@ class TaskView extends StatelessWidget {
                                 RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),
                         )),
-                        backgroundColor:
-                            MaterialStateProperty.all(Color(0xFFFFE98C)),
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).colorScheme.primaryContainer),
                         elevation: MaterialStateProperty.resolveWith<double>(
                             (states) => 0)),
-                    child: Text('Delete',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff000000))),
+                    child: Text('Delete', style: buttonTextStyle),
                     onPressed: () async {
                       await NotificationService.getNotificationInstance()
                           .cancelAll();
@@ -226,10 +184,7 @@ class TaskView extends StatelessWidget {
                               Theme.of(context).colorScheme.secondary,
                           content: Text(
                             'Deleted ${task.getTitle()}',
-                            style: TextStyle(
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xff000000)),
+                            style: popupTextStyle,
                           )));
                     }),
               ),

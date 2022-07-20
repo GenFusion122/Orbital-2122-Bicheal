@@ -57,11 +57,7 @@ class _EntryScreenState extends State<EntryScreen> {
                             MediaQuery.of(context).size.height * 0.005,
                             0.0,
                             0.0),
-                        child: Text('Title',
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xff000000))),
+                        child: Text('Title', style: viewHeaderTextStyle),
                       ),
                     ),
                     Padding(
@@ -69,12 +65,9 @@ class _EntryScreenState extends State<EntryScreen> {
                       child: TextFormField(
                           key: Key("journalTitleField"),
                           maxLength: 50,
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w900,
-                              color: Color(0xff000000)),
+                          style: viewBodyTextStyle,
                           initialValue: widget.entry.getTitle(),
-                          cursorColor: Color(0xff000000),
+                          cursorColor: Theme.of(context).colorScheme.onPrimary,
                           decoration: textInputDecorationFormField,
                           validator: (val) =>
                               val!.isNotEmpty ? null : 'Please enter a title',
@@ -90,11 +83,7 @@ class _EntryScreenState extends State<EntryScreen> {
                             MediaQuery.of(context).size.height * 0.005,
                             0.0,
                             0.0),
-                        child: Text('Description',
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xff000000))),
+                        child: Text('Description', style: viewHeaderTextStyle),
                       ),
                     ),
                     Padding(
@@ -102,12 +91,9 @@ class _EntryScreenState extends State<EntryScreen> {
                       child: TextFormField(
                           key: Key("journalDescriptionField"),
                           maxLength: 100,
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w900,
-                              color: Color(0xff000000)),
+                          style: viewBodyTextStyle,
                           initialValue: widget.entry.getDescription(),
-                          cursorColor: Color(0xff000000),
+                          cursorColor: Theme.of(context).colorScheme.onPrimary,
                           decoration: textInputDecorationFormField,
                           validator: (val) => val!.isNotEmpty
                               ? null
@@ -125,11 +111,7 @@ class _EntryScreenState extends State<EntryScreen> {
                             MediaQuery.of(context).size.height * 0.005,
                             0.0,
                             0.0),
-                        child: Text('Body',
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xff000000))),
+                        child: Text('Body', style: viewHeaderTextStyle),
                       ),
                     ),
                     Padding(
@@ -139,12 +121,10 @@ class _EntryScreenState extends State<EntryScreen> {
                         child: SingleChildScrollView(
                           child: TextFormField(
                               key: Key("journalBodyField"),
-                              style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w900,
-                                  color: Color(0xff000000)),
+                              style: viewBodyTextStyle,
                               initialValue: widget.entry.getBody(),
-                              cursorColor: Color(0xff000000),
+                              cursorColor:
+                                  Theme.of(context).colorScheme.onPrimary,
                               textAlignVertical: TextAlignVertical.top,
                               keyboardType: TextInputType.multiline,
                               maxLines: null,
@@ -169,16 +149,15 @@ class _EntryScreenState extends State<EntryScreen> {
                                   RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0),
                               )),
-                              backgroundColor:
-                                  MaterialStateProperty.all(Color(0xFFFFE98C)),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer),
                               elevation:
                                   MaterialStateProperty.resolveWith<double>(
                                       (states) => 0)),
-                          child: Text(widget.textPrompt,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xff000000))),
+                          child:
+                              Text(widget.textPrompt, style: buttonTextStyle),
                           onPressed: () async {
                             if (_formkey.currentState!.validate()) {
                               List prediction = [0, 0];
@@ -195,7 +174,9 @@ class _EntryScreenState extends State<EntryScreen> {
                                         return ClipPath(
                                             clipper: HexagonalClipper(),
                                             child: Material(
-                                                color: Color(0xFFFFC95C),
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .tertiary,
                                                 child: Center(
                                                     child: Container(
                                                         alignment:
@@ -230,8 +211,10 @@ class _EntryScreenState extends State<EntryScreen> {
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w900,
-                                                                      color: Color(
-                                                                          0xff000000)),
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .colorScheme
+                                                                          .onPrimary),
                                                                 ),
                                                               ),
                                                               SizedBox(
@@ -274,8 +257,10 @@ class _EntryScreenState extends State<EntryScreen> {
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w900,
-                                                                      color: Color(
-                                                                          0xff000000)),
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .colorScheme
+                                                                          .onPrimary),
                                                                 ),
                                                               ),
                                                               SizedBox(
@@ -293,8 +278,9 @@ class _EntryScreenState extends State<EntryScreen> {
                                                                         fontWeight:
                                                                             FontWeight
                                                                                 .w900,
-                                                                        color: Color(
-                                                                            0xff000000)),
+                                                                        color: Theme.of(context)
+                                                                            .colorScheme
+                                                                            .onPrimary),
                                                                   )),
                                                               SizedBox(
                                                                   height: 5.0),
@@ -378,22 +364,16 @@ class _EntryScreenState extends State<EntryScreen> {
                                                                           borderRadius:
                                                                               BorderRadius.circular(18.0),
                                                                         )),
-                                                                        backgroundColor:
-                                                                            MaterialStateProperty.all(Color(
-                                                                                0xFFFFE98C)),
+                                                                        backgroundColor: MaterialStateProperty.all(Theme.of(context)
+                                                                            .colorScheme
+                                                                            .primaryContainer),
                                                                         elevation:
                                                                             MaterialStateProperty.resolveWith<double>((states) =>
                                                                                 0)),
                                                                 child: Text(
                                                                     'Confirm',
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            18,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w600,
-                                                                        color: Color(
-                                                                            0xff000000))),
+                                                                    style:
+                                                                        buttonTextStyle),
                                                                 onPressed: () {
                                                                   DatabaseService().updateUserEntry(
                                                                       widget
@@ -451,8 +431,9 @@ class _EntryScreenState extends State<EntryScreen> {
                                                             0.045,
                                                         fontWeight:
                                                             FontWeight.w900,
-                                                        color:
-                                                            Color(0xff000000)),
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onPrimary),
                                                   ),
                                                 ),
                                                 SizedBox(height: 10.0),
@@ -468,8 +449,10 @@ class _EntryScreenState extends State<EntryScreen> {
                                                               0.045,
                                                           fontWeight:
                                                               FontWeight.w900,
-                                                          color: Color(
-                                                              0xff000000)),
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .onPrimary),
                                                     )),
                                                 SizedBox(height: 5.0),
                                                 Row(
@@ -497,11 +480,7 @@ class _EntryScreenState extends State<EntryScreen> {
                                                             });
                                                           }),
                                                           icon: HexagonWidget.flat(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.2,
+                                                              width: 35,
                                                               elevation: 0.0,
                                                               color: (widget
                                                                           .entry
@@ -532,11 +511,7 @@ class _EntryScreenState extends State<EntryScreen> {
                                                             });
                                                           }),
                                                           icon: HexagonWidget.flat(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.2,
+                                                              width: 35,
                                                               elevation: 0.0,
                                                               color: (widget
                                                                           .entry
@@ -567,11 +542,7 @@ class _EntryScreenState extends State<EntryScreen> {
                                                             });
                                                           }),
                                                           icon: HexagonWidget.flat(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.2,
+                                                              width: 35,
                                                               elevation: 0.0,
                                                               color: (widget
                                                                           .entry
@@ -596,8 +567,10 @@ class _EntryScreenState extends State<EntryScreen> {
                                                       )),
                                                       backgroundColor:
                                                           MaterialStateProperty
-                                                              .all(Color(
-                                                                  0xFFFFE98C)),
+                                                              .all(Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .primaryContainer),
                                                       elevation:
                                                           MaterialStateProperty
                                                               .resolveWith<
@@ -605,12 +578,7 @@ class _EntryScreenState extends State<EntryScreen> {
                                                                   (states) =>
                                                                       0)),
                                                   child: Text('Confirm',
-                                                      style: TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color: Color(
-                                                              0xff000000))),
+                                                      style: buttonTextStyle),
                                                   onPressed: () {
                                                     DatabaseService()
                                                         .updateUserEntry(

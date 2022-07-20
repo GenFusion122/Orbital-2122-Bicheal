@@ -1,3 +1,4 @@
+import 'package:beecheal/custom%20widgets/constants.dart';
 import 'package:beecheal/models/entry.dart';
 import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:flutter/material.dart';
@@ -26,17 +27,9 @@ class EntryTile extends StatelessWidget {
           child: ListTile(
             contentPadding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width * 0.04),
-            title: Text(occasion.getTitle(),
-                style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w900,
-                    overflow: TextOverflow.ellipsis,
-                    color: Color(0xff000000))),
-            subtitle: Text(occasion.getDescription(),
-                style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w900,
-                    overflow: TextOverflow.ellipsis)),
+            title: Text(occasion.getTitle(), style: tileTitleStyle),
+            subtitle:
+                Text(occasion.getDescription(), style: tileDescriptionStyle),
             trailing: Row(mainAxisSize: MainAxisSize.min, children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -45,10 +38,7 @@ class EntryTile extends StatelessWidget {
                     DateFormat('yyyy-MM-dd\nhh:mm a')
                         .format(occasion.getDate())
                         .toString(),
-                    style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xff000000)),
+                    style: tileDateStyle,
                   )
                 ],
               ),

@@ -48,11 +48,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(0.0,
                         MediaQuery.of(context).size.height * 0.005, 0.0, 0.0),
-                    child: Text('Title',
-                        style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xff000000))),
+                    child: Text('Title', style: viewHeaderTextStyle),
                   ),
                 ),
                 Padding(
@@ -60,11 +56,8 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                   child: TextFormField(
                       key: Key("taskTitleField"),
                       maxLength: 50,
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xff000000)),
-                      cursorColor: Color(0xff000000),
+                      style: textFormFieldStyle,
+                      cursorColor: Theme.of(context).colorScheme.onPrimary,
                       initialValue: widget.task.getTitle(),
                       decoration: textInputDecorationFormField.copyWith(
                           counterText: "", hintText: 'Title'),
@@ -79,11 +72,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(0.0,
                         MediaQuery.of(context).size.height * 0.005, 0.0, 0.0),
-                    child: Text('Description',
-                        style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xff000000))),
+                    child: Text('Description', style: viewHeaderTextStyle),
                   ),
                 ),
                 Padding(
@@ -91,11 +80,8 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                   child: TextFormField(
                       key: Key("taskDescriptionField"),
                       maxLength: 100,
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xff000000)),
-                      cursorColor: Color(0xff000000),
+                      style: textFormFieldStyle,
+                      cursorColor: Theme.of(context).colorScheme.onPrimary,
                       initialValue: widget.task.getDescription(),
                       decoration: textInputDecorationFormField.copyWith(
                           counterText: "", hintText: 'Description'),
@@ -127,17 +113,10 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                               children: [
                                 SizedBox(
                                   width: 50.0,
-                                  child: Text('Date:',
-                                      style: TextStyle(
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.w900,
-                                          color: Color(0xff000000))),
+                                  child:
+                                      Text('Date:', style: viewDateTextStyle),
                                 ),
-                                Text(dateLabel,
-                                    style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.w900,
-                                        color: Color(0xff000000))),
+                                Text(dateLabel, style: viewDateTextStyle),
                               ],
                             ),
                             Padding(
@@ -155,15 +134,13 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                         )),
                                         backgroundColor:
                                             MaterialStateProperty.all(
-                                                Color(0xFFFFE98C)),
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primaryContainer),
                                         elevation:
                                             MaterialStateProperty.resolveWith<
                                                 double>((states) => 0)),
-                                    child: Text('Edit',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                            color: Color(0xff000000))),
+                                    child: Text('Edit', style: buttonTextStyle),
                                     onPressed: () async {
                                       {
                                         DateTime tempDate =
@@ -195,17 +172,10 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                               children: [
                                 SizedBox(
                                   width: 50.0,
-                                  child: Text('Time:',
-                                      style: TextStyle(
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.w900,
-                                          color: Color(0xff000000))),
+                                  child:
+                                      Text('Time:', style: viewDateTextStyle),
                                 ),
-                                Text(timeLabel,
-                                    style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.w900,
-                                        color: Color(0xff000000))),
+                                Text(timeLabel, style: viewDateTextStyle),
                               ],
                             ),
                             Padding(
@@ -223,15 +193,13 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                         )),
                                         backgroundColor:
                                             MaterialStateProperty.all(
-                                                Color(0xFFFFE98C)),
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primaryContainer),
                                         elevation:
                                             MaterialStateProperty.resolveWith<
                                                 double>((states) => 0)),
-                                    child: Text('Edit',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                            color: Color(0xff000000))),
+                                    child: Text('Edit', style: buttonTextStyle),
                                     onPressed: () async {
                                       {
                                         TimeOfDay tempTime =
@@ -263,16 +231,12 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                 RoundedRectangleBorder>(RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
                             )),
-                            backgroundColor:
-                                MaterialStateProperty.all(Color(0xFFFFE98C)),
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).colorScheme.primaryContainer),
                             elevation:
                                 MaterialStateProperty.resolveWith<double>(
                                     (states) => 0)),
-                        child: Text(widget.textPrompt,
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xff000000))),
+                        child: Text(widget.textPrompt, style: buttonTextStyle),
                         onPressed: () async {
                           if (_formkey.currentState!.validate()) {
                             if (widget.textPrompt == "Create") {

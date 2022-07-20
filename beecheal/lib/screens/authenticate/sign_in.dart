@@ -6,6 +6,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:beecheal/custom widgets/constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
+import 'package:beecheal/custom widgets/constants.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:beecheal/custom widgets/loading.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -80,27 +81,19 @@ class _SignInState extends State<SignIn> {
                                   style: TextStyle(
                                       fontSize: scaleMin * 0.04,
                                       fontWeight: FontWeight.w900,
-                                      color: Color(0xff000000)),
-                                  cursorColor: Color(0xff000000),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   decoration: InputDecoration(
                                       hintText: "Email",
                                       counterText: "",
-                                      enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
-                                          borderRadius: const BorderRadius.all(
-                                              const Radius.circular(10))),
-                                      focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
-                                          borderRadius: const BorderRadius.all(
-                                              const Radius.circular(10))),
-                                      border: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.black),
-                                        borderRadius: const BorderRadius.all(
-                                            const Radius.circular(10)),
-                                      )),
+                                      enabledBorder:
+                                          underlineInputBorderDecoration,
+                                      focusedBorder:
+                                          underlineInputBorderDecoration,
+                                      border: underlineInputBorderDecoration),
                                   validator: (val) =>
                                       EmailValidator.validate(val!)
                                           ? null
@@ -115,27 +108,19 @@ class _SignInState extends State<SignIn> {
                                   style: TextStyle(
                                       fontSize: scaleMin * 0.04,
                                       fontWeight: FontWeight.w900,
-                                      color: Color(0xff000000)),
-                                  cursorColor: Color(0xff000000),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   decoration: InputDecoration(
                                       hintText: "Password",
                                       counterText: "",
-                                      enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
-                                          borderRadius: const BorderRadius.all(
-                                              const Radius.circular(10))),
-                                      focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
-                                          borderRadius: const BorderRadius.all(
-                                              const Radius.circular(10))),
-                                      border: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.black),
-                                        borderRadius: const BorderRadius.all(
-                                            const Radius.circular(10)),
-                                      )),
+                                      enabledBorder:
+                                          underlineInputBorderDecoration,
+                                      focusedBorder:
+                                          underlineInputBorderDecoration,
+                                      border: underlineInputBorderDecoration),
                                   validator: (val) => val!.length < 8
                                       ? 'Enter a password at least 8 characters long'
                                       : null,
@@ -154,7 +139,9 @@ class _SignInState extends State<SignIn> {
                                         decoration: TextDecoration.underline,
                                         fontSize: scaleMin * 0.032,
                                         fontWeight: FontWeight.w600,
-                                        color: Color(0xff000000)),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () => {
                                             showDialog(
@@ -179,35 +166,32 @@ class _SignInState extends State<SignIn> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w900,
-                                                                  color: Color(
-                                                                      0xff000000)),
-                                                              cursorColor: Color(
-                                                                  0xff000000),
-                                                              decoration:
-                                                                  InputDecoration(
-                                                                      hintText:
-                                                                          "Email",
-                                                                      counterText:
-                                                                          "",
-                                                                      enabledBorder: UnderlineInputBorder(
-                                                                          borderSide: BorderSide(
-                                                                              color: Colors
-                                                                                  .black),
-                                                                          borderRadius: const BorderRadius.all(const Radius.circular(
-                                                                              10))),
-                                                                      focusedBorder: UnderlineInputBorder(
-                                                                          borderSide:
-                                                                              BorderSide(color: Colors.black),
-                                                                          borderRadius: const BorderRadius.all(const Radius.circular(10))),
-                                                                      border: UnderlineInputBorder(
-                                                                        borderSide:
-                                                                            BorderSide(color: Colors.black),
-                                                                        borderRadius: const BorderRadius
-                                                                            .all(const Radius
-                                                                                .circular(
-                                                                            10)),
-                                                                      )),
-                                                              validator: (val) => EmailValidator.validate(val!) ? null : 'Enter a valid email',
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .colorScheme
+                                                                      .onPrimary),
+                                                              cursorColor: Theme
+                                                                      .of(
+                                                                          context)
+                                                                  .colorScheme
+                                                                  .onPrimary,
+                                                              decoration: InputDecoration(
+                                                                  hintText:
+                                                                      "Email",
+                                                                  counterText:
+                                                                      "",
+                                                                  enabledBorder:
+                                                                      underlineInputBorderDecoration,
+                                                                  focusedBorder:
+                                                                      underlineInputBorderDecoration,
+                                                                  border:
+                                                                      underlineInputBorderDecoration),
+                                                              validator: (val) =>
+                                                                  EmailValidator
+                                                                          .validate(
+                                                                              val!)
+                                                                      ? null
+                                                                      : 'Enter a valid email',
                                                               onChanged: (val) {
                                                                 setState(() =>
                                                                     forgotEmail =
@@ -235,12 +219,12 @@ class _SignInState extends State<SignIn> {
                                                                           .circular(
                                                                               18.0),
                                                                 )),
-                                                                backgroundColor:
-                                                                    MaterialStateProperty.all(
-                                                                        Color(
-                                                                            0xFFFFE98C)),
-                                                                elevation: MaterialStateProperty
-                                                                    .resolveWith<double>(
+                                                                backgroundColor: MaterialStateProperty.all(Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .primaryContainer),
+                                                                elevation:
+                                                                    MaterialStateProperty.resolveWith<double>(
                                                                         (states) =>
                                                                             0)),
                                                             onPressed:
@@ -269,7 +253,7 @@ class _SignInState extends State<SignIn> {
                                                                           style: TextStyle(
                                                                               fontSize: scaleMin * 0.028,
                                                                               fontWeight: FontWeight.w900,
-                                                                              color: Color(0xff000000)),
+                                                                              color: Theme.of(context).colorScheme.onPrimary),
                                                                         )));
                                                                 Navigator.of(
                                                                         context)
@@ -284,8 +268,10 @@ class _SignInState extends State<SignIn> {
                                                                     fontSize:
                                                                         scaleMin *
                                                                             0.036,
-                                                                    color: Color(
-                                                                        0xFF000000))),
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .colorScheme
+                                                                        .onPrimary)),
                                                           ),
                                                         ],
                                                       ),
@@ -310,7 +296,9 @@ class _SignInState extends State<SignIn> {
                                       borderRadius: BorderRadius.circular(18.0),
                                     )),
                                     backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFFFFDD4b)),
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
                                     elevation: MaterialStateProperty
                                         .resolveWith<double>((states) => 0)),
                                 onPressed: () async {
@@ -333,7 +321,9 @@ class _SignInState extends State<SignIn> {
                                     style: TextStyle(
                                         fontSize: scaleMin * 0.036,
                                         fontWeight: FontWeight.w600,
-                                        color: Color(0xff000000))),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary)),
                               ),
                               SizedBox(height: scaleMin * 0.005),
                               ElevatedButton(
@@ -349,7 +339,9 @@ class _SignInState extends State<SignIn> {
                                       borderRadius: BorderRadius.circular(18.0),
                                     )),
                                     backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFFFFDD4b)),
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
                                     elevation: MaterialStateProperty
                                         .resolveWith<double>((states) => 0)),
                                 onPressed: () async {
@@ -368,7 +360,9 @@ class _SignInState extends State<SignIn> {
                                     style: TextStyle(
                                         fontSize: scaleMin * 0.036,
                                         fontWeight: FontWeight.w600,
-                                        color: Color(0xff000000))),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary)),
                               ),
                               SizedBox(height: scaleMin * 0.005),
                               ElevatedButton(
@@ -384,7 +378,9 @@ class _SignInState extends State<SignIn> {
                                       borderRadius: BorderRadius.circular(18.0),
                                     )),
                                     backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFFFFDD4b)),
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
                                     elevation: MaterialStateProperty
                                         .resolveWith<double>((states) => 0)),
                                 onPressed: () async {
@@ -422,7 +418,9 @@ class _SignInState extends State<SignIn> {
                                     style: TextStyle(
                                         fontSize: scaleMin * 0.036,
                                         fontWeight: FontWeight.w600,
-                                        color: Color(0xff000000))),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary)),
                               ),
 
                               SizedBox(
@@ -444,7 +442,7 @@ class _SignInState extends State<SignIn> {
         key: scaffoldMessengerKey,
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: Color(0xFFFFE0B2),
+          backgroundColor: Theme.of(context).colorScheme.background,
           appBar: null,
           body: Stack(children: [
             Positioned(
@@ -481,11 +479,9 @@ class _SignInState extends State<SignIn> {
                               // Email input
                               TextFormField(
                                   key: const Key('emailField'),
-                                  style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.w900,
-                                      color: Color(0xff000000)),
-                                  cursorColor: Color(0xff000000),
+                                  style: textFormFieldStyle,
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   decoration: textInputDecoration.copyWith(
                                       hintText: 'Email'),
                                   validator: (val) =>
@@ -499,11 +495,9 @@ class _SignInState extends State<SignIn> {
                               // Password input
                               TextFormField(
                                   key: const Key('passwordField'),
-                                  style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.w900,
-                                      color: Color(0xff000000)),
-                                  cursorColor: Color(0xff000000),
+                                  style: textFormFieldStyle,
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   decoration: textInputDecoration.copyWith(
                                       hintText: 'Password'),
                                   validator: (val) => val!.length < 8
@@ -524,7 +518,9 @@ class _SignInState extends State<SignIn> {
                                         decoration: TextDecoration.underline,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
-                                        color: Color(0xff000000)),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () => {
                                             showDialog(
@@ -535,7 +531,9 @@ class _SignInState extends State<SignIn> {
                                                   return ClipPath(
                                                     clipper: HexagonalClipper(),
                                                     child: Material(
-                                                      color: Color(0xFFFFC95C),
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .tertiary,
                                                       child: Center(
                                                         child: Container(
                                                           alignment:
@@ -563,21 +561,15 @@ class _SignInState extends State<SignIn> {
                                                                 TextFormField(
                                                                     key: const Key(
                                                                         'forgotEmail'),
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            20.0,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w900,
-                                                                        color: Color(
-                                                                            0xff000000)),
-                                                                    cursorColor:
-                                                                        Color(
-                                                                            0xff000000),
-                                                                    decoration:
-                                                                        textInputDecoration.copyWith(
-                                                                            hintText:
-                                                                                'Email'),
+                                                                    style:
+                                                                        textFormFieldStyle,
+                                                                    cursorColor: Theme.of(
+                                                                            context)
+                                                                        .colorScheme
+                                                                        .onPrimary,
+                                                                    decoration: textInputDecoration.copyWith(
+                                                                        hintText:
+                                                                            'Email'),
                                                                     validator: (val) => EmailValidator.validate(
                                                                             val!)
                                                                         ? null
@@ -597,7 +589,7 @@ class _SignInState extends State<SignIn> {
                                                                         borderRadius:
                                                                             BorderRadius.circular(18.0),
                                                                       )),
-                                                                      backgroundColor: MaterialStateProperty.all(Color(0xFFFFE98C)),
+                                                                      backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primaryContainer),
                                                                       elevation: MaterialStateProperty.resolveWith<double>((states) => 0)),
                                                                   onPressed:
                                                                       () async {
@@ -615,10 +607,8 @@ class _SignInState extends State<SignIn> {
                                                                           backgroundColor: Theme.of(context).colorScheme.secondary,
                                                                           content: Text(
                                                                             'Sent password reset email to ${forgotEmail}',
-                                                                            style: TextStyle(
-                                                                                fontSize: 12.0,
-                                                                                fontWeight: FontWeight.w900,
-                                                                                color: Color(0xff000000)),
+                                                                            style:
+                                                                                popupTextStyle,
                                                                           )));
                                                                       Navigator.of(
                                                                               context)
@@ -630,8 +620,9 @@ class _SignInState extends State<SignIn> {
                                                                   child: Text(
                                                                       'Reset password',
                                                                       style: TextStyle(
-                                                                          color:
-                                                                              Color(0xFF000000))),
+                                                                          color: Theme.of(context)
+                                                                              .colorScheme
+                                                                              .onPrimary)),
                                                                 ),
                                                               ],
                                                             ),
@@ -660,7 +651,9 @@ class _SignInState extends State<SignIn> {
                                       borderRadius: BorderRadius.circular(18.0),
                                     )),
                                     backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFFFFDD4b)),
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
                                     elevation: MaterialStateProperty
                                         .resolveWith<double>((states) => 0)),
                                 onPressed: () async {
@@ -679,11 +672,7 @@ class _SignInState extends State<SignIn> {
                                     }
                                   }
                                 },
-                                child: Text('Sign In',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xff000000))),
+                                child: Text('Sign In', style: buttonTextStyle),
                               ),
                               SizedBox(height: 5.0),
                               ElevatedButton(
@@ -700,7 +689,9 @@ class _SignInState extends State<SignIn> {
                                       borderRadius: BorderRadius.circular(18.0),
                                     )),
                                     backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFFFFDD4b)),
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
                                     elevation: MaterialStateProperty
                                         .resolveWith<double>((states) => 0)),
                                 onPressed: () async {
@@ -716,10 +707,7 @@ class _SignInState extends State<SignIn> {
                                   });
                                 },
                                 child: Text('Sign In with Google',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xff000000))),
+                                    style: buttonTextStyle),
                               ),
                               SizedBox(height: 5.0),
                               ElevatedButton(
@@ -736,7 +724,9 @@ class _SignInState extends State<SignIn> {
                                       borderRadius: BorderRadius.circular(18.0),
                                     )),
                                     backgroundColor: MaterialStateProperty.all(
-                                        Color(0xFFFFDD4b)),
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
                                     elevation: MaterialStateProperty
                                         .resolveWith<double>((states) => 0)),
                                 onPressed: () async {
@@ -770,11 +760,7 @@ class _SignInState extends State<SignIn> {
                                     ),
                                   );
                                 },
-                                child: Text('Sign Up',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xff000000))),
+                                child: Text('Sign Up', style: buttonTextStyle),
                               ),
 
                               SizedBox(

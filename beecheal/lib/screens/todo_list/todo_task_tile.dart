@@ -1,3 +1,4 @@
+import 'package:beecheal/custom%20widgets/constants.dart';
 import 'package:beecheal/models/occasion.dart';
 import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:flutter/material.dart';
@@ -24,21 +25,14 @@ class TaskTile extends StatelessWidget {
           child: ListTile(
             title: Text(
               occasion.getTitle(),
-              style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w900,
-                  overflow: TextOverflow.ellipsis,
-                  color: Color(0xff000000)),
+              style: tileTitleStyle,
             ),
             subtitle: Column(children: [
               Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     occasion.getDescription(),
-                    style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w900,
-                        overflow: TextOverflow.ellipsis),
+                    style: tileDescriptionStyle,
                   )),
               Align(
                   alignment: Alignment.centerRight,
