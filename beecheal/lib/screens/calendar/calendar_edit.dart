@@ -314,15 +314,6 @@ class _CalenderEditScreen<T extends Occasion>
                                 InitializeNotifications
                                     .initializeToDoNotifications();
                                 Navigator.of(context).pop();
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      if (T.toString() == "Task") {
-                                        return TaskView(
-                                            widget.occasion as Task);
-                                      }
-                                      return OccasionView(widget.occasion);
-                                    });
                               }
                             } else {
                               widget.occasion.setTitle(

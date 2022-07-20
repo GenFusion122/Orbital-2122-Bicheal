@@ -18,8 +18,11 @@ class Wrapper extends StatelessWidget {
     if (user == null) {
       return Authenticate();
     } else {
-      return StreamProvider<List<Task>>.value(
-          value: DatabaseService().tasks, initialData: [], child: Home());
+      return StreamProvider<List<Task>?>.value(
+          catchError: ((context, error) {}),
+          value: DatabaseService().tasks,
+          initialData: [],
+          child: Home());
     }
   }
 }

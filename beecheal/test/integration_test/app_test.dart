@@ -10,11 +10,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:intl/intl.dart';
-import '../../lib/globals.dart' as globals;
 
 Future<void> signIn(
     WidgetTester tester, String username, String password) async {
-  globals.testingActive = true;
   await tester.pumpAndSettle();
   await tester.enterText(find.byKey(Key("emailField")), username);
   await tester.enterText(find.byKey(Key("passwordField")), password);
@@ -41,6 +39,7 @@ void main() {
     await signIn(tester, "test1@test.com", "test12345");
     expect(find.byKey(Key("homeBar")), findsOneWidget);
     await signOutFromHomepage(tester);
+    await tester.pumpAndSettle();
     expect(find.byKey(Key("signIn")), findsOneWidget);
     await tester.pumpAndSettle();
   });
@@ -117,7 +116,7 @@ void main() {
       await signOutFromHomepage(tester);
     });
 
-    /*testWidgets('Create, Edit and Deletion of Journal Entries',
+    testWidgets('Create, Edit and Deletion of Journal Entries',
         (WidgetTester tester) async {
       await Firebase.initializeApp();
       await tester.pumpWidget(MyApp());
@@ -132,11 +131,14 @@ void main() {
           find.byKey(Key("journalDescriptionField")), "A Happy Description!");
       await tester.enterText(find.byKey(Key("journalBodyField")),
           "I am very Happy today! It is a wonderful looking day outside today!");
+      await tester.pumpAndSettle(Duration(seconds: 2));
       await tester.tap(find.text("Create"));
-      await tester.pumpAndSettle(Duration(seconds: 5));
-      //find fix for ML and int testing
+      await tester.pumpAndSettle();
+      await tester.pump();
       await tester.tap(find.text("Confirm"));
+      await tester.pumpAndSettle();
       expect(find.text("Happy!"), findsOneWidget);
+      await tester.pumpAndSettle();
       await tester.tap(find.text("Happy!"));
       await tester.pumpAndSettle();
       await tester.tap(find.text("Edit"));
@@ -146,15 +148,20 @@ void main() {
           find.byKey(Key("journalDescriptionField")), "A Sad Description!");
       await tester.enterText(find.byKey(Key("journalBodyField")),
           "I am very Sad today! It is a terrible looking day outside today :(");
-      await tester.pumpAndSettle(Duration(seconds: 5));
+      await tester.pumpAndSettle(Duration(seconds: 2));
+      await tester.tap(find.text("Update"));
+      await tester.pumpAndSettle();
       await tester.tap(find.text("Confirm"));
       await tester.pumpAndSettle();
       await tester.tap(find.text("Sad!"));
+      await tester.pumpAndSettle();
       await tester.tap(find.text("Delete"));
       await tester.pump(Duration(seconds: 5));
       expect(find.text("I am very Sad today!"), findsNothing);
+      await tester.tap(find.byType(BackButtonIcon));
+      await tester.pumpAndSettle();
       await signOutFromHomepage(tester);
-    });*/
+    });
 
     testWidgets(
         "Create, Edit, Delete Calendar events and Tasks via Calendar view",
@@ -182,7 +189,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text("OK"));
       await tester.pumpAndSettle();
-      expect(find.text("An Event Title!"), findsOneWidget);
+      expect(find.text("An Event Title!"), findsWidgets);
       await tester.pumpAndSettle();
       await tester.tap(find.text("An Event Title!"));
       await tester.pumpAndSettle();
@@ -202,7 +209,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(Key(editDateKey)));
       await tester.pumpAndSettle();
-      expect(find.text("An Edited Event Title!"), findsOneWidget);
+      expect(find.text("An Edited Event Title!"), findsWidgets);
       await tester.tap(find.text("An Edited Event Title!"));
       await tester.pumpAndSettle();
       await tester.tap(find.text("Delete"));
@@ -225,7 +232,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text("OK"));
       await tester.pumpAndSettle();
-      expect(find.text("A Task Title!"), findsOneWidget);
+      expect(find.text("A Task Title!"), findsWidgets);
       await tester.pumpAndSettle();
       await tester.tap(find.text("A Task Title!"));
       await tester.pumpAndSettle();
@@ -245,7 +252,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(Key(editDateKey)));
       await tester.pumpAndSettle();
-      expect(find.text("An Edited Task Title!"), findsOneWidget);
+      expect(find.text("An Edited Task Title!"), findsWidgets);
       await tester.pumpAndSettle();
       await tester.tap(find.text("Completed"));
       await tester.pumpAndSettle();
