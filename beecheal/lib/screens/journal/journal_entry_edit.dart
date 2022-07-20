@@ -8,7 +8,6 @@ import 'package:beecheal/services/database.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:hexagon/hexagon.dart';
-import '/../globals.dart' as globals;
 
 class EntryScreen extends StatefulWidget {
   // const EntryScreen({Key? key}) : super(key: key);
@@ -27,7 +26,7 @@ class _EntryScreenState extends State<EntryScreen> {
   static const platform = MethodChannel('model.classifier/inference');
 
   void initState() {
-    if (!kIsWeb || !globals.testingActive) {
+    if (!kIsWeb) {
       // Initialize model
       platform
           .invokeMethod("Classify", <String, dynamic>{'string': 'initialize'});
@@ -40,7 +39,7 @@ class _EntryScreenState extends State<EntryScreen> {
         contentPadding: EdgeInsets.all(10.0),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
-                MediaQuery.of(context).size.width * 0.04)),
+                MediaQuery.of(context).size.width * 0.02)),
         backgroundColor: Theme.of(context).colorScheme.tertiary,
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -68,7 +67,6 @@ class _EntryScreenState extends State<EntryScreen> {
                     Padding(
                       padding: EdgeInsets.all(1.0),
                       child: TextFormField(
-                          key: Key("journalTitleField"),
                           maxLength: 50,
                           style: TextStyle(
                               fontSize: 16.0,
@@ -101,7 +99,6 @@ class _EntryScreenState extends State<EntryScreen> {
                     Padding(
                       padding: EdgeInsets.all(1.0),
                       child: TextFormField(
-                          key: Key("journalDescriptionField"),
                           maxLength: 100,
                           style: TextStyle(
                               fontSize: 16.0,
@@ -139,7 +136,6 @@ class _EntryScreenState extends State<EntryScreen> {
                         constraints: BoxConstraints(maxHeight: 180.0),
                         child: SingleChildScrollView(
                           child: TextFormField(
-                              key: Key("journalBodyField"),
                               style: TextStyle(
                                   fontSize: 16.0,
                                   fontWeight: FontWeight.w900,
@@ -183,7 +179,7 @@ class _EntryScreenState extends State<EntryScreen> {
                           onPressed: () async {
                             if (_formkey.currentState!.validate()) {
                               List prediction = [0, 0];
-                              if (!kIsWeb || !globals.testingActive) {
+                              if (!kIsWeb) {
                                 prediction = await Classify();
                               }
                               widget.entry.setSentiment(prediction[0]);
@@ -192,99 +188,37 @@ class _EntryScreenState extends State<EntryScreen> {
                                   builder: (BuildContext context) {
                                     return StatefulBuilder(
                                         builder: (context, setState) {
-                                      return ClipPath(
-                                          clipper: HexagonalClipper(),
-                                          child: Material(
-                                              color: Color(0xFFFFC95C),
-                                              child: Center(
-                                                  child: Container(
-                                                      alignment:
-                                                          FractionalOffset(
-                                                              0.5, 0.6),
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.75,
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.75,
-                                                      child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Align(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              child: Text(
-                                                                'BzB thinks that you are feeling:',
-                                                                style: TextStyle(
-                                                                    fontSize: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width *
-                                                                        0.045,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w900,
-                                                                    color: Color(
-                                                                        0xff000000)),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                                height: 5.0),
-                                                            Align(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              child: Text(
-                                                                  (prediction[0] ==
-                                                                          -1
-                                                                      ? 'Negative'
-                                                                      : prediction[0] ==
-                                                                              0
-                                                                          ? 'Neutral'
-                                                                          : 'Positive'),
-                                                                  style: TextStyle(
-                                                                      fontSize: MediaQuery.of(context).size.width * 0.05,
-                                                                      fontWeight: FontWeight.w900,
-                                                                      color: prediction[0] == -1
-                                                                          ? Colors.red
-                                                                          : prediction[0] == 0
-                                                                              ? Colors.grey
-                                                                              : Colors.green)),
-                                                            ),
-                                                            SizedBox(
-                                                              height: 5.0,
-                                                            ),
-                                                            Align(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              child: Text(
-                                                                'with ${prediction[1]}% confidence',
-                                                                style: TextStyle(
-                                                                    fontSize: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width *
-                                                                        0.045,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w900,
-                                                                    color: Color(
-                                                                        0xff000000)),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                                height: 10.0),
-                                                            Align(
+                                      if (!kIsWeb) {
+                                        return ClipPath(
+                                            clipper: HexagonalClipper(),
+                                            child: Material(
+                                                color: Color(0xFFFFC95C),
+                                                child: Center(
+                                                    child: Container(
+                                                        alignment:
+                                                            FractionalOffset(
+                                                                0.5, 0.6),
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.75,
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.75,
+                                                        child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              Align(
                                                                 alignment:
                                                                     Alignment
                                                                         .center,
                                                                 child: Text(
-                                                                  'I feel:',
+                                                                  'BzB thinks that you are feeling:',
                                                                   style: TextStyle(
                                                                       fontSize: MediaQuery.of(context)
                                                                               .size
@@ -295,149 +229,418 @@ class _EntryScreenState extends State<EntryScreen> {
                                                                               .w900,
                                                                       color: Color(
                                                                           0xff000000)),
-                                                                )),
-                                                            SizedBox(
-                                                                height: 5.0),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceEvenly,
-                                                              children: [
-                                                                Column(
-                                                                    children: [
-                                                                      Text(
-                                                                          'Negative',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontSize:
-                                                                                MediaQuery.of(context).size.width * 0.04,
-                                                                            fontWeight:
-                                                                                FontWeight.w900,
-                                                                          )),
-                                                                      IconButton(
-                                                                          onPressed:
-                                                                              (() {
-                                                                            setState(() {
-                                                                              widget.entry.setSentiment(-1);
-                                                                            });
-                                                                          }),
-                                                                          icon: HexagonWidget.flat(
-                                                                              key: Key("journalNegativeButton"),
-                                                                              width: MediaQuery.of(context).size.width * 0.2,
-                                                                              elevation: 0.0,
-                                                                              color: (widget.entry.getSentiment() == -1) ? Colors.red : Colors.grey.withOpacity(0.4))),
-                                                                    ]),
-                                                                Column(
-                                                                    children: [
-                                                                      Text(
-                                                                          'Neutral',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontSize:
-                                                                                MediaQuery.of(context).size.width * 0.04,
-                                                                            fontWeight:
-                                                                                FontWeight.w900,
-                                                                          )),
-                                                                      IconButton(
-                                                                          onPressed:
-                                                                              (() {
-                                                                            setState(() {
-                                                                              widget.entry.setSentiment(0);
-                                                                            });
-                                                                          }),
-                                                                          icon: HexagonWidget.flat(
-                                                                              key: Key("journalNeutralButton"),
-                                                                              width: MediaQuery.of(context).size.width * 0.2,
-                                                                              elevation: 0.0,
-                                                                              color: (widget.entry.getSentiment() == 0) ? Colors.grey : Colors.grey.withOpacity(0.4))),
-                                                                    ]),
-                                                                Column(
-                                                                    children: [
-                                                                      Text(
-                                                                          'Positive',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontSize:
-                                                                                MediaQuery.of(context).size.width * 0.04,
-                                                                            fontWeight:
-                                                                                FontWeight.w900,
-                                                                          )),
-                                                                      IconButton(
-                                                                          onPressed:
-                                                                              (() {
-                                                                            setState(() {
-                                                                              widget.entry.setSentiment(1);
-                                                                            });
-                                                                          }),
-                                                                          icon: HexagonWidget.flat(
-                                                                              key: Key("journalPositiveButton"),
-                                                                              width: MediaQuery.of(context).size.width * 0.2,
-                                                                              elevation: 0.0,
-                                                                              color: (widget.entry.getSentiment() == 1) ? Colors.green : Colors.grey.withOpacity(0.4))),
-                                                                    ])
-                                                              ],
-                                                            ),
-                                                            SizedBox(
-                                                                height: 5.0),
-                                                            ElevatedButton(
-                                                              style:
-                                                                  ButtonStyle(
-                                                                      shape: MaterialStateProperty.all<
-                                                                              RoundedRectangleBorder>(
-                                                                          RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(18.0),
-                                                                      )),
-                                                                      backgroundColor:
-                                                                          MaterialStateProperty.all(Color(
-                                                                              0xFFFFE98C)),
-                                                                      elevation:
-                                                                          MaterialStateProperty.resolveWith<double>((states) =>
-                                                                              0)),
-                                                              child: Text(
-                                                                  'Confirm',
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                  height: 5.0),
+                                                              Align(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                child: Text(
+                                                                    (prediction[0] ==
+                                                                            -1
+                                                                        ? 'Negative'
+                                                                        : prediction[0] ==
+                                                                                0
+                                                                            ? 'Neutral'
+                                                                            : 'Positive'),
+                                                                    style: TextStyle(
+                                                                        fontSize: MediaQuery.of(context).size.width * 0.05,
+                                                                        fontWeight: FontWeight.w900,
+                                                                        color: prediction[0] == -1
+                                                                            ? Colors.red
+                                                                            : prediction[0] == 0
+                                                                                ? Colors.grey
+                                                                                : Colors.green)),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 5.0,
+                                                              ),
+                                                              Align(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                child: Text(
+                                                                  'with ${prediction[1]}% confidence',
                                                                   style: TextStyle(
-                                                                      fontSize:
-                                                                          18,
+                                                                      fontSize: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width *
+                                                                          0.045,
                                                                       fontWeight:
                                                                           FontWeight
-                                                                              .w600,
+                                                                              .w900,
                                                                       color: Color(
-                                                                          0xff000000))),
-                                                              onPressed: () {
-                                                                DatabaseService().updateUserEntry(
-                                                                    widget.entry
-                                                                        .getId(),
-                                                                    widget.entry
-                                                                        .getTitle(),
-                                                                    widget.entry
-                                                                        .getDate(),
-                                                                    widget.entry
-                                                                        .getDescription(),
-                                                                    widget.entry
-                                                                        .getBody(),
-                                                                    widget.entry
-                                                                        .getSentiment());
-                                                                Navigator.of(
+                                                                          0xff000000)),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                  height: 10.0),
+                                                              Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  child: Text(
+                                                                    'I feel:',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            MediaQuery.of(context).size.width *
+                                                                                0.045,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w900,
+                                                                        color: Color(
+                                                                            0xff000000)),
+                                                                  )),
+                                                              SizedBox(
+                                                                  height: 5.0),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceEvenly,
+                                                                children: [
+                                                                  Column(
+                                                                      children: [
+                                                                        Text(
+                                                                            'Negative',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontSize: MediaQuery.of(context).size.width * 0.04,
+                                                                              fontWeight: FontWeight.w900,
+                                                                            )),
+                                                                        IconButton(
+                                                                            onPressed:
+                                                                                (() {
+                                                                              setState(() {
+                                                                                widget.entry.setSentiment(-1);
+                                                                              });
+                                                                            }),
+                                                                            icon: HexagonWidget.flat(
+                                                                                width: MediaQuery.of(context).size.width * 0.2,
+                                                                                elevation: 0.0,
+                                                                                color: (widget.entry.getSentiment() == -1) ? Colors.red : Colors.grey.withOpacity(0.4))),
+                                                                      ]),
+                                                                  Column(
+                                                                      children: [
+                                                                        Text(
+                                                                            'Neutral',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontSize: MediaQuery.of(context).size.width * 0.04,
+                                                                              fontWeight: FontWeight.w900,
+                                                                            )),
+                                                                        IconButton(
+                                                                            onPressed:
+                                                                                (() {
+                                                                              setState(() {
+                                                                                widget.entry.setSentiment(0);
+                                                                              });
+                                                                            }),
+                                                                            icon: HexagonWidget.flat(
+                                                                                width: MediaQuery.of(context).size.width * 0.2,
+                                                                                elevation: 0.0,
+                                                                                color: (widget.entry.getSentiment() == 0) ? Colors.grey : Colors.grey.withOpacity(0.4))),
+                                                                      ]),
+                                                                  Column(
+                                                                      children: [
+                                                                        Text(
+                                                                            'Positive',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontSize: MediaQuery.of(context).size.width * 0.04,
+                                                                              fontWeight: FontWeight.w900,
+                                                                            )),
+                                                                        IconButton(
+                                                                            onPressed:
+                                                                                (() {
+                                                                              setState(() {
+                                                                                widget.entry.setSentiment(1);
+                                                                              });
+                                                                            }),
+                                                                            icon: HexagonWidget.flat(
+                                                                                width: MediaQuery.of(context).size.width * 0.2,
+                                                                                elevation: 0.0,
+                                                                                color: (widget.entry.getSentiment() == 1) ? Colors.green : Colors.grey.withOpacity(0.4))),
+                                                                      ])
+                                                                ],
+                                                              ),
+                                                              SizedBox(
+                                                                  height: 5.0),
+                                                              ElevatedButton(
+                                                                style:
+                                                                    ButtonStyle(
+                                                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                                            RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(18.0),
+                                                                        )),
+                                                                        backgroundColor:
+                                                                            MaterialStateProperty.all(Color(
+                                                                                0xFFFFE98C)),
+                                                                        elevation:
+                                                                            MaterialStateProperty.resolveWith<double>((states) =>
+                                                                                0)),
+                                                                child: Text(
+                                                                    'Confirm',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            18,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w600,
+                                                                        color: Color(
+                                                                            0xff000000))),
+                                                                onPressed: () {
+                                                                  DatabaseService().updateUserEntry(
+                                                                      widget
+                                                                          .entry
+                                                                          .getId(),
+                                                                      widget
+                                                                          .entry
+                                                                          .getTitle(),
+                                                                      widget
+                                                                          .entry
+                                                                          .getDate(),
+                                                                      widget
+                                                                          .entry
+                                                                          .getDescription(),
+                                                                      widget
+                                                                          .entry
+                                                                          .getBody(),
+                                                                      widget
+                                                                          .entry
+                                                                          .getSentiment());
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                  // showDialog(
+                                                                  //     context:
+                                                                  //         context,
+                                                                  //     builder:
+                                                                  //         (BuildContext
+                                                                  //             context) {
+                                                                  //       return EntryView(
+                                                                  //           widget
+                                                                  //               .entry,
+                                                                  //           false);
+                                                                  //     });
+                                                                },
+                                                              )
+                                                            ])))));
+                                      } else {
+                                        return AlertDialog(
+                                          content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Align(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    'Let BzB know how you are feeling:',
+                                                    style: TextStyle(
+                                                        fontSize: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.045,
+                                                        fontWeight:
+                                                            FontWeight.w900,
+                                                        color:
+                                                            Color(0xff000000)),
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10.0),
+                                                Align(
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      'I feel:',
+                                                      style: TextStyle(
+                                                          fontSize: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.045,
+                                                          fontWeight:
+                                                              FontWeight.w900,
+                                                          color: Color(
+                                                              0xff000000)),
+                                                    )),
+                                                SizedBox(height: 5.0),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    Column(children: [
+                                                      Text('Negative',
+                                                          style: TextStyle(
+                                                            fontSize: MediaQuery.of(
                                                                         context)
-                                                                    .pop();
-                                                                Navigator.of(
+                                                                    .size
+                                                                    .width *
+                                                                0.04,
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                          )),
+                                                      IconButton(
+                                                          onPressed: (() {
+                                                            setState(() {
+                                                              widget.entry
+                                                                  .setSentiment(
+                                                                      -1);
+                                                            });
+                                                          }),
+                                                          icon: HexagonWidget.flat(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.2,
+                                                              elevation: 0.0,
+                                                              color: (widget
+                                                                          .entry
+                                                                          .getSentiment() ==
+                                                                      -1)
+                                                                  ? Colors.red
+                                                                  : Colors.grey
+                                                                      .withOpacity(
+                                                                          0.4))),
+                                                    ]),
+                                                    Column(children: [
+                                                      Text('Neutral',
+                                                          style: TextStyle(
+                                                            fontSize: MediaQuery.of(
                                                                         context)
-                                                                    .pop();
-                                                                // showDialog(
-                                                                //     context:
-                                                                //         context,
-                                                                //     builder:
-                                                                //         (BuildContext
-                                                                //             context) {
-                                                                //       return EntryView(
-                                                                //           widget
-                                                                //               .entry,
-                                                                //           false);
-                                                                //     });
-                                                              },
-                                                            )
-                                                          ])))));
+                                                                    .size
+                                                                    .width *
+                                                                0.04,
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                          )),
+                                                      IconButton(
+                                                          onPressed: (() {
+                                                            setState(() {
+                                                              widget.entry
+                                                                  .setSentiment(
+                                                                      0);
+                                                            });
+                                                          }),
+                                                          icon: HexagonWidget.flat(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.2,
+                                                              elevation: 0.0,
+                                                              color: (widget
+                                                                          .entry
+                                                                          .getSentiment() ==
+                                                                      0)
+                                                                  ? Colors.grey
+                                                                  : Colors.grey
+                                                                      .withOpacity(
+                                                                          0.4))),
+                                                    ]),
+                                                    Column(children: [
+                                                      Text('Positive',
+                                                          style: TextStyle(
+                                                            fontSize: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.04,
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                          )),
+                                                      IconButton(
+                                                          onPressed: (() {
+                                                            setState(() {
+                                                              widget.entry
+                                                                  .setSentiment(
+                                                                      1);
+                                                            });
+                                                          }),
+                                                          icon: HexagonWidget.flat(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.2,
+                                                              elevation: 0.0,
+                                                              color: (widget
+                                                                          .entry
+                                                                          .getSentiment() ==
+                                                                      1)
+                                                                  ? Colors.green
+                                                                  : Colors.grey
+                                                                      .withOpacity(
+                                                                          0.4))),
+                                                    ])
+                                                  ],
+                                                ),
+                                                SizedBox(height: 5.0),
+                                                ElevatedButton(
+                                                  style: ButtonStyle(
+                                                      shape: MaterialStateProperty.all<
+                                                              RoundedRectangleBorder>(
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(18.0),
+                                                      )),
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all(Color(
+                                                                  0xFFFFE98C)),
+                                                      elevation:
+                                                          MaterialStateProperty
+                                                              .resolveWith<
+                                                                      double>(
+                                                                  (states) =>
+                                                                      0)),
+                                                  child: Text('Confirm',
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: Color(
+                                                              0xff000000))),
+                                                  onPressed: () {
+                                                    DatabaseService()
+                                                        .updateUserEntry(
+                                                            widget.entry
+                                                                .getId(),
+                                                            widget.entry
+                                                                .getTitle(),
+                                                            widget.entry
+                                                                .getDate(),
+                                                            widget.entry
+                                                                .getDescription(),
+                                                            widget.entry
+                                                                .getBody(),
+                                                            widget.entry
+                                                                .getSentiment());
+                                                    Navigator.of(context).pop();
+                                                    Navigator.of(context).pop();
+                                                    // showDialog(
+                                                    //     context:
+                                                    //         context,
+                                                    //     builder:
+                                                    //         (BuildContext
+                                                    //             context) {
+                                                    //       return EntryView(
+                                                    //           widget
+                                                    //               .entry,
+                                                    //           false);
+                                                    //     });
+                                                  },
+                                                )
+                                              ]),
+                                        );
+                                      }
                                     });
                                   });
                             }

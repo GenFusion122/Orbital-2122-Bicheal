@@ -37,7 +37,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
         contentPadding: EdgeInsets.all(10.0),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
-                MediaQuery.of(context).size.width * 0.04)),
+                MediaQuery.of(context).size.width * 0.02)),
         backgroundColor: Theme.of(context).colorScheme.tertiary,
         content: Form(
             key: _formkey,

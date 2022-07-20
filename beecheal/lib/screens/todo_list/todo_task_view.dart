@@ -18,7 +18,7 @@ class TaskView extends StatelessWidget {
       contentPadding: EdgeInsets.all(10.0),
       shape: RoundedRectangleBorder(
           borderRadius:
-              BorderRadius.circular(MediaQuery.of(context).size.width * 0.04)),
+              BorderRadius.circular(MediaQuery.of(context).size.width * 0.02)),
       backgroundColor: Theme.of(context).colorScheme.tertiary,
       content: Column(mainAxisSize: MainAxisSize.min, children: [
         Align(

@@ -22,7 +22,7 @@ class EntryTile extends StatelessWidget {
               vertical: MediaQuery.of(context).size.height * 0.005),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(
-                  MediaQuery.of(context).size.width * 0.04)),
+                  MediaQuery.of(context).size.width * 0.02)),
           child: ListTile(
             contentPadding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width * 0.04),
@@ -57,7 +57,7 @@ class EntryTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   HexagonWidget.flat(
-                      width: MediaQuery.of(context).size.width * 0.075,
+                      width: 35,
                       elevation: 0.0,
                       color: occasion.getSentiment() == 1
                           ? Colors.green

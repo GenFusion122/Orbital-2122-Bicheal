@@ -18,7 +18,7 @@ class EntryView extends StatelessWidget {
       contentPadding: EdgeInsets.all(10.0),
       shape: RoundedRectangleBorder(
           borderRadius:
-              BorderRadius.circular(MediaQuery.of(context).size.width * 0.04)),
+              BorderRadius.circular(MediaQuery.of(context).size.width * 0.02)),
       backgroundColor: Theme.of(context).colorScheme.tertiary,
       content: Column(mainAxisSize: MainAxisSize.min, children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -30,7 +30,7 @@ class EntryView extends StatelessWidget {
                 color: Color(0xff000000)),
           ),
           HexagonWidget.flat(
-              width: MediaQuery.of(context).size.width * 0.075,
+              width: 35,
               elevation: 0.0,
               color: entry.getSentiment() == 1
                   ? Colors.green
