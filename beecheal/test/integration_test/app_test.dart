@@ -1,5 +1,7 @@
 import 'package:beecheal/custom%20widgets/hexagonalclipper.dart';
 import 'package:beecheal/main.dart';
+import 'package:beecheal/models/occasion.dart';
+import 'package:beecheal/screens/calendar/calendar_template.dart';
 import 'package:beecheal/screens/home/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,18 +35,18 @@ void main() {
 
   String username =
       "testacc${DateFormat('ddMMyyhhmmss').format(DateTime.now())}@test.com";
-  // testWidgets('SignIn/SignOut Test', (WidgetTester tester) async {
-  //   await Firebase.initializeApp();
-  //   await tester.pumpWidget(MyApp());
-  //   await signIn(tester, "test1@test.com", "test12345");
-  //   expect(find.byKey(Key("homeBar")), findsOneWidget);
-  //   await signOutFromHomepage(tester);
-  //   expect(find.byKey(Key("signIn")), findsOneWidget);
-  //   await tester.pumpAndSettle();
-  // });
+  testWidgets('SignIn/SignOut Test', (WidgetTester tester) async {
+    await Firebase.initializeApp();
+    await tester.pumpWidget(MyApp());
+    await signIn(tester, "test1@test.com", "test12345");
+    expect(find.byKey(Key("homeBar")), findsOneWidget);
+    await signOutFromHomepage(tester);
+    expect(find.byKey(Key("signIn")), findsOneWidget);
+    await tester.pumpAndSettle();
+  });
 
-  group("End-to-end Features test", () {
-    testWidgets('Register', (WidgetTester tester) async {
+  group("End-to-end Features test: ", () {
+    testWidgets('Registration', (WidgetTester tester) async {
       await Firebase.initializeApp();
       await tester.pumpWidget(MyApp());
       await tester.pumpAndSettle();
@@ -59,7 +61,7 @@ void main() {
       await tester.pumpAndSettle();
       await signOutFromHomepage(tester);
     });
-    /*testWidgets('Test Create, Edit & Deletion, also Testing Filter Buttons ',
+    testWidgets('Create, Edit & Deletion, also Testing Filter Buttons ',
         (WidgetTester tester) async {
       await Firebase.initializeApp();
       await tester.pumpWidget(MyApp());
@@ -109,13 +111,13 @@ void main() {
       await tester.tap(find.text("An Edited Task Description!"));
       await tester.pumpAndSettle();
       await tester.tap(find.text("Delete"));
-      await Future.delayed(Duration(seconds: 5), (){});
+      await tester.pumpAndSettle(Duration(seconds: 5));
       await tester.pumpAndSettle();
       expect(find.text("An Edited Task Description!"), findsNothing);
       await signOutFromHomepage(tester);
-    });*/
+    });
 
-    testWidgets('Test Create, Edit and Deletion of Journal Entries',
+    /*testWidgets('Create, Edit and Deletion of Journal Entries',
         (WidgetTester tester) async {
       await Firebase.initializeApp();
       await tester.pumpWidget(MyApp());
@@ -151,6 +153,113 @@ void main() {
       await tester.tap(find.text("Delete"));
       await tester.pump(Duration(seconds: 5));
       expect(find.text("I am very Sad today!"), findsNothing);
+      await signOutFromHomepage(tester);
+    });*/
+
+    testWidgets(
+        "Create, Edit, Delete Calendar events and Tasks via Calendar view",
+        (WidgetTester tester) async {
+      String dateKey =
+          "CellContent-${DateFormat('yyyy-M-5').format(DateTime.now())}";
+      String editDateKey =
+          "CellContent-${DateFormat('yyyy-M-25').format(DateTime.now())}";
+      //Calendar Events Test
+      await Firebase.initializeApp();
+      await tester.pumpWidget(MyApp());
+      await signIn(tester, username, "test12345");
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key("homeCalendarNavButton")));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key(dateKey)));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key("calendarCreateEventButton")));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+          find.byKey(Key("calendarTitleField")), "An Event Title!");
+      await tester.enterText(
+          find.byKey(Key("calendarDescriptionField")), "An Event Description!");
+      await tester.tap(find.text("Create"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("OK"));
+      await tester.pumpAndSettle();
+      expect(find.text("An Event Title!"), findsOneWidget);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("An Event Title!"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Edit"));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+          find.byKey(Key("calendarTitleField")), "An Edited Event Title!");
+      await tester.enterText(find.byKey(Key("calendarDescriptionField")),
+          "An Edited Event Description!");
+      await tester.tap(find.byKey(Key("calendarEditDateButton")));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(Center, '25'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("OK"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Update"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key(editDateKey)));
+      await tester.pumpAndSettle();
+      expect(find.text("An Edited Event Title!"), findsOneWidget);
+      await tester.tap(find.text("An Edited Event Title!"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Delete"));
+      await tester.pumpAndSettle(Duration(seconds: 5));
+      expect(find.text("An Edited Event Title!"), findsNothing);
+      await tester.pumpAndSettle();
+
+      //Calendar Tasks
+      await tester.tap(find.text("Tasks"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key(dateKey)));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key("calendarCreateEventButton")));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+          find.byKey(Key("calendarTitleField")), "A Task Title!");
+      await tester.enterText(
+          find.byKey(Key("calendarDescriptionField")), "A Task Description!");
+      await tester.tap(find.text("Create"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("OK"));
+      await tester.pumpAndSettle();
+      expect(find.text("A Task Title!"), findsOneWidget);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("A Task Title!"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Edit"));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+          find.byKey(Key("taskTitleField")), "An Edited Task Title!");
+      await tester.enterText(find.byKey(Key("taskDescriptionField")),
+          "An Edited Task Description!");
+      await tester.tap(find.byKey(Key("taskSelectDateButton")));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(Center, '25'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("OK"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Update"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(Key(editDateKey)));
+      await tester.pumpAndSettle();
+      expect(find.text("An Edited Task Title!"), findsOneWidget);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Completed"));
+      await tester.pumpAndSettle();
+      expect(find.text("An Edited Task Title!"), findsNothing);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Incomplete"));
+      await tester.pumpAndSettle();
+      expect(find.text("An Edited Task Title!"), findsOneWidget);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("An Edited Task Title!"));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text("Delete"));
+      await tester.pumpAndSettle(Duration(seconds: 5));
+      await tester.tap(find.byType(BackButtonIcon));
       await signOutFromHomepage(tester);
     });
   });

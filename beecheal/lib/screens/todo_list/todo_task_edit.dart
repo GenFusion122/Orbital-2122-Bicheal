@@ -1,6 +1,7 @@
 import 'package:beecheal/models/task.dart';
 import 'package:beecheal/screens/home/initialize_notifications.dart';
 import 'package:beecheal/screens/todo_list/todo_task_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:beecheal/custom widgets/constants.dart';
 import 'package:beecheal/services/database.dart';
@@ -234,14 +235,26 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                             color: Color(0xff000000))),
                                     onPressed: () async {
                                       {
-                                        TimeOfDay tempTime =
-                                            await TimePicker.timePicker(
-                                                    context,
-                                                    newDate ??
-                                                        widget.task
-                                                            .getDate()) ??
-                                                TimeOfDay.fromDateTime(
-                                                    widget.task.getDate());
+                                        TimeOfDay tempTime;
+                                        if (kIsWeb) {
+                                          tempTime =
+                                              await TimePicker.webTimePicker(
+                                                      context,
+                                                      newDate ??
+                                                          widget.task
+                                                              .getDate()) ??
+                                                  TimeOfDay.fromDateTime(
+                                                      widget.task.getDate());
+                                        } else {
+                                          tempTime =
+                                              await TimePicker.timePicker(
+                                                      context,
+                                                      newDate ??
+                                                          widget.task
+                                                              .getDate()) ??
+                                                  TimeOfDay.fromDateTime(
+                                                      widget.task.getDate());
+                                        }
                                         setState(() {
                                           newTime = tempTime;
                                         });

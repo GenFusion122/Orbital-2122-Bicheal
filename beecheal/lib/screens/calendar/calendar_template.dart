@@ -185,10 +185,13 @@ class _CalendarTemplate<T extends Occasion> extends State<CalendarTemplate<T>> {
         )
       ]),
       Align(
+        key: Key("calendarCreateEventButtonK"),
         alignment: Alignment.bottomRight,
         child: Padding(
-          padding: EdgeInsets.only(right: 5, bottom: 50),
+          padding: EdgeInsets.only(right: 20, bottom: 50),
           child: FloatingActionButton(
+              tooltip: "Create New Event",
+              key: Key("calendarCreateEventButton"),
               backgroundColor: Colors.transparent,
               elevation: 0,
               child: HexagonWidget.flat(

@@ -116,4 +116,12 @@ class TimePicker {
             ));
     return pickedTime;
   }
+
+  static Future<TimeOfDay?> webTimePicker(
+      BuildContext context, DateTime initTime) async {
+    TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay(hour: initTime.hour, minute: initTime.minute));
+    return pickedTime;
+  }
 }

@@ -64,6 +64,7 @@ class _CalenderEditScreen<T extends Occasion>
                 Padding(
                   padding: EdgeInsets.all(1.0),
                   child: TextFormField(
+                      key: Key("calendarTitleField"),
                       maxLength: 50,
                       style: TextStyle(
                           fontSize: 20.0,
@@ -95,6 +96,7 @@ class _CalenderEditScreen<T extends Occasion>
                 Padding(
                   padding: EdgeInsets.all(1.0),
                   child: TextFormField(
+                      key: Key("calendarDescriptionField"),
                       maxLength: 100,
                       style: TextStyle(
                           fontSize: 20.0,
@@ -150,6 +152,7 @@ class _CalenderEditScreen<T extends Occasion>
                               child: SizedBox(
                                 width: 100.0,
                                 child: ElevatedButton(
+                                    key: Key("calendarEditDateButton"),
                                     style: ButtonStyle(
                                         shape: MaterialStateProperty.all<
                                                 RoundedRectangleBorder>(
@@ -217,6 +220,7 @@ class _CalenderEditScreen<T extends Occasion>
                               child: SizedBox(
                                 width: 100.0,
                                 child: ElevatedButton(
+                                    key: Key("calendarEditTimeButton"),
                                     style: ButtonStyle(
                                         shape: MaterialStateProperty.all<
                                                 RoundedRectangleBorder>(

@@ -2,7 +2,7 @@ import 'package:beecheal/models/entry.dart';
 import 'package:beecheal/models/task.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import '../lib/models/occasion.dart';
+import '../../lib/models/occasion.dart';
 
 void main() {
   //Testing Object Creation/Retrival of Information
