@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexagon/hexagon.dart';
 
+// for page navigation
 class OrangeNavButton extends StatelessWidget {
   final String location;
   final String text;
@@ -13,14 +14,6 @@ class OrangeNavButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        /*style: ButtonStyle(
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18.0),
-            )),
-            backgroundColor: MaterialStateProperty.all(Color(0xFFFFDD4B)),
-            elevation:
-                MaterialStateProperty.resolveWith<double>((states) => 0)),*/
         icon: HexagonWidget.flat(
             width: 60,
             color: Color(0xFFFFDD4B),
@@ -40,18 +33,5 @@ class OrangeNavButton extends StatelessWidget {
         onPressed: () {
           Navigator.pushNamed(context, location);
         });
-  }
-}
-
-class OrangeNormalButton extends StatelessWidget {
-  final String text;
-  const OrangeNormalButton(this.text, {Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.orange)),
-        child: Text(text),
-        onPressed: () {});
   }
 }

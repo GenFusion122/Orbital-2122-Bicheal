@@ -8,13 +8,13 @@ import '../../services/notifications.dart';
 import '../home/initialize_notifications.dart';
 
 class TaskView extends StatelessWidget {
-  // const EntryView({Key? key}) : super(key: key);
   Task task;
 
   TaskView(this.task);
 
   @override
   Widget build(BuildContext context) {
+    // dialog for viewing tasks
     return AlertDialog(
       contentPadding: EdgeInsets.all(10.0),
       shape: RoundedRectangleBorder(
@@ -22,6 +22,7 @@ class TaskView extends StatelessWidget {
               BorderRadius.circular(MediaQuery.of(context).size.width * 0.02)),
       backgroundColor: Theme.of(context).colorScheme.tertiary,
       content: Column(mainAxisSize: MainAxisSize.min, children: [
+        // task title
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(
@@ -45,6 +46,7 @@ class TaskView extends StatelessWidget {
                     softWrap: true, maxLines: 5, style: viewBodyTextStyle),
               ),
             )),
+        // task description
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(
@@ -68,6 +70,7 @@ class TaskView extends StatelessWidget {
                     softWrap: true, maxLines: 5, style: viewBodyTextStyle),
               ),
             )),
+        // task completion date
         Padding(
           padding: EdgeInsets.symmetric(vertical: 6.0),
           child: Card(
@@ -91,6 +94,7 @@ class TaskView extends StatelessWidget {
                 ),
               )),
         ),
+        // task due date
         Padding(
           padding: EdgeInsets.symmetric(vertical: 3.0),
           child: Align(
@@ -131,6 +135,7 @@ class TaskView extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            // button for editing tasks
             SizedBox(
               width: 100,
               child: ElevatedButton(
@@ -154,6 +159,7 @@ class TaskView extends StatelessWidget {
                         });
                   }),
             ),
+            // button for deleting task if incomplete
             if (task.getCompletedOn() == Task.incompletePlaceholder)
               SizedBox(
                 width: 100,

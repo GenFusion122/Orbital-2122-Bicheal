@@ -6,18 +6,12 @@ import 'package:email_validator/email_validator.dart';
 import 'package:beecheal/custom widgets/constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
-import 'package:beecheal/custom widgets/constants.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:beecheal/custom widgets/loading.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:math';
 
 class SignIn extends StatefulWidget {
-  // const SignIn({Key? key}) : super(key: key);
-
-  // final Function toggleSignIn;
-  // const SignIn({required this.toggleSignIn});
-
   @override
   State<SignIn> createState() => _SignInState();
 }
@@ -43,6 +37,7 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     if (kIsWeb) {
       // web build
+      // scaling variables for responsive UI
       double scaleMin = min(MediaQuery.of(context).size.width,
           MediaQuery.of(context).size.height);
       double scaleMax = min(MediaQuery.of(context).size.width,
@@ -56,7 +51,7 @@ class _SignInState extends State<SignIn> {
           body: Stack(children: [
             SafeArea(
               child: loading
-                  ? Loading()
+                  ? Loading() // loading screen
                   : Container(
                       padding: EdgeInsets.symmetric(
                           horizontal:
@@ -75,7 +70,7 @@ class _SignInState extends State<SignIn> {
                                 ),
                               ),
                               SizedBox(height: scaleMin * 0.02),
-                              // Email input
+                              // email input
                               TextFormField(
                                   key: const Key('emailField'),
                                   style: TextStyle(
@@ -102,7 +97,7 @@ class _SignInState extends State<SignIn> {
                                     setState(() => email = val);
                                   }),
                               SizedBox(height: scaleMin * 0.02),
-                              // Password input
+                              // password input
                               TextFormField(
                                   key: const Key('passwordField'),
                                   style: TextStyle(
@@ -129,6 +124,7 @@ class _SignInState extends State<SignIn> {
                                     setState(() => password = val);
                                   }),
                               SizedBox(height: scaleMin * 0.0125),
+                              // password reset
                               Align(
                                 alignment: Alignment.centerRight,
                                 child: RichText(
@@ -144,6 +140,7 @@ class _SignInState extends State<SignIn> {
                                             .onPrimary),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () => {
+                                            // shows dialog for sending password reset email
                                             showDialog(
                                                 context: context,
                                                 builder:
@@ -229,7 +226,7 @@ class _SignInState extends State<SignIn> {
                                                                             0)),
                                                             onPressed:
                                                                 () async {
-                                                              // Validation check
+                                                              // validation check
                                                               if (_secondaryFormkey
                                                                   .currentState!
                                                                   .validate()) {
@@ -302,7 +299,7 @@ class _SignInState extends State<SignIn> {
                                     elevation: MaterialStateProperty
                                         .resolveWith<double>((states) => 0)),
                                 onPressed: () async {
-                                  // Validation check
+                                  // validation check
                                   if (_formKey.currentState!.validate()) {
                                     setState(() {
                                       loading = true;
@@ -386,6 +383,7 @@ class _SignInState extends State<SignIn> {
                                 onPressed: () async {
                                   Navigator.push(
                                     context,
+                                    // handles animation for page changes
                                     PageRouteBuilder<dynamic>(
                                       pageBuilder: (BuildContext context,
                                               Animation<double> animation,
@@ -412,7 +410,6 @@ class _SignInState extends State<SignIn> {
                                       },
                                     ),
                                   );
-                                  // widget.toggleSignIn();
                                 },
                                 child: Text('Sign Up',
                                     style: TextStyle(
@@ -426,6 +423,7 @@ class _SignInState extends State<SignIn> {
                               SizedBox(
                                 height: scaleMin * 0.005,
                               ),
+                              // error message
                               Text(error,
                                   style: TextStyle(
                                       color: Colors.red,
@@ -445,6 +443,7 @@ class _SignInState extends State<SignIn> {
           backgroundColor: Theme.of(context).colorScheme.background,
           appBar: null,
           body: Stack(children: [
+            // hexagon in background
             Positioned(
               left: -(MediaQuery.of(context).size.width * 0.45),
               top: 0.0,
@@ -455,7 +454,7 @@ class _SignInState extends State<SignIn> {
             ),
             SafeArea(
               child: loading
-                  ? Loading()
+                  ? Loading() // loading screen
                   : Container(
                       padding: EdgeInsets.symmetric(
                           horizontal:
@@ -476,7 +475,7 @@ class _SignInState extends State<SignIn> {
                                 ),
                               ),
                               SizedBox(height: 20.0),
-                              // Email input
+                              // email input
                               TextFormField(
                                   key: const Key('emailField'),
                                   style: textFormFieldStyle,
@@ -492,7 +491,7 @@ class _SignInState extends State<SignIn> {
                                     setState(() => email = val);
                                   }),
                               SizedBox(height: 20.0),
-                              // Password input
+                              // password input
                               TextFormField(
                                   key: const Key('passwordField'),
                                   style: textFormFieldStyle,
@@ -508,6 +507,7 @@ class _SignInState extends State<SignIn> {
                                     setState(() => password = val);
                                   }),
                               SizedBox(height: 12.5),
+                              // password reset
                               Align(
                                 alignment: Alignment.centerRight,
                                 child: RichText(
@@ -523,6 +523,7 @@ class _SignInState extends State<SignIn> {
                                             .onPrimary),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () => {
+                                            // shows dialog for password reset
                                             showDialog(
                                                 context: context,
                                                 builder:
@@ -593,7 +594,7 @@ class _SignInState extends State<SignIn> {
                                                                       elevation: MaterialStateProperty.resolveWith<double>((states) => 0)),
                                                                   onPressed:
                                                                       () async {
-                                                                    // Validation check
+                                                                    // validation check
                                                                     if (_secondaryFormkey
                                                                         .currentState!
                                                                         .validate()) {
@@ -657,7 +658,7 @@ class _SignInState extends State<SignIn> {
                                     elevation: MaterialStateProperty
                                         .resolveWith<double>((states) => 0)),
                                 onPressed: () async {
-                                  // Validation check
+                                  // validation check
                                   if (_formKey.currentState!.validate()) {
                                     setState(() {
                                       loading = true;
@@ -762,10 +763,10 @@ class _SignInState extends State<SignIn> {
                                 },
                                 child: Text('Sign Up', style: buttonTextStyle),
                               ),
-
                               SizedBox(
                                 height: 5.0,
                               ),
+                              // error message
                               Text(error,
                                   style: TextStyle(
                                       color: Colors.red, fontSize: 14.0)),

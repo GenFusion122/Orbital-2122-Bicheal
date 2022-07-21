@@ -49,6 +49,9 @@ const cardContentStyleSmall = TextStyle(
 const buttonTextStyle = TextStyle(
     fontSize: 18.0, fontWeight: FontWeight.w900, color: Color(0xff000000));
 
+const tileButtonTextStyle = TextStyle(
+    fontSize: 15.0, fontWeight: FontWeight.w900, color: Color(0xff000000));
+
 const viewHeaderTextStyle = TextStyle(
     fontSize: 15.0, fontWeight: FontWeight.w900, color: Color(0xff000000));
 

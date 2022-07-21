@@ -10,8 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:hexagon/hexagon.dart';
 
 class EntryScreen extends StatefulWidget {
-  // const EntryScreen({Key? key}) : super(key: key);
-
   Entry entry;
   String textPrompt;
 
@@ -27,7 +25,7 @@ class _EntryScreenState extends State<EntryScreen> {
 
   void initState() {
     if (!kIsWeb) {
-      // Initialize model
+      // Initialize sentiment analysis model
       platform
           .invokeMethod("Classify", <String, dynamic>{'string': 'initialize'});
     }
@@ -35,6 +33,7 @@ class _EntryScreenState extends State<EntryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // dialog for editing entries
     return AlertDialog(
         contentPadding: EdgeInsets.all(10.0),
         shape: RoundedRectangleBorder(
@@ -49,6 +48,7 @@ class _EntryScreenState extends State<EntryScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
+                    // entry title
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
@@ -75,6 +75,7 @@ class _EntryScreenState extends State<EntryScreen> {
                             setState(() => widget.entry.setTitle(val));
                           }),
                     ),
+                    // entry description
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
@@ -100,9 +101,9 @@ class _EntryScreenState extends State<EntryScreen> {
                               : 'Please enter a description',
                           onChanged: (val) {
                             setState(() => widget.entry.setDescription(val));
-                            // print(widget.descriptionInitial);
                           }),
                     ),
+                    // entry body
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
@@ -135,11 +136,11 @@ class _EntryScreenState extends State<EntryScreen> {
                                   : 'Please enter a body',
                               onChanged: (val) {
                                 setState(() => widget.entry.setBody(val));
-                                // print(widget.bodyInitial);
                               }),
                         ),
                       ),
                     ),
+                    // buttons
                     SizedBox(
                       width: 100.0,
                       child: ElevatedButton(
@@ -159,12 +160,15 @@ class _EntryScreenState extends State<EntryScreen> {
                           child:
                               Text(widget.textPrompt, style: buttonTextStyle),
                           onPressed: () async {
+                            // conducts sentiment analysis on entry body
                             if (_formkey.currentState!.validate()) {
                               List prediction = [0, 0];
                               if (!kIsWeb) {
+                                // mobile version
                                 prediction = await Classify();
                               }
                               widget.entry.setSentiment(prediction[0]);
+                              // dialog for confirming/changing sentiment predicted
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -375,6 +379,7 @@ class _EntryScreenState extends State<EntryScreen> {
                                                                     style:
                                                                         buttonTextStyle),
                                                                 onPressed: () {
+                                                                  // updates entry in database
                                                                   DatabaseService().updateUserEntry(
                                                                       widget
                                                                           .entry
@@ -400,21 +405,12 @@ class _EntryScreenState extends State<EntryScreen> {
                                                                   Navigator.of(
                                                                           context)
                                                                       .pop();
-                                                                  // showDialog(
-                                                                  //     context:
-                                                                  //         context,
-                                                                  //     builder:
-                                                                  //         (BuildContext
-                                                                  //             context) {
-                                                                  //       return EntryView(
-                                                                  //           widget
-                                                                  //               .entry,
-                                                                  //           false);
-                                                                  //     });
                                                                 },
                                                               )
                                                             ])))));
                                       } else {
+                                        // web version
+                                        // dialog for choosing sentiment
                                         return AlertDialog(
                                           content: Column(
                                               mainAxisSize: MainAxisSize.min,
@@ -580,6 +576,7 @@ class _EntryScreenState extends State<EntryScreen> {
                                                   child: Text('Confirm',
                                                       style: buttonTextStyle),
                                                   onPressed: () {
+                                                    // updates entry in database
                                                     DatabaseService()
                                                         .updateUserEntry(
                                                             widget.entry
@@ -596,17 +593,6 @@ class _EntryScreenState extends State<EntryScreen> {
                                                                 .getSentiment());
                                                     Navigator.of(context).pop();
                                                     Navigator.of(context).pop();
-                                                    // showDialog(
-                                                    //     context:
-                                                    //         context,
-                                                    //     builder:
-                                                    //         (BuildContext
-                                                    //             context) {
-                                                    //       return EntryView(
-                                                    //           widget
-                                                    //               .entry,
-                                                    //           false);
-                                                    //     });
                                                   },
                                                 )
                                               ]),
@@ -628,11 +614,7 @@ class _EntryScreenState extends State<EntryScreen> {
     var sendMap = <String, dynamic>{
       'string': widget.entry.getBody(),
     };
-    print(sendMap);
-    print("TESTING CLASSIFY");
-    print("Prediction:");
     List result = await platform.invokeMethod("Classify", sendMap);
-    print(result);
     return result;
   }
 }

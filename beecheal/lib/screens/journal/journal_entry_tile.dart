@@ -27,9 +27,12 @@ class EntryTile extends StatelessWidget {
           child: ListTile(
             contentPadding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width * 0.04),
+            // entry title
             title: Text(occasion.getTitle(), style: tileTitleStyle),
+            // entry description
             subtitle:
                 Text(occasion.getDescription(), style: tileDescriptionStyle),
+            // entry date
             trailing: Row(mainAxisSize: MainAxisSize.min, children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -43,6 +46,7 @@ class EntryTile extends StatelessWidget {
                 ],
               ),
               SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+              // entry sentiment
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

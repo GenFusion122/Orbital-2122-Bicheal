@@ -15,6 +15,7 @@ class EntryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dialog for viewing entry
     return AlertDialog(
       contentPadding: EdgeInsets.all(10.0),
       shape: RoundedRectangleBorder(
@@ -23,10 +24,12 @@ class EntryView extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.tertiary,
       content: Column(mainAxisSize: MainAxisSize.min, children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          // entry date
           Text(
             DateFormat('yyyy-MM-dd hh:mm a').format(entry.getDate()).toString(),
             style: viewHeaderTextStyle,
           ),
+          // entry sentiment
           HexagonWidget.flat(
               width: 35,
               elevation: 0.0,
@@ -36,6 +39,7 @@ class EntryView extends StatelessWidget {
                       ? Colors.red
                       : Colors.grey)
         ]),
+        // entry title
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(
@@ -59,6 +63,7 @@ class EntryView extends StatelessWidget {
                     softWrap: true, maxLines: 5, style: viewBodyTextStyle),
               ),
             )),
+        // entry description
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(
@@ -82,6 +87,7 @@ class EntryView extends StatelessWidget {
                     softWrap: true, maxLines: 5, style: viewBodyTextStyle),
               ),
             )),
+        // entry body
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(

@@ -8,8 +8,6 @@ import 'package:intl/intl.dart';
 import '../../custom widgets/timepicker.dart';
 
 class TaskEditScreen extends StatefulWidget {
-  // const EntryScreen({Key? key}) : super(key: key);
-
   Task task;
   String textPrompt;
 
@@ -21,6 +19,7 @@ class TaskEditScreen extends StatefulWidget {
 
 class _TaskEditScreenState extends State<TaskEditScreen> {
   final _formkey = GlobalKey<FormState>();
+  // initialize variables
   DateTime? newDate;
   TimeOfDay? newTime;
   String? newTitle;
@@ -43,6 +42,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                // task title
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
@@ -67,6 +67,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                         setState(() => newTitle = val);
                       }),
                 ),
+                // task description
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
@@ -119,6 +120,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                 Text(dateLabel, style: viewDateTextStyle),
                               ],
                             ),
+                            // edits date
                             Padding(
                               padding: EdgeInsets.all(1.0),
                               child: SizedBox(
@@ -178,6 +180,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                 Text(timeLabel, style: viewDateTextStyle),
                               ],
                             ),
+                            // edits time
                             Padding(
                               padding: EdgeInsets.all(1.0),
                               child: SizedBox(
@@ -239,12 +242,13 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                         child: Text(widget.textPrompt, style: buttonTextStyle),
                         onPressed: () async {
                           if (_formkey.currentState!.validate()) {
+                            // checks if new or existing task
                             if (widget.textPrompt == "Create") {
                               DateTime? pickedDateTime =
                                   await TimePicker.dateTimePicker(
                                       context, widget.task.getDate());
                               if (pickedDateTime != null) {
-                                //if the user didn't cancel
+                                // if the user didn't cancel
                                 widget.task.setTitle(
                                     newTitle ?? widget.task.getTitle());
                                 widget.task.setDescription(newDescription ??
@@ -259,11 +263,6 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                 InitializeNotifications
                                     .initializeToDoNotifications();
                                 Navigator.of(context).pop();
-                                // showDialog(
-                                //     context: context,
-                                //     builder: (BuildContext context) {
-                                //       return TaskView(widget.task);
-                                //     });
                               }
                             } else {
                               widget.task
@@ -294,6 +293,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                   widget.task.getDate(),
                                   widget.task.getDescription(),
                                   Task.incompletePlaceholder);
+                              // initialize notifications for new task
                               InitializeNotifications
                                   .initializeToDoNotifications();
                               Navigator.of(context).pop();

@@ -28,15 +28,6 @@ class DatabaseService {
     });
   }
 
-  Future getUserDailyReminderPreference() async {
-    return print(userCollection.doc(_auth.curruid()).get().then(
-      (DocumentSnapshot doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        return data;
-      },
-    ));
-  }
-
   Future updateUserWeeklyReminderPreference(bool value) async {
     return await userCollection.doc(_auth.curruid()).update({
       'weeklyReminder': value,
@@ -76,7 +67,6 @@ class DatabaseService {
 
   void deleteUserEntry(String? id, String? title, String? dateTime) async {
     userCollection.doc(_auth.curruid()).collection('entries').doc(id).delete();
-    print('Deleted entry ${title.toString()} made on ${dateTime.toString()}');
   }
 
   Future updateUserTask(String? id, String? title, DateTime? dateTime,
@@ -110,7 +100,6 @@ class DatabaseService {
 
   void deleteUserTask(String? id, String? title) async {
     userCollection.doc(_auth.curruid()).collection('tasks').doc(id).delete();
-    print('Deleted task ${title.toString()}');
   }
 
   Future updateUserOccasion(String? id, String? title, DateTime? dateTime,
@@ -144,17 +133,16 @@ class DatabaseService {
         .collection('occasions')
         .doc(id)
         .delete();
-    print('Deleted task ${title.toString()}');
   }
 
-// get user stream
+  // get user stream
   Stream<User> get user {
     return userCollection.doc(_auth.curruid()).snapshots().map((document) =>
         User(document['uid'], document['dailyJournalEntry'],
             document['weeklyReminder']));
   }
 
-// get occasions stream
+  // get occasions stream for calendar
   Stream<List<Occasion>> get occasion {
     return userCollection
         .doc(_auth.curruid())
@@ -164,7 +152,7 @@ class DatabaseService {
         .map(_OccasionListFromSnapshot);
   }
 
-// get entries stream
+  // get entries stream for journal entries
   Stream<List<Entry>> get entries {
     return userCollection
         .doc(_auth.curruid())
@@ -174,7 +162,7 @@ class DatabaseService {
         .map(_EntryListFromSnapshot);
   }
 
-  // get tasks stream
+  // get tasks stream for to do list
   Stream<List<Task>> get tasks {
     return userCollection
         .doc(_auth.curruid())
@@ -184,7 +172,7 @@ class DatabaseService {
         .map(_TaskListFromSnapshot);
   }
 
-//journal entry list from snapshot
+  // journal entry list from snapshot
   List<Entry> _EntryListFromSnapshot(QuerySnapshot snap) {
     return snap.docs
         .map((document) => Entry(
@@ -197,7 +185,7 @@ class DatabaseService {
         .toList();
   }
 
-//occasion list from snapshot
+  // occasion list from snapshot
   List<Occasion> _OccasionListFromSnapshot(QuerySnapshot snap) {
     return snap.docs
         .map((document) => Occasion(document.id, document['title'],
@@ -205,6 +193,7 @@ class DatabaseService {
         .toList();
   }
 
+  // task list from snapshot
   List<Task> _TaskListFromSnapshot(QuerySnapshot snap) {
     return snap.docs
         .map((document) => Task(

@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
   Timer? _everyMinute;
   // toDoListState
   List<bool> isSelected = [true, false, false];
-  // Notifications
+  // notifications
   void initState() {
     super.initState();
     if (!kIsWeb) {
@@ -50,6 +50,7 @@ class _HomeState extends State<Home> {
     }
   }
 
+  // initialize variables
   int numberOfTasksToday = 0;
   int numberOfEventsToday = 0;
   String upcomingTask = "";
@@ -146,14 +147,15 @@ class _HomeState extends State<Home> {
     });
 
     try {
+      // retrieves user preferences for daily, weekly reminders
       dailyJournalEntry = Provider.of<User>(context).getDailyJournalEntry();
       weeklyReminder = Provider.of<User>(context).getWeeklyReminder();
     } on ProviderNullException {}
 
     if (!kIsWeb) {
-      //checks if on mobile
+      // checks if on mobile
       _initializeNotificaitonValues(); //initialize notification objects
-      // Daily journal entry notification
+      // daily journal entry notification
       if (dailyJournalEntry) {
         NotificationService.showDailyScheduledNotification(
             id: 0,
@@ -166,7 +168,7 @@ class _HomeState extends State<Home> {
         NotificationService.getNotificationInstance().cancel(0);
       }
 
-      // Weekly notification
+      // weekly notification
       if (weeklyReminder) {
         NotificationService.showWeeklyScheduledNotification(
             id: 1,
@@ -181,10 +183,12 @@ class _HomeState extends State<Home> {
       }
     }
     final _formkey = GlobalKey<FormState>();
+    // scaling variables for responsive UI
     double scaleMin = min(
         MediaQuery.of(context).size.width, MediaQuery.of(context).size.height);
     double scaleMax = min(
         MediaQuery.of(context).size.width, MediaQuery.of(context).size.height);
+    // MediaQuary.of(context).size.___ is used for responsive UI
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -226,10 +230,7 @@ class _HomeState extends State<Home> {
                           size: 45),
                       label: Text(
                         'Sign Out',
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w900,
-                            color: Theme.of(context).colorScheme.onPrimary),
+                        style: buttonTextStyle,
                       ),
                       onPressed: () async {
                         // clear all notifications
@@ -238,6 +239,7 @@ class _HomeState extends State<Home> {
                         await NotificationService.getNotificationInstance()
                             .cancelAll();
 
+                        // signs out
                         await _auth.signOut();
                         final provider =
                             Provider.of<AuthService>(context, listen: false);
@@ -245,17 +247,15 @@ class _HomeState extends State<Home> {
                         setState(() {});
                       }),
                 ),
+                // button for changing password
                 ListTile(
                   minLeadingWidth: 0.0,
                   tileColor: Theme.of(context).colorScheme.surface,
                   leading: Icon(Icons.password_rounded,
                       color: Theme.of(context).colorScheme.onPrimary, size: 30),
-                  title: Text('Change Password',
-                      style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w900,
-                          color: Theme.of(context).colorScheme.onPrimary)),
+                  title: Text('Change Password', style: tileButtonTextStyle),
                   onTap: () {
+                    // shows dialog box for changing password
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -351,7 +351,7 @@ class _HomeState extends State<Home> {
                                                           MaterialStateProperty.resolveWith<double>(
                                                               (states) => 0)),
                                                   onPressed: () async {
-                                                    // Validation check
+                                                    // validation check
                                                     if (_formkey.currentState!
                                                         .validate()) {
                                                       dynamic result =
@@ -360,6 +360,7 @@ class _HomeState extends State<Home> {
                                                                   newPassword);
                                                       Navigator.of(context)
                                                           .pop();
+                                                      // shows snackbar popup
                                                       ScaffoldMessenger.of(context).showSnackBar(
                                                           SnackBar(
                                                               shape: RoundedRectangleBorder(
@@ -375,16 +376,8 @@ class _HomeState extends State<Home> {
                                                                       .secondary,
                                                               content: Text(
                                                                 'Password changed',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        12.0,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w900,
-                                                                    color: Theme.of(
-                                                                            context)
-                                                                        .colorScheme
-                                                                        .onPrimary),
+                                                                style:
+                                                                    popupTextStyle,
                                                               )));
                                                       if (result == null) {}
                                                     }
@@ -402,7 +395,8 @@ class _HomeState extends State<Home> {
                         });
                   },
                 ),
-                if (!kIsWeb)
+                if (!kIsWeb) // mobile build
+                  // daily journal reminder slider
                   MergeSemantics(
                     child: ListTile(
                         leading: Container(
@@ -432,7 +426,8 @@ class _HomeState extends State<Home> {
                           ),
                         )),
                   ),
-                if (!kIsWeb)
+                if (!kIsWeb) // mobile build
+                  // weekly reminder slider
                   MergeSemantics(
                     child: ListTile(
                         leading: Container(
@@ -489,6 +484,7 @@ class _HomeState extends State<Home> {
             ),
           ),
         ),
+        // allows for responsive UI based on constraints
         body: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
           if (constraints.maxWidth > constraints.maxHeight) {
@@ -511,12 +507,7 @@ class _HomeState extends State<Home> {
                             children: [
                               Text(
                                 "Tasks Due \nToday:",
-                                style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w900,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary),
+                                style: cardHeaderStyle,
                               ),
                               Align(
                                   alignment: Alignment.bottomRight,
@@ -586,6 +577,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
+                // bar for toggle buttons for task list view
                 Container(
                   color: Theme.of(context).colorScheme.primary,
                   width: MediaQuery.of(context).size.width,
@@ -634,6 +626,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
+                // list view for tasks
                 Expanded(
                   flex: 8,
                   child: Stack(children: [
@@ -681,6 +674,7 @@ class _HomeState extends State<Home> {
                             }
                           },
                         )),
+                    // floating action button for creating tasks
                     Align(
                       alignment: Alignment.bottomRight,
                       child: Padding(
@@ -728,8 +722,9 @@ class _HomeState extends State<Home> {
                       crossAxisCount: 2,
                       childAspectRatio: kIsWeb
                           ? (MediaQuery.of(context).size.width / 2) /
-                              (MediaQuery.of(context).size.height * (1 / 5))
-                          : 1.35,
+                              (MediaQuery.of(context).size.height *
+                                  (1 / 5)) // web
+                          : 1.35, // mobile
                       children: [
                         displayCard(Padding(
                           padding: const EdgeInsets.all(10.0),
@@ -807,6 +802,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
+                // bar for toggle buttons for task list view
                 Container(
                   color: Theme.of(context).colorScheme.primary,
                   width: MediaQuery.of(context).size.width,
@@ -855,6 +851,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
+                // list view for tasks
                 Expanded(
                   flex: 8,
                   child: Stack(children: [
@@ -902,6 +899,7 @@ class _HomeState extends State<Home> {
                             }
                           },
                         )),
+                    // floating action button for creating tasks
                     Align(
                       alignment: Alignment.bottomRight,
                       child: Padding(
@@ -943,6 +941,7 @@ class _HomeState extends State<Home> {
     );
   }
 
+  // widget for task list view toggle buttons
   Widget toggleButtonWidget(double width, bool selected, String text) {
     return Container(
         width: width,
@@ -961,6 +960,7 @@ class _HomeState extends State<Home> {
         )));
   }
 
+  // widget for upcoming tasks/events display
   Widget displayCard(Widget child) {
     return Card(
       color: Theme.of(context).colorScheme.surface,
