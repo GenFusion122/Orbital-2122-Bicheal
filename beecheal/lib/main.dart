@@ -71,6 +71,7 @@ class MyApp extends StatelessWidget {
             initialData: User('', true, true),
             value: DatabaseService().user,
             child: MaterialApp(
+              title: 'BzB',
               initialRoute: initialroute,
               routes: {
                 '/': (context) => Wrapper(),
