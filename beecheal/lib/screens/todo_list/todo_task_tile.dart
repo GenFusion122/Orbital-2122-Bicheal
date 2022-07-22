@@ -17,9 +17,8 @@ class TaskTile extends StatelessWidget {
         child: Card(
           margin: EdgeInsets.symmetric(
               vertical: MediaQuery.of(context).size.height * 0.005),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                  MediaQuery.of(context).size.width * 0.02)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           // task title
           child: ListTile(
             title: Text(

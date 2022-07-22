@@ -9,8 +9,8 @@ import '../../models/entry.dart';
 import 'legend_widget.dart';
 
 class EntryMoodPiechart extends StatefulWidget {
-  const EntryMoodPiechart({Key? key}) : super(key: key);
-
+  bool isWidescreen;
+  EntryMoodPiechart({required this.isWidescreen});
   @override
   State<EntryMoodPiechart> createState() => _EntryMoodPiechart();
 }
@@ -77,7 +77,7 @@ class _EntryMoodPiechart extends State<EntryMoodPiechart> {
               Row(children: [
                 Expanded(
                     child: AspectRatio(
-                        aspectRatio: 1.64,
+                        aspectRatio: 1.31,
                         child: PieChart(
                           PieChartData(
                               pieTouchData: PieTouchData(touchCallback:
@@ -97,41 +97,45 @@ class _EntryMoodPiechart extends State<EntryMoodPiechart> {
                                 show: false,
                               ),
                               sectionsSpace: 0,
-                              centerSpaceRadius: 40,
+                              centerSpaceRadius:
+                                  MediaQuery.of(context).size.width / 16,
                               sections: showingSections(snapshot.data ?? [])),
                         ))),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const <Widget>[
-                        Legend(
-                          color: positiveColor,
-                          text: 'Positive',
-                          isSquare: true,
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Legend(
-                          color: neutralColor,
-                          text: 'Neutral',
-                          isSquare: true,
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Legend(
-                          color: negativeColor,
-                          text: 'Negative',
-                          isSquare: true,
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                      ]),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 15),
+                    child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const <Widget>[
+                          Legend(
+                            color: positiveColor,
+                            text: 'Positive',
+                            isSquare: true,
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Legend(
+                            color: neutralColor,
+                            text: 'Neutral',
+                            isSquare: true,
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Legend(
+                            color: negativeColor,
+                            text: 'Negative',
+                            isSquare: true,
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                        ]),
+                  ),
                 ),
               ]),
             ]);
@@ -141,10 +145,14 @@ class _EntryMoodPiechart extends State<EntryMoodPiechart> {
 
   List<PieChartSectionData> showingSections(List<Entry> entryList) {
     _fillDateLists(entryList);
+    double baseFontSize =
+        widget.isWidescreen ? MediaQuery.of(context).size.width / 64 : 16.0;
+    double baseRadius =
+        widget.isWidescreen ? MediaQuery.of(context).size.width / 16 : 60.0;
     return List.generate(3, (i) {
       final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 25.0 : 16.0;
-      final radius = isTouched ? 60.0 : 50.0;
+      final fontSize = isTouched ? baseFontSize + 10 : baseFontSize;
+      final radius = isTouched ? baseRadius + 10 : baseRadius;
       final double positiveCount = positiveDates.length.toDouble();
       final double negativeCount = negativeDates.length.toDouble();
       final double neutralCount = neutralDates.length.toDouble();

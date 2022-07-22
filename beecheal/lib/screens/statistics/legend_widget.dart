@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Legend extends StatelessWidget {
@@ -35,7 +36,9 @@ class Legend extends StatelessWidget {
         Text(
           text,
           style: TextStyle(
-              fontSize: 12, fontWeight: FontWeight.bold, color: textColor),
+              fontSize: kIsWeb ? MediaQuery.of(context).size.width / 96 : 12,
+              fontWeight: FontWeight.bold,
+              color: textColor),
         )
       ],
     );

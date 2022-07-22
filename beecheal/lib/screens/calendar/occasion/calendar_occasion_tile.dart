@@ -16,8 +16,7 @@ class OccasionTile extends StatelessWidget {
       margin: EdgeInsets.symmetric(
           vertical: MediaQuery.of(context).size.height * 0.005),
       shape: RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.circular(MediaQuery.of(context).size.width * 0.02),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: ListTile(
         title: Text(occasion.getTitle(),
