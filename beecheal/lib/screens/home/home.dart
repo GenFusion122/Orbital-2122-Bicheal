@@ -419,6 +419,7 @@ class _HomeState extends State<Home> {
                             value: dailyJournalEntry,
                             onChanged: (bool value) {
                               setState(() {
+                                dailyJournalEntry = value;
                                 DatabaseService()
                                     .updateUserDailyReminderPreference(value);
                               });
