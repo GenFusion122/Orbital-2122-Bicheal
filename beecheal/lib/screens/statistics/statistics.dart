@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:beecheal/screens/statistics/statistics_mood_piechart.dart';
@@ -52,6 +53,9 @@ class _StatisticsState extends State<Statistics> {
   DateTime focusedDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
+    bool isWidescreen =
+        MediaQuery.of(context).size.width >= MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width / 2;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -87,66 +91,102 @@ class _StatisticsState extends State<Statistics> {
           body: TabBarView(children: [
             Container(
               color: Theme.of(context).colorScheme.secondary,
-              child: ListView(children: [
-                TaskStatsPieChart(),
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(children: [
-                      TaskStatsStackedBarchart(
-                        focusedDate: focusedDate,
+              child: ListView(
+                  scrollDirection:
+                      isWidescreen ? Axis.horizontal : Axis.vertical,
+                  children: [
+                    Center(
+                      child: SizedBox(
+                          width: isWidescreen
+                              ? width
+                              : MediaQuery.of(context).size.width,
+                          child: TaskStatsPieChart(
+                            isWidescreen: isWidescreen,
+                          )),
+                    ),
+                    Center(
+                      child: SizedBox(
+                        width: isWidescreen
+                            ? width
+                            : MediaQuery.of(context).size.width,
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(children: [
+                              TaskStatsStackedBarchart(
+                                focusedDate: focusedDate,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ElevatedButton(
+                                      style: ButtonStyle(
+                                          shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(18.0),
+                                          )),
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .primary)),
+                                      onPressed: () {
+                                        setState(() {
+                                          focusedDate = focusedDate
+                                              .subtract(Duration(days: 7));
+                                        });
+                                      },
+                                      child: Icon(Icons.arrow_back)),
+                                  Text(
+                                      "Focused Date: ${DateFormat('dd MMMM').format(focusedDate)}"),
+                                  ElevatedButton(
+                                      style: ButtonStyle(
+                                          shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(18.0),
+                                          )),
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .primary)),
+                                      onPressed: () {
+                                        setState(() {
+                                          focusedDate = focusedDate
+                                              .add(Duration(days: 7));
+                                        });
+                                      },
+                                      child: Icon(Icons.arrow_forward)),
+                                ],
+                              )
+                            ]),
+                          ),
+                        ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                              style: ButtonStyle(
-                                  shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                  )),
-                                  backgroundColor: MaterialStateProperty.all(
-                                      Theme.of(context).colorScheme.primary)),
-                              onPressed: () {
-                                setState(() {
-                                  focusedDate =
-                                      focusedDate.subtract(Duration(days: 7));
-                                });
-                              },
-                              child: Icon(Icons.arrow_back)),
-                          Text(
-                              "Focused Date: ${DateFormat('dd MMMM').format(focusedDate)}"),
-                          ElevatedButton(
-                              style: ButtonStyle(
-                                  shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                  )),
-                                  backgroundColor: MaterialStateProperty.all(
-                                      Theme.of(context).colorScheme.primary)),
-                              onPressed: () {
-                                setState(() {
-                                  focusedDate =
-                                      focusedDate.add(Duration(days: 7));
-                                });
-                              },
-                              child: Icon(Icons.arrow_forward)),
-                        ],
-                      )
-                    ]),
-                  ),
-                )
-              ]),
+                    )
+                  ]),
             ),
             Container(
               color: Theme.of(context).colorScheme.secondary,
               child: ListView(
+                scrollDirection: isWidescreen ? Axis.horizontal : Axis.vertical,
                 children: [
-                  EntryMoodPiechart(),
-                  EntryMoodCalendar(),
+                  SizedBox(
+                      width: isWidescreen
+                          ? width
+                          : MediaQuery.of(context).size.width,
+                      child: EntryMoodPiechart(isWidescreen: isWidescreen)),
+                  SizedBox(
+                      width: isWidescreen
+                          ? width
+                          : MediaQuery.of(context).size.width,
+                      child: EntryMoodCalendar(isWidescreen: isWidescreen)),
                 ],
               ),
             ),

@@ -54,13 +54,13 @@ class _CalendarTemplate<T extends Occasion> extends State<CalendarTemplate<T>> {
 
   @override
   Widget build(BuildContext context) {
-    bool isScreenWide =
+    bool isWidescreen =
         MediaQuery.of(context).size.width >= MediaQuery.of(context).size.height;
-    double width = isScreenWide
+    double width = isWidescreen
         ? MediaQuery.of(context).size.width / 2
         : MediaQuery.of(context).size.width;
     Widget calendarFont(String text, bool isOutside, bool isTiny) {
-      double fontSize = isScreenWide ? 15 * (width / 500) : 17;
+      double fontSize = isWidescreen ? 15 * (width / 500) : 17;
       if (isTiny) {
         fontSize = fontSize * 0.6;
       }
@@ -75,13 +75,13 @@ class _CalendarTemplate<T extends Occasion> extends State<CalendarTemplate<T>> {
     }
 
     double outerHexagonSize =
-        isScreenWide ? width / 10 : MediaQuery.of(context).size.height / 15;
+        isWidescreen ? width / 10 : MediaQuery.of(context).size.height / 15;
     double innerHexagonSize =
-        isScreenWide ? width / 15 : MediaQuery.of(context).size.height / 20;
+        isWidescreen ? width / 15 : MediaQuery.of(context).size.height / 20;
 
     return Stack(children: [
       Flex(
-          direction: isScreenWide ? Axis.horizontal : Axis.vertical,
+          direction: isWidescreen ? Axis.horizontal : Axis.vertical,
           children: <Widget>[
             SizedBox(
               width: width,
@@ -91,7 +91,7 @@ class _CalendarTemplate<T extends Occasion> extends State<CalendarTemplate<T>> {
                 ),
                 color: Colors.white,
                 child: TableCalendar<T>(
-                  shouldFillViewport: isScreenWide ? true : false,
+                  shouldFillViewport: isWidescreen ? true : false,
                   headerStyle: HeaderStyle(formatButtonVisible: false),
                   focusedDay: _focusedDay,
                   firstDay: DateTime(1900),
@@ -173,19 +173,16 @@ class _CalendarTemplate<T extends Occasion> extends State<CalendarTemplate<T>> {
                                       day.day.toString(), false, false),
                                 ),
                               ),
-                              //EdgeInsets.only(top: 55, left: 30),
                               Padding(
                                 padding: EdgeInsets.only(
-                                    top: isScreenWide
+                                    top: isWidescreen
                                         ? MediaQuery.of(context).size.width *
                                             0.029
-                                        : MediaQuery.of(context).size.width *
-                                            0.035,
-                                    left: isScreenWide
+                                        : 30,
+                                    left: isWidescreen
                                         ? MediaQuery.of(context).size.width *
                                             0.015
-                                        : MediaQuery.of(context).size.width *
-                                            0.05),
+                                        : 20),
                                 child: HexagonWidget.flat(
                                   width: outerHexagonSize / 3,
                                   color: DateUtils.dateOnly(day) ==

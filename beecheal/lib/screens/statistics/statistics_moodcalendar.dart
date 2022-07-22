@@ -14,8 +14,8 @@ import '../journal/journal_entry_tile.dart';
 import 'legend_widget.dart';
 
 class EntryMoodCalendar extends StatefulWidget {
-  const EntryMoodCalendar({Key? key}) : super(key: key);
-
+  bool isWidescreen;
+  EntryMoodCalendar({required this.isWidescreen});
   @override
   State<EntryMoodCalendar> createState() => _EntryMoodCalendar();
 }
@@ -93,6 +93,10 @@ class _EntryMoodCalendar extends State<EntryMoodCalendar> {
 
   @override
   Widget build(BuildContext context) {
+    double outerHexagonSize =
+        widget.isWidescreen ? MediaQuery.of(context).size.width / 30 : 80;
+    double innerHexagonSize =
+        widget.isWidescreen ? MediaQuery.of(context).size.width / 40 : 40;
     return StreamBuilder(
       stream: DatabaseService().entries,
       builder: (context, AsyncSnapshot<List<Entry>> snapshot) {
@@ -130,11 +134,11 @@ class _EntryMoodCalendar extends State<EntryMoodCalendar> {
                   calendarBuilders: CalendarBuilders(
                       todayBuilder: (context, day, focusedDay) {
                     return HexagonWidget.flat(
-                      width: 80,
+                      width: outerHexagonSize,
                       color: _boxColor(day),
                       child: Center(
                           child: HexagonWidget.flat(
-                        width: 20,
+                        width: innerHexagonSize,
                         color: Theme.of(context).colorScheme.secondary,
                         child: Center(
                             child: Text('${day.day}',
@@ -149,11 +153,11 @@ class _EntryMoodCalendar extends State<EntryMoodCalendar> {
                     );
                   }), selectedBuilder: ((context, day, selectedDay) {
                     return HexagonWidget.flat(
-                      width: 80,
+                      width: outerHexagonSize,
                       color: Color(0xFFC67C00),
                       child: Center(
                           child: HexagonWidget.flat(
-                        width: 40,
+                        width: innerHexagonSize,
                         color: DateUtils.dateOnly(day) ==
                                 DateUtils.dateOnly(DateTime.now())
                             ? Theme.of(context).colorScheme.secondary
@@ -205,17 +209,21 @@ class _EntryMoodCalendar extends State<EntryMoodCalendar> {
   }
 
   Widget calendarIndicator(DateTime day, Color color) {
+    double outerHexagonSize =
+        widget.isWidescreen ? MediaQuery.of(context).size.width / 30 : 80;
+    double innerHexagonSize =
+        widget.isWidescreen ? MediaQuery.of(context).size.width / 40 : 40;
     return Stack(
       children: [
         HexagonWidget.flat(
-          width: 80,
+          width: outerHexagonSize,
           color: DateUtils.dateOnly(day) ==
                   DateUtils.dateOnly(_selectedDay ?? DateTime.now())
               ? Color(0xFFC67C00)
               : Theme.of(context).colorScheme.primary,
           child: Center(
               child: HexagonWidget.flat(
-            width: 40,
+            width: innerHexagonSize,
             color: DateUtils.dateOnly(day) == DateUtils.dateOnly(DateTime.now())
                 ? Theme.of(context).colorScheme.secondary
                 : Colors.white,
