@@ -1,6 +1,7 @@
 import 'package:beecheal/screens/home/home.dart';
 import 'package:beecheal/screens/statistics/statistics.dart';
 import 'package:beecheal/services/database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +90,7 @@ class _TaskStatsStackedBarchart extends State<TaskStatsStackedBarchart> {
               Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: AspectRatio(
-                  aspectRatio: 1.5,
+                  aspectRatio: kIsWeb ? 1.3 : 1.2,
                   child: BarChart(
                     BarChartData(
                       alignment: BarChartAlignment.center,
@@ -186,7 +187,7 @@ class _TaskStatsStackedBarchart extends State<TaskStatsStackedBarchart> {
       barChartList.add(BarChartGroupData(x: i, barsSpace: 4, barRods: [
         BarChartRodData(
             toY: dateMapping[date]?.length.toDouble() ?? 0.0,
-            width: 30,
+            width: kIsWeb ? MediaQuery.of(context).size.width / 20 : 30,
             rodStackItems: [
               BarChartRodStackItem(0, completed, bottom),
               BarChartRodStackItem(

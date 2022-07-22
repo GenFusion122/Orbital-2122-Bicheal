@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hexagon/hexagon.dart';
 
@@ -54,6 +55,36 @@ class TimePicker {
 
   static Future<TimeOfDay?> timePicker(
       BuildContext context, DateTime initTime) async {
+    if (kIsWeb) {
+      TimeOfDay? pickedTime = await showTimePicker(
+          context: context,
+          initialEntryMode: TimePickerEntryMode.input,
+          initialTime: TimeOfDay(hour: initTime.hour, minute: initTime.minute),
+          builder: (context, child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                colorScheme: ColorScheme.light(
+                  primary: Theme.of(context)
+                      .colorScheme
+                      .primary, // header background colour
+                  onPrimary: Colors.black, // header text colour
+                  onSurface: Colors.black, // body text colour
+                ),
+                textButtonTheme: TextButtonThemeData(
+                  style: TextButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.secondary, //button colour
+                    primary: Colors.black,
+                  ),
+                ),
+              ),
+              child: child!,
+            );
+          });
+
+      return pickedTime;
+    }
     TimeOfDay? pickedTime =
         TimeOfDay(hour: initTime.hour, minute: initTime.minute);
     await showDialog(
@@ -107,7 +138,7 @@ class TimePicker {
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: Text("Ok")),
+                            child: Text("OK")),
                       ],
                     ),
                   ],

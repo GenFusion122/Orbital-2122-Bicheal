@@ -29,10 +29,10 @@ class _CalenderEditScreen<T extends Occasion>
   final _formkey = GlobalKey<FormState>();
   DateTime? newDate;
   TimeOfDay? newTime;
+  String? newTitle;
+  String? newDescription;
   @override
   Widget build(BuildContext context) {
-    String newTitle = widget.occasion.getTitle();
-    String newDescription = widget.occasion.getDescription();
     String dateLabel =
         DateFormat('yyyy-MM-dd').format(newDate ?? widget.occasion.getDate());
     String timeLabel =
@@ -42,7 +42,7 @@ class _CalenderEditScreen<T extends Occasion>
         contentPadding: EdgeInsets.all(10.0),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
-                MediaQuery.of(context).size.width * 0.04)),
+                MediaQuery.of(context).size.width * 0.02)),
         backgroundColor: Theme.of(context).colorScheme.tertiary,
         content: Form(
             key: _formkey,
@@ -64,6 +64,7 @@ class _CalenderEditScreen<T extends Occasion>
                 Padding(
                   padding: EdgeInsets.all(1.0),
                   child: TextFormField(
+                      key: Key("calendarTitleField"),
                       maxLength: 50,
                       style: TextStyle(
                           fontSize: 20.0,
@@ -76,7 +77,8 @@ class _CalenderEditScreen<T extends Occasion>
                       validator: (val) =>
                           val!.isNotEmpty ? null : 'Please enter a title',
                       onChanged: (val) {
-                        newTitle = val;
+                        setState(() => newTitle = val);
+                        ;
                       }),
                 ),
                 Align(
@@ -94,6 +96,7 @@ class _CalenderEditScreen<T extends Occasion>
                 Padding(
                   padding: EdgeInsets.all(1.0),
                   child: TextFormField(
+                      key: Key("calendarDescriptionField"),
                       maxLength: 100,
                       style: TextStyle(
                           fontSize: 20.0,
@@ -106,7 +109,7 @@ class _CalenderEditScreen<T extends Occasion>
                       validator: (val) =>
                           val!.isNotEmpty ? null : 'Please enter a description',
                       onChanged: (val) {
-                        newDescription = val;
+                        setState(() => newDescription = val);
                       }),
                 ),
                 Padding(
@@ -149,6 +152,7 @@ class _CalenderEditScreen<T extends Occasion>
                               child: SizedBox(
                                 width: 100.0,
                                 child: ElevatedButton(
+                                    key: Key("calendarEditDateButton"),
                                     style: ButtonStyle(
                                         shape: MaterialStateProperty.all<
                                                 RoundedRectangleBorder>(
@@ -216,6 +220,7 @@ class _CalenderEditScreen<T extends Occasion>
                               child: SizedBox(
                                 width: 100.0,
                                 child: ElevatedButton(
+                                    key: Key("calendarEditTimeButton"),
                                     style: ButtonStyle(
                                         shape: MaterialStateProperty.all<
                                                 RoundedRectangleBorder>(
@@ -282,8 +287,10 @@ class _CalenderEditScreen<T extends Occasion>
                                       context, DateTime.now());
                               if (pickedDateTime != null) {
                                 //if the user didn't cancel
-                                widget.occasion.setTitle(newTitle);
-                                widget.occasion.setDescription(newDescription);
+                                widget.occasion.setTitle(
+                                    newTitle ?? widget.occasion.getTitle());
+                                widget.occasion.setDescription(newDescription ??
+                                    widget.occasion.getDescription());
                                 widget.occasion.setDate(widget.occasion
                                     .getDate()
                                     .add(Duration(
@@ -307,19 +314,12 @@ class _CalenderEditScreen<T extends Occasion>
                                 InitializeNotifications
                                     .initializeToDoNotifications();
                                 Navigator.of(context).pop();
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      if (T.toString() == "Task") {
-                                        return TaskView(
-                                            widget.occasion as Task);
-                                      }
-                                      return OccasionView(widget.occasion);
-                                    });
                               }
                             } else {
-                              widget.occasion.setTitle(newTitle);
-                              widget.occasion.setDescription(newDescription);
+                              widget.occasion.setTitle(
+                                  newTitle ?? widget.occasion.getTitle());
+                              widget.occasion.setDescription(newDescription ??
+                                  widget.occasion.getDescription());
                               DateTime originalDateTime =
                                   widget.occasion.getDate();
                               DateTime combinedDateTime = (newDate ??

@@ -1,3 +1,4 @@
+import 'package:beecheal/custom%20widgets/constants.dart';
 import 'package:beecheal/models/entry.dart';
 import 'package:beecheal/screens/journal/journal_entry_edit.dart';
 import 'package:flutter/material.dart';
@@ -14,23 +15,23 @@ class EntryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // dialog for viewing entry
     return AlertDialog(
       contentPadding: EdgeInsets.all(10.0),
       shape: RoundedRectangleBorder(
           borderRadius:
-              BorderRadius.circular(MediaQuery.of(context).size.width * 0.04)),
+              BorderRadius.circular(MediaQuery.of(context).size.width * 0.02)),
       backgroundColor: Theme.of(context).colorScheme.tertiary,
       content: Column(mainAxisSize: MainAxisSize.min, children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          // entry date
           Text(
             DateFormat('yyyy-MM-dd hh:mm a').format(entry.getDate()).toString(),
-            style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w900,
-                color: Color(0xff000000)),
+            style: viewHeaderTextStyle,
           ),
+          // entry sentiment
           HexagonWidget.flat(
-              width: MediaQuery.of(context).size.width * 0.075,
+              width: 35,
               elevation: 0.0,
               color: entry.getSentiment() == 1
                   ? Colors.green
@@ -38,16 +39,13 @@ class EntryView extends StatelessWidget {
                       ? Colors.red
                       : Colors.grey)
         ]),
+        // entry title
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(
             padding: EdgeInsets.fromLTRB(
                 0.0, MediaQuery.of(context).size.height * 0.005, 0.0, 0.0),
-            child: Text('Title',
-                style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w900,
-                    color: Color(0xff000000))),
+            child: Text('Title', style: viewHeaderTextStyle),
           ),
         ),
         Card(
@@ -62,24 +60,16 @@ class EntryView extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(entry.getTitle(),
-                    softWrap: true,
-                    maxLines: 5,
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xff000000))),
+                    softWrap: true, maxLines: 5, style: viewBodyTextStyle),
               ),
             )),
+        // entry description
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(
             padding: EdgeInsets.fromLTRB(
                 0.0, MediaQuery.of(context).size.height * 0.005, 0.0, 0.0),
-            child: Text('Description',
-                style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w900,
-                    color: Color(0xff000000))),
+            child: Text('Description', style: viewHeaderTextStyle),
           ),
         ),
         Card(
@@ -94,24 +84,16 @@ class EntryView extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(entry.getDescription(),
-                    softWrap: true,
-                    maxLines: 5,
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xff000000))),
+                    softWrap: true, maxLines: 5, style: viewBodyTextStyle),
               ),
             )),
+        // entry body
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(
             padding: EdgeInsets.fromLTRB(
                 0.0, MediaQuery.of(context).size.height * 0.005, 0.0, 0.0),
-            child: Text('Body',
-                style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w900,
-                    color: Color(0xff000000))),
+            child: Text('Body', style: viewHeaderTextStyle),
           ),
         ),
         Expanded(
@@ -127,11 +109,7 @@ class EntryView extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: SingleChildScrollView(
-                    child: Text(entry.getBody(),
-                        style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xff000000))),
+                    child: Text(entry.getBody(), style: viewHeaderTextStyle),
                   ),
                 ),
               )),
@@ -148,16 +126,12 @@ class EntryView extends StatelessWidget {
                                 RoundedRectangleBorder>(RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
                             )),
-                            backgroundColor:
-                                MaterialStateProperty.all(Color(0xFFFFE98C)),
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).colorScheme.primaryContainer),
                             elevation:
                                 MaterialStateProperty.resolveWith<double>(
                                     (states) => 0)),
-                        child: Text('Edit',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xff000000))),
+                        child: Text('Edit', style: buttonTextStyle),
                         onPressed: () {
                           Navigator.of(context).pop();
                           showDialog(
@@ -178,16 +152,12 @@ class EntryView extends StatelessWidget {
                                 RoundedRectangleBorder>(RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
                             )),
-                            backgroundColor:
-                                MaterialStateProperty.all(Color(0xFFFFE98C)),
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).colorScheme.primaryContainer),
                             elevation:
                                 MaterialStateProperty.resolveWith<double>(
                                     (states) => 0)),
-                        child: Text('Delete',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xff000000))),
+                        child: Text('Delete', style: buttonTextStyle),
                         onPressed: () {
                           DatabaseService().deleteUserEntry(entry.getId(),
                               entry.getTitle(), entry.getDate().toString());
@@ -200,10 +170,7 @@ class EntryView extends StatelessWidget {
                                   Theme.of(context).colorScheme.secondary,
                               content: Text(
                                 'Deleted ${entry.getTitle()} created on ${DateFormat('yyyy-MM-dd hh:mm a').format(entry.getDate()).toString()}',
-                                style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w900,
-                                    color: Color(0xff000000)),
+                                style: popupTextStyle,
                               )));
                         }),
                   )

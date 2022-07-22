@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.5"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -30,26 +30,25 @@ dependencies:
   flutter:
     sdk: flutter 
   table_calendar: ^3.0.5
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  firebase_auth: ^3.3.18
-  google_sign_in: ^5.3.3
-  cloud_firestore: ^3.1.15
-  firebase_core: ^1.17.0
+  google_sign_in: ^5.4.0
   provider: ^6.0.2
   email_validator: ^2.0.1
   flutter_spinkit: ^5.1.0
-  firebase_messaging: ^11.4.1
-  flutter_local_notifications: ^9.6.0
+  flutter_local_notifications: ^9.7.0
   flutter_local_notifications_platform_interface: ^5.0.0
   rxdart: ^0.27.4
   timezone: ^0.8.0
   flutter_native_timezone: ^2.0.0
-  fl_chart: ^0.51.0
+  fl_chart: ^0.55.0
   hexagon: ^0.2.0-nullsafety.1
+  mockito: ^5.2.0
+
+  cloud_firestore: ^3.3.0
+  firebase_auth: ^3.4.2
+  firebase_core: ^1.19.2
+  firebase_messaging: ^12.0.0
+  firebase_core_platform_interface: ^4.4.3
 
 dev_dependencies:
   flutter_test:

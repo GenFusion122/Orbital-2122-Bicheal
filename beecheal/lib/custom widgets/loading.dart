@@ -8,7 +8,7 @@ class Loading extends StatelessWidget {
   Widget build(BuildContext context) {
     return SpinKitFoldingCube(
       color: Color(0xFFFFE0B2),
-      size: MediaQuery.of(context).size.width * 0.5,
+      size: MediaQuery.of(context).size.width * 0.4,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:beecheal/custom%20widgets/constants.dart';
 import 'package:beecheal/models/occasion.dart';
 import 'package:beecheal/screens/todo_list/todo_task_view.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,6 @@ import 'package:beecheal/models/task.dart';
 import 'package:intl/intl.dart';
 
 class TaskTile extends StatelessWidget {
-  // const TileTemplate({Key? key}) : super(key: key);
-
   var occasion;
   TaskTile(this.occasion);
 
@@ -18,28 +17,23 @@ class TaskTile extends StatelessWidget {
         child: Card(
           margin: EdgeInsets.symmetric(
               vertical: MediaQuery.of(context).size.height * 0.005),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                  MediaQuery.of(context).size.width * 0.04)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          // task title
           child: ListTile(
             title: Text(
               occasion.getTitle(),
-              style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w900,
-                  overflow: TextOverflow.ellipsis,
-                  color: Color(0xff000000)),
+              style: tileTitleStyle,
             ),
             subtitle: Column(children: [
+              // task description
               Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     occasion.getDescription(),
-                    style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w900,
-                        overflow: TextOverflow.ellipsis),
+                    style: tileDescriptionStyle,
                   )),
+              // task due date
               Align(
                   alignment: Alignment.centerRight,
                   // changes text color based on current completedOn status and time relative to due date
@@ -64,6 +58,7 @@ class TaskTile extends StatelessWidget {
                                     : Color.fromARGB(255, 255, 92, 80),
                       ))),
             ]),
+            // button for completing and uncompleting tasks
             trailing: IconButton(
                 iconSize: 30.0,
                 icon: occasion.getCompletedOn() == Task.incompletePlaceholder
@@ -88,6 +83,7 @@ class TaskTile extends StatelessWidget {
                   }
                 }),
             onTap: () {
+              // shows dialog for task view
               showDialog(
                   context: context,
                   builder: (BuildContext context) {

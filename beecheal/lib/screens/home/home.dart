@@ -9,6 +9,7 @@ import 'package:beecheal/services/auth.dart';
 import 'package:beecheal/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -18,6 +19,7 @@ import 'package:provider/provider.dart';
 import '../../custom widgets/custombuttons.dart';
 import 'package:beecheal/services/notifications.dart';
 import 'dart:async';
+import 'dart:math';
 
 class Home extends StatefulWidget {
   @override
@@ -29,13 +31,16 @@ class _HomeState extends State<Home> {
   Timer? _everyMinute;
   // toDoListState
   List<bool> isSelected = [true, false, false];
-  // Notifications
+  // notifications
   void initState() {
     super.initState();
-    NotificationService.init(initScheduled: true);
-    // On clicked
-    NotificationService.onNotifications.stream.listen(
-        (String? payload) => Navigator.pushNamed(context, payload.toString()));
+    if (!kIsWeb) {
+      // checks if on mobile
+      NotificationService.init(initScheduled: true);
+      // On clicked
+      NotificationService.onNotifications.stream.listen((String? payload) =>
+          Navigator.pushNamed(context, payload.toString()));
+    }
   }
 
   _initializeNotificaitonValues() async {
@@ -45,10 +50,13 @@ class _HomeState extends State<Home> {
     }
   }
 
+  // initialize variables
   int numberOfTasksToday = 0;
   int numberOfEventsToday = 0;
   String upcomingTask = "";
   String upcomingEvent = "";
+  bool dailyJournalEntry = false;
+  bool weeklyReminder = false;
 
   Future<void> getNumberOfTasksToday() async {
     var itemsList = [];
@@ -101,7 +109,7 @@ class _HomeState extends State<Home> {
           .then((snapshot) {
         upcomingTask = snapshot.docs[0]['title'];
       });
-    } catch (RangeError) {
+    } on RangeError {
       upcomingTask = "No upcoming Tasks";
     }
   }
@@ -118,72 +126,89 @@ class _HomeState extends State<Home> {
           .then((snapshot) {
         upcomingEvent = snapshot.docs[0]['title'];
       });
-    } catch (RangeError) {
+    } on RangeError {
       upcomingEvent = "No upcoming Events";
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    getNumberOfTasksToday();
-    getNumberOfEventsToday();
-    getClosestEvent();
-    getClosestTask();
+    try {
+      getNumberOfTasksToday();
+      getNumberOfEventsToday();
+      getClosestEvent();
+      getClosestTask();
+    } on FirebaseException {}
     // refreshes listview
     _everyMinute = Timer.periodic(Duration(minutes: 1), (Timer t) {
-      // print('Rebuilt at ${DateTime.now()}');
       if (mounted) {
         setState(() {});
       }
     });
-    _initializeNotificaitonValues(); //initialize notification objects
-    bool dailyJournalEntry = Provider.of<User>(context).getDailyJournalEntry();
-    bool weeklyReminder = Provider.of<User>(context).getWeeklyReminder();
+
+    try {
+      // retrieves user preferences for daily, weekly reminders
+      dailyJournalEntry = Provider.of<User>(context).getDailyJournalEntry();
+      weeklyReminder = Provider.of<User>(context).getWeeklyReminder();
+    } on ProviderNullException {}
+
+    if (!kIsWeb) {
+      // checks if on mobile
+      _initializeNotificaitonValues(); //initialize notification objects
+      // daily journal entry notification
+      if (dailyJournalEntry) {
+        NotificationService.showDailyScheduledNotification(
+            id: 0,
+            title: 'Daily journal entry',
+            body: 'show journal entries',
+            payload: '/journalEntries',
+            time: Time(20),
+            scheduledDate: DateTime.now());
+      } else {
+        NotificationService.getNotificationInstance().cancel(0);
+      }
+
+      // weekly notification
+      if (weeklyReminder) {
+        NotificationService.showWeeklyScheduledNotification(
+            id: 1,
+            title: 'Weekly reminder',
+            body: 'It\'s a new week!',
+            payload: '/home',
+            time: Time(8),
+            days: [DateTime.monday],
+            scheduledDate: DateTime.now());
+      } else {
+        NotificationService.getNotificationInstance().cancel(1);
+      }
+    }
     final _formkey = GlobalKey<FormState>();
-    // Daily journal entry notification
-    if (dailyJournalEntry) {
-      NotificationService.showDailyScheduledNotification(
-          id: 0,
-          title: 'Daily journal entry',
-          body: 'show journal entries',
-          payload: '/journalEntries',
-          time: Time(20),
-          scheduledDate: DateTime.now());
-    } else {
-      NotificationService.getNotificationInstance().cancel(0);
-    }
-
-    // Weekly notification
-    if (weeklyReminder) {
-      NotificationService.showWeeklyScheduledNotification(
-          id: 1,
-          title: 'Weekly reminder',
-          body: 'It\'s a new week!',
-          payload: '/home',
-          time: Time(8),
-          days: [DateTime.monday],
-          scheduledDate: DateTime.now());
-    } else {
-      NotificationService.getNotificationInstance().cancel(1);
-    }
-
+    // scaling variables for responsive UI
+    double scaleMin = min(
+        MediaQuery.of(context).size.width, MediaQuery.of(context).size.height);
+    double scaleMax = min(
+        MediaQuery.of(context).size.width, MediaQuery.of(context).size.height);
+    // MediaQuary.of(context).size.___ is used for responsive UI
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Color(0xFFFFE0B2),
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
+          key: Key("homeBar"),
           leading: Padding(
             padding: EdgeInsets.symmetric(
-              vertical: MediaQuery.of(context).size.width * 0.01,
+              vertical: 5,
             ),
             child: Image.asset(
               'assets/BzB.png',
-              height: (MediaQuery.of(context).size.width * 0.1),
-              width: (MediaQuery.of(context).size.width * 0.1),
+              height: 40,
+              width: 40,
             ),
           ),
-          iconTheme: IconThemeData(color: Colors.black, size: 40),
-          title: Icon(Icons.home_outlined, color: Colors.black, size: 45),
+          iconTheme: IconThemeData(
+              color: Theme.of(context).colorScheme.onPrimary, size: 40),
+          title: Icon(Icons.home_outlined,
+              color: Theme.of(context).colorScheme.onPrimary, size: 45),
           centerTitle: true,
           backgroundColor: Theme.of(context).colorScheme.primary,
           elevation: 0.0,
@@ -197,23 +222,24 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 Container(
                   height: MediaQuery.of(context).size.height * 0.070,
-                  color: Colors.orange[400],
+                  color: Theme.of(context).colorScheme.primary,
                   child: TextButton.icon(
+                      key: Key("signOutButton"),
                       icon: Icon(Icons.person_outline,
-                          color: Colors.black, size: 45),
-                      style: TextButton.styleFrom(primary: Colors.black),
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          size: 45),
                       label: Text(
                         'Sign Out',
-                        style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xff000000)),
+                        style: buttonTextStyle,
                       ),
                       onPressed: () async {
                         // clear all notifications
                         _everyMinute?.cancel();
+
                         await NotificationService.getNotificationInstance()
                             .cancelAll();
+
+                        // signs out
                         await _auth.signOut();
                         final provider =
                             Provider.of<AuthService>(context, listen: false);
@@ -221,59 +247,15 @@ class _HomeState extends State<Home> {
                         setState(() {});
                       }),
                 ),
-                // ListTile(
-                //   minLeadingWidth: 0.0,
-                //   tileColor: Colors.white,
-                //   leading: Icon(Icons.account_circle_outlined,
-                //       color: Colors.black, size: 30),
-                //   title: Text('Profile',
-                //       style: TextStyle(
-                //           fontSize: 16.0,
-                //           fontWeight: FontWeight.w900,
-                //           color: Color(0xff000000))),
-                // ),
-                // ListTile(
-                //   minLeadingWidth: 0.0,
-                //   tileColor: Colors.white,
-                //   leading: Icon(Icons.bookmark_outline,
-                //       color: Colors.black, size: 30),
-                //   title: Text('Achievements',
-                //       style: TextStyle(
-                //           fontSize: 15.0,
-                //           fontWeight: FontWeight.w900,
-                //           color: Color(0xff000000))),
-                //   onTap: () {
-                //     showDialog(
-                //         context: context,
-                //         builder: (BuildContext context) {
-                //           return AlertDialog(
-                //             content: Text('Achievements'),
-                //           );
-                //         });
-                //   },
-                // ),
-                // ListTile(
-                //   minLeadingWidth: 0.0,
-                //   tileColor: Colors.white,
-                //   leading: Icon(Icons.settings_outlined,
-                //       color: Colors.black, size: 30),
-                //   title: Text('Settings',
-                //       style: TextStyle(
-                //           fontSize: 15.0,
-                //           fontWeight: FontWeight.w900,
-                //           color: Color(0xff000000))),
-                // ),
+                // button for changing password
                 ListTile(
                   minLeadingWidth: 0.0,
-                  tileColor: Colors.white,
+                  tileColor: Theme.of(context).colorScheme.surface,
                   leading: Icon(Icons.password_rounded,
-                      color: Colors.black, size: 30),
-                  title: Text('Change Password',
-                      style: TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xff000000))),
+                      color: Theme.of(context).colorScheme.onPrimary, size: 30),
+                  title: Text('Change Password', style: tileButtonTextStyle),
                   onTap: () {
+                    // shows dialog box for changing password
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -283,7 +265,7 @@ class _HomeState extends State<Home> {
                           return ClipPath(
                               clipper: HexagonalClipper(),
                               child: Material(
-                                  color: Color(0xFFFFC95C),
+                                  color: Theme.of(context).colorScheme.tertiary,
                                   child: Center(
                                       child: Container(
                                           alignment:
@@ -302,14 +284,11 @@ class _HomeState extends State<Home> {
                                               mainAxisSize: MainAxisSize.min,
                                               children: <Widget>[
                                                 TextFormField(
-                                                    style: TextStyle(
-                                                        fontSize: 20.0,
-                                                        fontWeight:
-                                                            FontWeight.w900,
-                                                        color:
-                                                            Color(0xff000000)),
+                                                    style: textFormFieldStyle,
                                                     cursorColor:
-                                                        Color(0xff000000),
+                                                        Theme.of(context)
+                                                            .colorScheme
+                                                            .onPrimary,
                                                     decoration: textInputDecoration
                                                         .copyWith(
                                                             hintText:
@@ -325,14 +304,11 @@ class _HomeState extends State<Home> {
                                                           newPassword = val);
                                                     }),
                                                 TextFormField(
-                                                    style: TextStyle(
-                                                        fontSize: 20.0,
-                                                        fontWeight:
-                                                            FontWeight.w900,
-                                                        color:
-                                                            Color(0xff000000)),
+                                                    style: textFormFieldStyle,
                                                     cursorColor:
-                                                        Color(0xff000000),
+                                                        Theme.of(context)
+                                                            .colorScheme
+                                                            .onPrimary,
                                                     decoration: textInputDecoration
                                                         .copyWith(
                                                             hintText:
@@ -349,15 +325,16 @@ class _HomeState extends State<Home> {
                                                     }),
                                                 ElevatedButton(
                                                   style: ButtonStyle(
-                                                      minimumSize: MaterialStateProperty.all(Size(
-                                                          (MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.75),
-                                                          (MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.1))),
+                                                      minimumSize:
+                                                          MaterialStateProperty.all(Size(
+                                                              (MediaQuery.of(context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.75),
+                                                              (MediaQuery.of(context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.1))),
                                                       shape: MaterialStateProperty.all<
                                                               RoundedRectangleBorder>(
                                                           RoundedRectangleBorder(
@@ -365,15 +342,16 @@ class _HomeState extends State<Home> {
                                                             BorderRadius
                                                                 .circular(18.0),
                                                       )),
-                                                      backgroundColor: MaterialStateProperty.all(
-                                                          Color(0xFFFFE98C)),
+                                                      backgroundColor:
+                                                          MaterialStateProperty.all(
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .primaryContainer),
                                                       elevation:
-                                                          MaterialStateProperty
-                                                              .resolveWith<double>(
-                                                                  (states) =>
-                                                                      0)),
+                                                          MaterialStateProperty.resolveWith<double>(
+                                                              (states) => 0)),
                                                   onPressed: () async {
-                                                    // Validation check
+                                                    // validation check
                                                     if (_formkey.currentState!
                                                         .validate()) {
                                                       dynamic result =
@@ -382,6 +360,7 @@ class _HomeState extends State<Home> {
                                                                   newPassword);
                                                       Navigator.of(context)
                                                           .pop();
+                                                      // shows snackbar popup
                                                       ScaffoldMessenger.of(context).showSnackBar(
                                                           SnackBar(
                                                               shape: RoundedRectangleBorder(
@@ -397,21 +376,18 @@ class _HomeState extends State<Home> {
                                                                       .secondary,
                                                               content: Text(
                                                                 'Password changed',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        12.0,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w900,
-                                                                    color: Color(
-                                                                        0xff000000)),
+                                                                style:
+                                                                    popupTextStyle,
                                                               )));
                                                       if (result == null) {}
                                                     }
                                                   },
                                                   child: Text('Change password',
                                                       style: TextStyle(
-                                                          color: Colors.black)),
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .onPrimary)),
                                                 ),
                                               ],
                                             ),
@@ -419,60 +395,68 @@ class _HomeState extends State<Home> {
                         });
                   },
                 ),
-                MergeSemantics(
-                  child: ListTile(
-                      leading: Container(
-                          width: MediaQuery.of(context).size.width * 0.4 * 0.5,
-                          child: Text(
-                            'Daily Journal Reminder',
-                            style: TextStyle(
-                                fontSize: MediaQuery.of(context).size.width *
-                                    0.4 *
-                                    0.084,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xff000000)),
-                          )),
-                      trailing: Transform.scale(
-                        scale: MediaQuery.of(context).size.width * 0.003,
-                        child: Switch(
-                          activeColor: Theme.of(context).colorScheme.primary,
-                          value: dailyJournalEntry,
-                          onChanged: (bool value) {
-                            setState(() {
-                              DatabaseService()
-                                  .updateUserDailyReminderPreference(value);
-                            });
-                          },
-                        ),
-                      )),
-                ),
-                MergeSemantics(
-                  child: ListTile(
-                      leading: Container(
-                          width: MediaQuery.of(context).size.width * 0.4 * 0.5,
-                          child: Text(
-                            'Weekly Reminder',
-                            style: TextStyle(
-                                fontSize: MediaQuery.of(context).size.width *
-                                    0.4 *
-                                    0.084,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xff000000)),
-                          )),
-                      trailing: Transform.scale(
-                        scale: MediaQuery.of(context).size.width * 0.003,
-                        child: Switch(
-                          activeColor: Theme.of(context).colorScheme.primary,
-                          value: weeklyReminder,
-                          onChanged: (bool value) {
-                            setState(() {
-                              DatabaseService()
-                                  .updateUserWeeklyReminderPreference(value);
-                            });
-                          },
-                        ),
-                      )),
-                )
+                if (!kIsWeb) // mobile build
+                  // daily journal reminder slider
+                  MergeSemantics(
+                    child: ListTile(
+                        leading: Container(
+                            width:
+                                MediaQuery.of(context).size.width * 0.4 * 0.5,
+                            child: Text(
+                              'Daily Journal Reminder',
+                              style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.width *
+                                      0.4 *
+                                      0.084,
+                                  fontWeight: FontWeight.w900,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary),
+                            )),
+                        trailing: Transform.scale(
+                          scale: MediaQuery.of(context).size.width * 0.003,
+                          child: Switch(
+                            activeColor: Theme.of(context).colorScheme.primary,
+                            value: dailyJournalEntry,
+                            onChanged: (bool value) {
+                              setState(() {
+                                DatabaseService()
+                                    .updateUserDailyReminderPreference(value);
+                              });
+                            },
+                          ),
+                        )),
+                  ),
+                if (!kIsWeb) // mobile build
+                  // weekly reminder slider
+                  MergeSemantics(
+                    child: ListTile(
+                        leading: Container(
+                            width:
+                                MediaQuery.of(context).size.width * 0.4 * 0.5,
+                            child: Text(
+                              'Weekly Reminder',
+                              style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.width *
+                                      0.4 *
+                                      0.084,
+                                  fontWeight: FontWeight.w900,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary),
+                            )),
+                        trailing: Transform.scale(
+                          scale: MediaQuery.of(context).size.width * 0.003,
+                          child: Switch(
+                            activeColor: Theme.of(context).colorScheme.primary,
+                            value: weeklyReminder,
+                            onChanged: (bool value) {
+                              setState(() {
+                                DatabaseService()
+                                    .updateUserWeeklyReminderPreference(value);
+                              });
+                            },
+                          ),
+                        )),
+                  )
               ],
             ),
           ),
@@ -484,246 +468,480 @@ class _HomeState extends State<Home> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Expanded(
-                    child:
-                        OrangeNavButton("/statistics", "statistics", context)),
+                    child: OrangeNavButton(
+                        key: Key("homeStatisticsNavButton"),
+                        "/statistics",
+                        "statistics",
+                        context)),
                 Expanded(
+                    key: Key("homeCalendarNavButton"),
                     child: OrangeNavButton("/calendar", "calendar", context)),
                 Expanded(
+                    key: Key("homeJournalNavButton"),
                     child:
                         OrangeNavButton("/journalEntries", "journal", context)),
               ],
             ),
           ),
         ),
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 8,
-              child: Padding(
-                padding: const EdgeInsets.all(3),
-                child: GridView.count(
-                  physics: NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  childAspectRatio: 1.35,
-                  children: [
-                    displayCard(Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Stack(
-                        children: [
-                          Text(
-                            "Tasks Due \nToday:",
-                            style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xff000000)),
-                          ),
-                          Align(
-                              alignment: Alignment.bottomRight,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Text(numberOfTasksToday.toString(),
-                                    style: TextStyle(
-                                        fontSize: 50,
-                                        fontWeight: FontWeight.bold)),
-                              ))
-                        ],
-                      ),
-                    )),
-                    displayCard(Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Stack(
-                        children: [
-                          Text("Events Happening \nToday: ",
-                              style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w900,
-                                  color: Color(0xff000000))),
-                          Align(
-                              alignment: Alignment.bottomRight,
-                              child: Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Text(numberOfEventsToday.toString(),
-                                    style: TextStyle(
-                                        fontSize: 50,
-                                        fontWeight: FontWeight.bold)),
-                              ))
-                        ],
-                      ),
-                    )),
-                    displayCard(Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Upcoming Task:",
-                            style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xff000000)),
-                          ),
-                          Flexible(
-                              child: Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: Text(upcomingTask,
-                                maxLines: 3,
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    overflow: TextOverflow.ellipsis)),
-                          ))
-                        ],
-                      ),
-                    )),
-                    displayCard(Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Upcoming Event:",
-                            style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0xff000000)),
-                          ),
-                          Flexible(
-                              child: Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: Text(upcomingEvent,
-                                maxLines: 3,
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    overflow: TextOverflow.ellipsis)),
-                          ))
-                        ],
-                      ),
-                    )),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              color: Color(0xFFFFAB00),
-              width: MediaQuery.of(context).size.width,
-              child: Align(
-                alignment: Alignment.center,
-                child: ToggleButtons(
-                  onPressed: (int index) {
-                    setState(() {
-                      for (int buttonIndex = 0;
-                          buttonIndex < isSelected.length;
-                          buttonIndex++) {
-                        if (buttonIndex == index) {
-                          isSelected[buttonIndex] = true;
-                        } else {
-                          isSelected[buttonIndex] = false;
-                        }
-                      }
-                    });
-                  },
-                  borderColor: Colors.transparent,
-                  selectedBorderColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  isSelected: isSelected,
-                  color: Colors.black,
-                  selectedColor: Colors.black,
-                  constraints: BoxConstraints.expand(
-                      width: MediaQuery.of(context).size.width / 3.1,
-                      height: MediaQuery.of(context).size.height * 0.05),
-                  children: [
-                    toggleButtonWidget(MediaQuery.of(context).size.width / 3.1,
-                        isSelected[0], "Default"),
-                    toggleButtonWidget(MediaQuery.of(context).size.width / 3.1,
-                        isSelected[1], "Completed"),
-                    toggleButtonWidget(MediaQuery.of(context).size.width / 3.1,
-                        isSelected[2], "Incomplete"),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 8,
-              child: Stack(children: [
-                Container(
-                    color: Color(0xFFFFE0B2),
-                    margin: EdgeInsets.all(0.0),
-                    child: StreamBuilder(
-                      stream: DatabaseService().tasks,
-                      builder: (context, AsyncSnapshot<List<Task>> snapshot) {
-                        var completed = Provider.of<List<Task>>(context).where(
-                            (task) =>
-                                task.getCompletedOn() !=
-                                Task.incompletePlaceholder);
-                        var notCompleted = Provider.of<List<Task>>(context)
-                            .where((task) =>
-                                task.getCompletedOn() ==
-                                Task.incompletePlaceholder);
-                        if (isSelected[0] == true) {
-                          return ListView.builder(
-                              itemCount:
-                                  Provider.of<List<Task>>(context).length,
-                              itemBuilder: (context, index) {
-                                return TaskTile(
-                                    Provider.of<List<Task>>(context)[index]);
-                              });
-                        } else if (isSelected[1] == true) {
-                          return ListView.builder(
-                              itemCount: completed.length,
-                              itemBuilder: (context, index) {
-                                return TaskTile(completed.toList()[index]);
-                              });
-                        } else if (isSelected[2] == true) {
-                          return ListView.builder(
-                              itemCount: notCompleted.length,
-                              itemBuilder: (context, index) {
-                                return TaskTile(notCompleted.toList()[index]);
-                              });
-                        } else {
-                          return SpinKitFoldingCube(
-                            color: Color(0xFFFFE0B2),
-                          );
-                        }
-                      },
-                    )),
-                Align(
-                  alignment: Alignment.bottomRight,
+        // allows for responsive UI based on constraints
+        body: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+          if (constraints.maxWidth > constraints.maxHeight) {
+            return Column(
+              children: <Widget>[
+                Expanded(
+                  flex: 4,
                   child: Padding(
-                    padding: EdgeInsets.all(2.0),
-                    child: FloatingActionButton(
-                      backgroundColor: Colors.transparent,
-                      elevation: 0.0,
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return TaskEditScreen(
-                                  task: Task(
-                                    "",
-                                    "",
-                                    DateTime.now(),
-                                    "",
-                                    Task.incompletePlaceholder,
-                                  ),
-                                  textPrompt: 'Create');
-                            });
-                      },
-                      child: HexagonWidget.flat(
-                          width: 100,
-                          color: Theme.of(context).colorScheme.primary,
-                          child: Icon(Icons.add, size: 30)),
+                    padding: const EdgeInsets.all(3),
+                    child: GridView.count(
+                      physics: NeverScrollableScrollPhysics(),
+                      crossAxisCount: 4,
+                      childAspectRatio:
+                          (MediaQuery.of(context).size.width / 4) /
+                              (MediaQuery.of(context).size.height * (1 / 3.8)),
+                      children: [
+                        displayCard(Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Stack(
+                            children: [
+                              Text(
+                                "Tasks Due \nToday:",
+                                style: cardHeaderStyle,
+                              ),
+                              Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Text(numberOfTasksToday.toString(),
+                                        style: cardContentStyleBig),
+                                  ))
+                            ],
+                          ),
+                        )),
+                        displayCard(Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Stack(
+                            children: [
+                              Text("Events Happening \nToday: ",
+                                  style: cardHeaderStyle),
+                              Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Text(numberOfEventsToday.toString(),
+                                        style: cardContentStyleBig),
+                                  ))
+                            ],
+                          ),
+                        )),
+                        displayCard(Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Upcoming Task:",
+                                style: cardHeaderStyle,
+                              ),
+                              Flexible(
+                                  child: Padding(
+                                padding: const EdgeInsets.only(top: 5.0),
+                                child: Text(upcomingTask,
+                                    maxLines: 3, style: cardContentStyleSmall),
+                              ))
+                            ],
+                          ),
+                        )),
+                        displayCard(Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Upcoming Event:",
+                                style: cardHeaderStyle,
+                              ),
+                              Flexible(
+                                  child: Padding(
+                                padding: const EdgeInsets.only(top: 5.0),
+                                child: Text(upcomingEvent,
+                                    maxLines: 3, style: cardContentStyleSmall),
+                              ))
+                            ],
+                          ),
+                        )),
+                      ],
                     ),
                   ),
-                )
-              ]),
-            ),
-          ],
-        ),
+                ),
+                // bar for toggle buttons for task list view
+                Container(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: MediaQuery.of(context).size.width,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: ToggleButtons(
+                      onPressed: (int index) {
+                        setState(() {
+                          for (int buttonIndex = 0;
+                              buttonIndex < isSelected.length;
+                              buttonIndex++) {
+                            if (buttonIndex == index) {
+                              isSelected[buttonIndex] = true;
+                            } else {
+                              isSelected[buttonIndex] = false;
+                            }
+                          }
+                        });
+                      },
+                      borderColor:
+                          Theme.of(context).colorScheme.secondaryContainer,
+                      selectedBorderColor:
+                          Theme.of(context).colorScheme.secondaryContainer,
+                      highlightColor:
+                          Theme.of(context).colorScheme.secondaryContainer,
+                      isSelected: isSelected,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      selectedColor: Theme.of(context).colorScheme.onPrimary,
+                      constraints: BoxConstraints.expand(
+                          width: MediaQuery.of(context).size.width / 3.1,
+                          height: MediaQuery.of(context).size.height * 0.05),
+                      children: [
+                        toggleButtonWidget(
+                            MediaQuery.of(context).size.width / 3.1,
+                            isSelected[0],
+                            "Default"),
+                        toggleButtonWidget(
+                            MediaQuery.of(context).size.width / 3.1,
+                            isSelected[1],
+                            "Completed"),
+                        toggleButtonWidget(
+                            MediaQuery.of(context).size.width / 3.1,
+                            isSelected[2],
+                            "Incomplete"),
+                      ],
+                    ),
+                  ),
+                ),
+                // list view for tasks
+                Expanded(
+                  flex: 8,
+                  child: Stack(children: [
+                    Container(
+                        color: Theme.of(context).colorScheme.background,
+                        margin: EdgeInsets.all(0.0),
+                        child: StreamBuilder(
+                          stream: DatabaseService().tasks,
+                          builder:
+                              (context, AsyncSnapshot<List<Task>> snapshot) {
+                            var completed = Provider.of<List<Task>>(context)
+                                .where((task) =>
+                                    task.getCompletedOn() !=
+                                    Task.incompletePlaceholder);
+                            var notCompleted = Provider.of<List<Task>>(context)
+                                .where((task) =>
+                                    task.getCompletedOn() ==
+                                    Task.incompletePlaceholder);
+                            if (isSelected[0] == true) {
+                              return ListView.builder(
+                                  key: Key("taskListView"),
+                                  itemCount:
+                                      Provider.of<List<Task>>(context).length,
+                                  itemBuilder: (context, index) {
+                                    return TaskTile(Provider.of<List<Task>>(
+                                        context)[index]);
+                                  });
+                            } else if (isSelected[1] == true) {
+                              return ListView.builder(
+                                  itemCount: completed.length,
+                                  itemBuilder: (context, index) {
+                                    return TaskTile(completed.toList()[index]);
+                                  });
+                            } else if (isSelected[2] == true) {
+                              return ListView.builder(
+                                  itemCount: notCompleted.length,
+                                  itemBuilder: (context, index) {
+                                    return TaskTile(
+                                        notCompleted.toList()[index]);
+                                  });
+                            } else {
+                              return SpinKitFoldingCube(
+                                color: Theme.of(context).colorScheme.background,
+                              );
+                            }
+                          },
+                        )),
+                    // floating action button for creating tasks
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: EdgeInsets.all(2.0),
+                        child: FloatingActionButton(
+                          key: Key("homeCreateTaskButton"),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondaryContainer,
+                          elevation: 0.0,
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return TaskEditScreen(
+                                      task: Task(
+                                        "",
+                                        "",
+                                        DateTime.now(),
+                                        "",
+                                        Task.incompletePlaceholder,
+                                      ),
+                                      textPrompt: 'Create');
+                                });
+                          },
+                          child: HexagonWidget.flat(
+                              width: 100,
+                              color: Theme.of(context).colorScheme.primary,
+                              child: Icon(Icons.add, size: 30)),
+                        ),
+                      ),
+                    )
+                  ]),
+                ),
+              ],
+            );
+          } else {
+            return Column(
+              children: <Widget>[
+                Expanded(
+                  flex: 8,
+                  child: Padding(
+                    padding: const EdgeInsets.all(3),
+                    child: GridView.count(
+                      physics: NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      childAspectRatio: kIsWeb
+                          ? (MediaQuery.of(context).size.width / 2) /
+                              (MediaQuery.of(context).size.height *
+                                  (1 / 5)) // web
+                          : 1.35, // mobile
+                      children: [
+                        displayCard(Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Stack(
+                            children: [
+                              Text(
+                                "Tasks Due \nToday:",
+                                style: cardHeaderStyle,
+                              ),
+                              Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Text(numberOfTasksToday.toString(),
+                                        style: cardContentStyleBig),
+                                  ))
+                            ],
+                          ),
+                        )),
+                        displayCard(Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Stack(
+                            children: [
+                              Text("Events Happening \nToday: ",
+                                  style: cardHeaderStyle),
+                              Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Text(numberOfEventsToday.toString(),
+                                        style: cardContentStyleBig),
+                                  ))
+                            ],
+                          ),
+                        )),
+                        displayCard(Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Upcoming Task:",
+                                style: cardHeaderStyle,
+                              ),
+                              Flexible(
+                                  child: Padding(
+                                padding: const EdgeInsets.only(top: 5.0),
+                                child: Text(upcomingTask,
+                                    maxLines: 3, style: cardContentStyleSmall),
+                              ))
+                            ],
+                          ),
+                        )),
+                        displayCard(Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Upcoming Event:",
+                                style: cardHeaderStyle,
+                              ),
+                              Flexible(
+                                  child: Padding(
+                                padding: const EdgeInsets.only(top: 5.0),
+                                child: Text(upcomingEvent,
+                                    maxLines: 3, style: cardContentStyleSmall),
+                              ))
+                            ],
+                          ),
+                        )),
+                      ],
+                    ),
+                  ),
+                ),
+                // bar for toggle buttons for task list view
+                Container(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: MediaQuery.of(context).size.width,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: ToggleButtons(
+                      onPressed: (int index) {
+                        setState(() {
+                          for (int buttonIndex = 0;
+                              buttonIndex < isSelected.length;
+                              buttonIndex++) {
+                            if (buttonIndex == index) {
+                              isSelected[buttonIndex] = true;
+                            } else {
+                              isSelected[buttonIndex] = false;
+                            }
+                          }
+                        });
+                      },
+                      borderColor:
+                          Theme.of(context).colorScheme.secondaryContainer,
+                      selectedBorderColor:
+                          Theme.of(context).colorScheme.secondaryContainer,
+                      highlightColor:
+                          Theme.of(context).colorScheme.secondaryContainer,
+                      isSelected: isSelected,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      selectedColor: Theme.of(context).colorScheme.onPrimary,
+                      constraints: BoxConstraints.expand(
+                          width: MediaQuery.of(context).size.width / 3.1,
+                          height: MediaQuery.of(context).size.height * 0.05),
+                      children: [
+                        toggleButtonWidget(
+                            MediaQuery.of(context).size.width / 3.1,
+                            isSelected[0],
+                            "Default"),
+                        toggleButtonWidget(
+                            MediaQuery.of(context).size.width / 3.1,
+                            isSelected[1],
+                            "Completed"),
+                        toggleButtonWidget(
+                            MediaQuery.of(context).size.width / 3.1,
+                            isSelected[2],
+                            "Incomplete"),
+                      ],
+                    ),
+                  ),
+                ),
+                // list view for tasks
+                Expanded(
+                  flex: 8,
+                  child: Stack(children: [
+                    Container(
+                        color: Theme.of(context).colorScheme.background,
+                        margin: EdgeInsets.all(0.0),
+                        child: StreamBuilder(
+                          stream: DatabaseService().tasks,
+                          builder:
+                              (context, AsyncSnapshot<List<Task>> snapshot) {
+                            var completed = Provider.of<List<Task>>(context)
+                                .where((task) =>
+                                    task.getCompletedOn() !=
+                                    Task.incompletePlaceholder);
+                            var notCompleted = Provider.of<List<Task>>(context)
+                                .where((task) =>
+                                    task.getCompletedOn() ==
+                                    Task.incompletePlaceholder);
+                            if (isSelected[0] == true) {
+                              return ListView.builder(
+                                  key: Key("taskListView"),
+                                  itemCount:
+                                      Provider.of<List<Task>>(context).length,
+                                  itemBuilder: (context, index) {
+                                    return TaskTile(Provider.of<List<Task>>(
+                                        context)[index]);
+                                  });
+                            } else if (isSelected[1] == true) {
+                              return ListView.builder(
+                                  itemCount: completed.length,
+                                  itemBuilder: (context, index) {
+                                    return TaskTile(completed.toList()[index]);
+                                  });
+                            } else if (isSelected[2] == true) {
+                              return ListView.builder(
+                                  itemCount: notCompleted.length,
+                                  itemBuilder: (context, index) {
+                                    return TaskTile(
+                                        notCompleted.toList()[index]);
+                                  });
+                            } else {
+                              return SpinKitFoldingCube(
+                                color: Theme.of(context).colorScheme.background,
+                              );
+                            }
+                          },
+                        )),
+                    // floating action button for creating tasks
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: EdgeInsets.all(2.0),
+                        child: FloatingActionButton(
+                          key: Key("homeCreateTaskButton"),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondaryContainer,
+                          elevation: 0.0,
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return TaskEditScreen(
+                                      task: Task(
+                                        "",
+                                        "",
+                                        DateTime.now(),
+                                        "",
+                                        Task.incompletePlaceholder,
+                                      ),
+                                      textPrompt: 'Create');
+                                });
+                          },
+                          child: HexagonWidget.flat(
+                              width: 100,
+                              color: Theme.of(context).colorScheme.primary,
+                              child: Icon(Icons.add, size: 30)),
+                        ),
+                      ),
+                    )
+                  ]),
+                ),
+              ],
+            );
+          }
+        }),
       ),
     );
   }
 
+  // widget for task list view toggle buttons
   Widget toggleButtonWidget(double width, bool selected, String text) {
     return Container(
         width: width,
@@ -738,13 +956,14 @@ class _HomeState extends State<Home> {
           style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.w900,
-              color: Color(0xff000000)),
+              color: Theme.of(context).colorScheme.onPrimary),
         )));
   }
 
+  // widget for upcoming tasks/events display
   Widget displayCard(Widget child) {
     return Card(
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.surface,
       margin: EdgeInsets.all(3),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),

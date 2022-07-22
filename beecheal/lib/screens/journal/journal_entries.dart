@@ -18,10 +18,12 @@ class _JournalEntriesState extends State<JournalEntries> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFFFFE0B2),
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
-          title: Icon(Icons.book_outlined, color: Colors.black, size: 45),
-          iconTheme: IconThemeData(color: Colors.black),
+          title: Icon(Icons.book_outlined,
+              color: Theme.of(context).colorScheme.onPrimary, size: 45),
+          iconTheme:
+              IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
           centerTitle: true,
           elevation: 0.0,
         ),
@@ -40,7 +42,8 @@ class _JournalEntriesState extends State<JournalEntries> {
               }),
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.transparent,
+          key: Key("journalCreateEntryButton"),
+          backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
           elevation: 0,
           child: HexagonWidget.flat(
               width: 100,

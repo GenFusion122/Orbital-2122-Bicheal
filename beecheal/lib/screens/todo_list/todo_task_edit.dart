@@ -8,8 +8,6 @@ import 'package:intl/intl.dart';
 import '../../custom widgets/timepicker.dart';
 
 class TaskEditScreen extends StatefulWidget {
-  // const EntryScreen({Key? key}) : super(key: key);
-
   Task task;
   String textPrompt;
 
@@ -21,12 +19,13 @@ class TaskEditScreen extends StatefulWidget {
 
 class _TaskEditScreenState extends State<TaskEditScreen> {
   final _formkey = GlobalKey<FormState>();
+  // initialize variables
   DateTime? newDate;
   TimeOfDay? newTime;
+  String? newTitle;
+  String? newDescription;
   @override
   Widget build(BuildContext context) {
-    String newTitle = widget.task.getTitle();
-    String newDescription = widget.task.getDescription();
     String dateLabel =
         DateFormat('yyyy-MM-dd').format(newDate ?? widget.task.getDate());
     String timeLabel =
@@ -43,64 +42,54 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                // task title
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(0.0,
                         MediaQuery.of(context).size.height * 0.005, 0.0, 0.0),
-                    child: Text('Title',
-                        style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xff000000))),
+                    child: Text('Title', style: viewHeaderTextStyle),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.all(1.0),
                   child: TextFormField(
+                      key: Key("taskTitleField"),
                       maxLength: 50,
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xff000000)),
-                      cursorColor: Color(0xff000000),
+                      style: textFormFieldStyle,
+                      cursorColor: Theme.of(context).colorScheme.onPrimary,
                       initialValue: widget.task.getTitle(),
                       decoration: textInputDecorationFormField.copyWith(
                           counterText: "", hintText: 'Title'),
                       validator: (val) =>
                           val!.isNotEmpty ? null : 'Please enter a title',
                       onChanged: (val) {
-                        newTitle = val;
+                        setState(() => newTitle = val);
                       }),
                 ),
+                // task description
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(0.0,
                         MediaQuery.of(context).size.height * 0.005, 0.0, 0.0),
-                    child: Text('Description',
-                        style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xff000000))),
+                    child: Text('Description', style: viewHeaderTextStyle),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.all(1.0),
                   child: TextFormField(
+                      key: Key("taskDescriptionField"),
                       maxLength: 100,
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xff000000)),
-                      cursorColor: Color(0xff000000),
+                      style: textFormFieldStyle,
+                      cursorColor: Theme.of(context).colorScheme.onPrimary,
                       initialValue: widget.task.getDescription(),
                       decoration: textInputDecorationFormField.copyWith(
                           counterText: "", hintText: 'Description'),
                       validator: (val) =>
                           val!.isNotEmpty ? null : 'Please enter a description',
                       onChanged: (val) {
-                        newDescription = val;
+                        setState(() => newDescription = val);
                       }),
                 ),
                 Padding(
@@ -125,24 +114,19 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                               children: [
                                 SizedBox(
                                   width: 50.0,
-                                  child: Text('Date:',
-                                      style: TextStyle(
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.w900,
-                                          color: Color(0xff000000))),
+                                  child:
+                                      Text('Date:', style: viewDateTextStyle),
                                 ),
-                                Text(dateLabel,
-                                    style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.w900,
-                                        color: Color(0xff000000))),
+                                Text(dateLabel, style: viewDateTextStyle),
                               ],
                             ),
+                            // edits date
                             Padding(
                               padding: EdgeInsets.all(1.0),
                               child: SizedBox(
                                 width: 100.0,
                                 child: ElevatedButton(
+                                    key: Key("taskSelectDateButton"),
                                     style: ButtonStyle(
                                         shape: MaterialStateProperty.all<
                                                 RoundedRectangleBorder>(
@@ -152,15 +136,13 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                         )),
                                         backgroundColor:
                                             MaterialStateProperty.all(
-                                                Color(0xFFFFE98C)),
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primaryContainer),
                                         elevation:
                                             MaterialStateProperty.resolveWith<
                                                 double>((states) => 0)),
-                                    child: Text('Edit',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                            color: Color(0xff000000))),
+                                    child: Text('Edit', style: buttonTextStyle),
                                     onPressed: () async {
                                       {
                                         DateTime tempDate =
@@ -192,24 +174,19 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                               children: [
                                 SizedBox(
                                   width: 50.0,
-                                  child: Text('Time:',
-                                      style: TextStyle(
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.w900,
-                                          color: Color(0xff000000))),
+                                  child:
+                                      Text('Time:', style: viewDateTextStyle),
                                 ),
-                                Text(timeLabel,
-                                    style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.w900,
-                                        color: Color(0xff000000))),
+                                Text(timeLabel, style: viewDateTextStyle),
                               ],
                             ),
+                            // edits time
                             Padding(
                               padding: EdgeInsets.all(1.0),
                               child: SizedBox(
                                 width: 100.0,
                                 child: ElevatedButton(
+                                    key: Key("taskSelectTimeButton"),
                                     style: ButtonStyle(
                                         shape: MaterialStateProperty.all<
                                                 RoundedRectangleBorder>(
@@ -219,15 +196,13 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                         )),
                                         backgroundColor:
                                             MaterialStateProperty.all(
-                                                Color(0xFFFFE98C)),
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primaryContainer),
                                         elevation:
                                             MaterialStateProperty.resolveWith<
                                                 double>((states) => 0)),
-                                    child: Text('Edit',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                            color: Color(0xff000000))),
+                                    child: Text('Edit', style: buttonTextStyle),
                                     onPressed: () async {
                                       {
                                         TimeOfDay tempTime =
@@ -253,31 +228,31 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                   child: SizedBox(
                     width: 100.0,
                     child: ElevatedButton(
+                        key: Key("taskCreateEditButton"),
                         style: ButtonStyle(
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
                             )),
-                            backgroundColor:
-                                MaterialStateProperty.all(Color(0xFFFFE98C)),
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).colorScheme.primaryContainer),
                             elevation:
                                 MaterialStateProperty.resolveWith<double>(
                                     (states) => 0)),
-                        child: Text(widget.textPrompt,
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xff000000))),
+                        child: Text(widget.textPrompt, style: buttonTextStyle),
                         onPressed: () async {
                           if (_formkey.currentState!.validate()) {
+                            // checks if new or existing task
                             if (widget.textPrompt == "Create") {
                               DateTime? pickedDateTime =
                                   await TimePicker.dateTimePicker(
                                       context, widget.task.getDate());
                               if (pickedDateTime != null) {
-                                //if the user didn't cancel
-                                widget.task.setTitle(newTitle);
-                                widget.task.setDescription(newDescription);
+                                // if the user didn't cancel
+                                widget.task.setTitle(
+                                    newTitle ?? widget.task.getTitle());
+                                widget.task.setDescription(newDescription ??
+                                    widget.task.getDescription());
                                 widget.task.setDate(pickedDateTime);
                                 DatabaseService().updateUserTask(
                                     widget.task.getId(),
@@ -288,15 +263,12 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                 InitializeNotifications
                                     .initializeToDoNotifications();
                                 Navigator.of(context).pop();
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return TaskView(widget.task);
-                                    });
                               }
                             } else {
-                              widget.task.setTitle(newTitle);
-                              widget.task.setDescription(newDescription);
+                              widget.task
+                                  .setTitle(newTitle ?? widget.task.getTitle());
+                              widget.task.setDescription(newDescription ??
+                                  widget.task.getDescription());
                               DateTime originalDateTime = widget.task.getDate();
                               DateTime combinedDateTime = (newDate ??
                                       DateTime(
@@ -321,6 +293,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                   widget.task.getDate(),
                                   widget.task.getDescription(),
                                   Task.incompletePlaceholder);
+                              // initialize notifications for new task
                               InitializeNotifications
                                   .initializeToDoNotifications();
                               Navigator.of(context).pop();
