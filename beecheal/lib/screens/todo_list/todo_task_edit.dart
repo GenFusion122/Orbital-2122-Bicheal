@@ -284,7 +284,7 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                               TimeOfDay.fromDateTime(
                                                   originalDateTime))
                                           .minute));
-                              newDate != null
+                              (newDate != null) | (newTime != null)
                                   ? widget.task.setDate(combinedDateTime)
                                   : null;
                               DatabaseService().updateUserTask(

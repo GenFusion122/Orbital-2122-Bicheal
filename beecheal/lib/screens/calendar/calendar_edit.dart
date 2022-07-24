@@ -336,7 +336,7 @@ class _CalenderEditScreen<T extends Occasion>
                                               TimeOfDay.fromDateTime(
                                                   originalDateTime))
                                           .minute));
-                              newDate != null
+                              (newDate != null) | (newTime != null)
                                   ? widget.occasion.setDate(combinedDateTime)
                                   : null;
                               DatabaseService().updateUserOccasion(
