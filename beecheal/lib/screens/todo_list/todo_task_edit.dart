@@ -216,7 +216,6 @@ class _TaskEditScreenState extends State<TaskEditScreen> {
                                         setState(() {
                                           newTime = tempTime;
                                         });
-                                        print(newTime);
                                       }
                                     }),
                               ),
