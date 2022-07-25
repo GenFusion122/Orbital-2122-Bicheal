@@ -11,16 +11,16 @@ Links to Milestone 3 documents:
 
 | README  | Poster | Video |
 | ------------- | ------------- | ------------- |
-| [MS3-README](url)  | [MS3-Poster](url)  | [MS3-Video](url)  |
+| [MS3-README](https://drive.google.com/file/d/1mWCoG5laH4i3uQJNUXchNByuFfC8ty6P/view?usp=sharing)  | [MS3-Poster](url)  | [MS3-Video](url)  |
 
 [Orbital 2122 project by Chia Yu Hong and Justin Widodo of team Bicheal]
 
 ## Installation
 Android APK:
-[BzB-Android](url)
+[BzB-Android](https://drive.google.com/file/d/1yqmhnQjrQMEQiY4nDI5l6gU06oXCGOyr/view?usp=sharing)
 
 Web Build:
-[BzB-Web](url)
+[BzB-Web](https://beecheal-17e08.web.app)
 
 ## Credits
 Model based on this [starter model](https://www.tensorflow.org/lite/examples/text_classification/overview)
