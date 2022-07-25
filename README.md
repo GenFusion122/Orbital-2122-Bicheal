@@ -19,6 +19,8 @@ Links to Milestone 3 documents:
 Android APK:
 [BzB-Android](https://drive.google.com/file/d/1yqmhnQjrQMEQiY4nDI5l6gU06oXCGOyr/view?usp=sharing)
 
+*The APK has been tested to work on Android 12. Timezone has to be set on your device for some features to work properly.*
+
 Web Build:
 [BzB-Web](https://beecheal-17e08.web.app)
 
