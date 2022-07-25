@@ -11,7 +11,7 @@ Links to Milestone 3 documents:
 
 | README  | Poster | Video |
 | ------------- | ------------- | ------------- |
-| [MS3-README](https://drive.google.com/file/d/1mWCoG5laH4i3uQJNUXchNByuFfC8ty6P/view?usp=sharing)  | [MS3-Poster](url)  | [MS3-Video](url)  |
+| [MS3-README](https://drive.google.com/file/d/1mWCoG5laH4i3uQJNUXchNByuFfC8ty6P/view?usp=sharing)  | [MS3-Poster](https://drive.google.com/file/d/1XyfI8vxsf3yf3n9WkwWN8Pyih42U8sy3/view?usp=sharing)  | [MS3-Video](https://drive.google.com/file/d/1EwIh9qvuGkInhJckmXxpRbK3uC7qhJj0/view?usp=sharing)  |
 
 [Orbital 2122 project by Chia Yu Hong and Justin Widodo of team Bicheal]
 
